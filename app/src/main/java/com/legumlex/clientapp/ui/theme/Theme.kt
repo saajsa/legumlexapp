@@ -37,24 +37,24 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = LegumLexPrimary,
+    primary = LegumLexPrimary, // #3366FF from website
     onPrimary = LegumLexOnPrimary,
-    primaryContainer = LegumLexPrimaryVariant,
-    onPrimaryContainer = LegumLexOnPrimary,
-    secondary = LegumLexSecondary,
+    primaryContainer = LegumLexSurfaceVariant, // Light container
+    onPrimaryContainer = LegumLexPrimaryVariant,
+    secondary = LegumLexSecondary, // #606060 from website
     onSecondary = LegumLexOnSecondary,
-    secondaryContainer = LegumLexSecondaryVariant,
-    onSecondaryContainer = LegumLexOnSecondary,
+    secondaryContainer = LegumLexSurfaceVariant,
+    onSecondaryContainer = LegumLexSecondaryVariant,
     tertiary = LegumLexGold,
     onTertiary = LegumLexOnPrimary,
     error = LegumLexError,
     onError = LegumLexOnPrimary,
     background = LegumLexBackground,
-    onBackground = LegumLexOnBackground,
+    onBackground = LegumLexOnBackground, // #1D1D21 from website
     surface = LegumLexSurface,
-    onSurface = LegumLexOnSurface,
-    surfaceVariant = LegumLexSecondary,
-    onSurfaceVariant = LegumLexOnSurface,
+    onSurface = LegumLexOnSurface, // #1D1D21 from website
+    surfaceVariant = LegumLexSurfaceVariant, // #f4f4f4 from website
+    onSurfaceVariant = LegumLexTextMedium, // #606060 from website
 )
 
 @Composable

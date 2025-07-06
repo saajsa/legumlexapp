@@ -52,17 +52,17 @@ val LegumLexTypography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp,
+        fontWeight = FontWeight.W600, // font-weight: 600 from website
+        fontSize = 20.sp, // font-size: 20px from website
+        lineHeight = 25.sp, // line-height: 25px from website
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
+        fontWeight = FontWeight.W600, // font-weight: 600 from website
+        fontSize = 18.sp, // Responsive font-size: 18px from website
         lineHeight = 24.sp,
-        letterSpacing = 0.15.sp,
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     titleSmall = TextStyle(
         fontFamily = FontFamily.Default,
@@ -76,14 +76,14 @@ val LegumLexTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.15.sp,
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.25.sp,
+        fontSize = 14.sp, // font-size: 14px from website
+        lineHeight = (14 * 1.57).sp, // line-height: 1.57 from website
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily.Default,
@@ -94,23 +94,23 @@ val LegumLexTypography = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.W600, // font-weight: 600 from website
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp,
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 12.sp,
+        fontWeight = FontWeight.W500, // font-weight: 500 from website
+        fontSize = 12.sp, // font-size: 12px from website
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp,
+        fontWeight = FontWeight.W600, // font-weight: 600 from website
+        fontSize = 11.sp, // font-size: 11px from website
+        lineHeight = 14.sp, // line-height: 14px from website
+        letterSpacing = 0.04.sp, // letter-spacing: 0.04em from website
     )
 )

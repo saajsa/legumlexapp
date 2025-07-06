@@ -2,11 +2,11 @@ package com.legumlex.clientapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// LegumLex Brand Colors
-val LegumLexPrimary = Color(0xFF1565C0) // Professional blue
-val LegumLexPrimaryVariant = Color(0xFF0D47A1) // Darker blue
-val LegumLexSecondary = Color(0xFF37474F) // Professional gray
-val LegumLexSecondaryVariant = Color(0xFF263238) // Darker gray
+// LegumLex Brand Colors (from website CSS #3366FF)
+val LegumLexPrimary = Color(0xFF3366FF) // Primary blue from website
+val LegumLexPrimaryVariant = Color(0xFF254EDB) // Darker blue from website
+val LegumLexSecondary = Color(0xFF606060) // Medium gray from website
+val LegumLexSecondaryVariant = Color(0xFF1D1D21) // Dark text from website
 
 // Additional colors for legal industry
 val LegumLexGold = Color(0xFFFFB300) // For premium/important items
@@ -14,15 +14,17 @@ val LegumLexSuccess = Color(0xFF2E7D32) // For success states
 val LegumLexWarning = Color(0xFFEF6C00) // For warnings
 val LegumLexError = Color(0xFFD32F2F) // For errors
 
-// Background colors
-val LegumLexSurface = Color(0xFFFAFAFA)
+// Background colors (from website CSS)
+val LegumLexSurface = Color(0xFFFFFFFF)
+val LegumLexSurfaceVariant = Color(0xFFF4F4F4) // Border color from website
 val LegumLexBackground = Color(0xFFFFFFFF)
 
-// Text colors
+// Text colors (from website CSS)
 val LegumLexOnPrimary = Color(0xFFFFFFFF)
 val LegumLexOnSecondary = Color(0xFFFFFFFF)
-val LegumLexOnSurface = Color(0xFF212121)
-val LegumLexOnBackground = Color(0xFF212121)
+val LegumLexOnSurface = Color(0xFF1D1D21) // Dark text from website
+val LegumLexOnBackground = Color(0xFF1D1D21) // Dark text from website
+val LegumLexTextMedium = Color(0xFF606060) // Medium gray text from website
 
 // Dark theme colors
 val LegumLexPrimaryDark = Color(0xFF1976D2)
