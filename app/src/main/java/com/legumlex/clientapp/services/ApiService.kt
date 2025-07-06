@@ -1,10 +1,23 @@
 package com.legumlex.clientapp.services
 
 import com.legumlex.clientapp.models.*
+import com.legumlex.clientapp.auth.LoginResponse
+import com.legumlex.clientapp.auth.RefreshTokenResponse
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
+    
+    // Authentication endpoints
+    // Note: Perfex CRM uses API token authentication via headers
+    // Login is typically handled through web interface, API uses token-based auth
+    @POST("authenticate")
+    suspend fun authenticate(
+        @Body credentials: Map<String, String>
+    ): Response<LoginResponse>
+    
+    @GET("me")
+    suspend fun getCurrentUser(): Response<User>
     
     // Customer endpoints - Perfex CRM uses 'customers' for client data
     @GET("customers")

@@ -13,7 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.legumlex.clientapp.ui.components.StatCard
+import com.legumlex.clientapp.ui.components.LegumLexCard
+import com.legumlex.clientapp.ui.components.LegumLexInfoCard
+import com.legumlex.clientapp.ui.components.LegumLexButton
+import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.viewmodels.DashboardViewModel
 
 @Composable
@@ -74,28 +77,54 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onNavigateToCases() }
+                        LegumLexCard(
+                            modifier = Modifier.weight(1f),
+                            onClick = { onNavigateToCases() },
+                            elevation = LegumLexCardElevation.Default
                         ) {
-                            StatCard(
-                                title = "Active Cases",
-                                value = uiState.summaryStats.activeCases.toString(),
-                                icon = Icons.Default.Folder,
-                                modifier = Modifier.fillMaxWidth()
+                            Icon(
+                                imageVector = Icons.Default.Folder,
+                                contentDescription = "Cases",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = uiState.summaryStats.activeCases.toString(),
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.W600
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Active Cases",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onNavigateToInvoices() }
+                        LegumLexCard(
+                            modifier = Modifier.weight(1f),
+                            onClick = { onNavigateToInvoices() },
+                            elevation = LegumLexCardElevation.Default
                         ) {
-                            StatCard(
-                                title = "Unpaid Invoices",
-                                value = uiState.summaryStats.unpaidInvoices.toString(),
-                                icon = Icons.Default.Receipt,
-                                modifier = Modifier.fillMaxWidth()
+                            Icon(
+                                imageVector = Icons.Default.Receipt,
+                                contentDescription = "Invoices",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = uiState.summaryStats.unpaidInvoices.toString(),
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.W600
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Unpaid Invoices",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -106,28 +135,54 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onNavigateToDocuments() }
+                        LegumLexCard(
+                            modifier = Modifier.weight(1f),
+                            onClick = { onNavigateToDocuments() },
+                            elevation = LegumLexCardElevation.Default
                         ) {
-                            StatCard(
-                                title = "Documents",
-                                value = uiState.summaryStats.totalDocuments.toString(),
-                                icon = Icons.Default.Description,
-                                modifier = Modifier.fillMaxWidth()
+                            Icon(
+                                imageVector = Icons.Default.Description,
+                                contentDescription = "Documents",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = uiState.summaryStats.totalDocuments.toString(),
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.W600
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Documents",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onNavigateToTickets() }
+                        LegumLexCard(
+                            modifier = Modifier.weight(1f),
+                            onClick = { onNavigateToTickets() },
+                            elevation = LegumLexCardElevation.Default
                         ) {
-                            StatCard(
-                                title = "Open Tickets",
-                                value = uiState.summaryStats.openTickets.toString(),
-                                icon = Icons.Default.Support,
-                                modifier = Modifier.fillMaxWidth()
+                            Icon(
+                                imageVector = Icons.Default.Support,
+                                contentDescription = "Support",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = uiState.summaryStats.openTickets.toString(),
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.W600
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Open Tickets",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -146,29 +201,25 @@ fun DashboardScreen(
                 
                 if (uiState.recentCases.isEmpty() && uiState.recentInvoices.isEmpty()) {
                     item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant
-                            )
+                        LegumLexCard(
+                            elevation = LegumLexCardElevation.Default
                         ) {
                             Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(24.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Home,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(48.dp)
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
                                     text = "Welcome to your legal client portal",
                                     style = MaterialTheme.typography.titleMedium,
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
