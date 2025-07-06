@@ -144,7 +144,7 @@ class DashboardViewModel : BaseViewModel() {
         loadDashboardData()
     }
     
-    fun clearError() {
+    override fun clearError() {
         super.clearError()
     }
 }

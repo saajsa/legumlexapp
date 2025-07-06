@@ -49,7 +49,7 @@ abstract class BaseViewModel : ViewModel() {
         _error.value = message
     }
     
-    protected fun clearError() {
+    protected open fun clearError() {
         _error.value = null
     }
     

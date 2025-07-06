@@ -175,7 +175,7 @@ class InvoiceViewModel : BaseViewModel() {
         loadInvoices()
     }
     
-    fun clearError() {
+    override fun clearError() {
         super.clearError()
     }
 }

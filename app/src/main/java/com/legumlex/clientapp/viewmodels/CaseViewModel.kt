@@ -153,7 +153,7 @@ class CaseViewModel : BaseViewModel() {
         loadCases()
     }
     
-    fun clearError() {
+    override fun clearError() {
         super.clearError()
     }
 }

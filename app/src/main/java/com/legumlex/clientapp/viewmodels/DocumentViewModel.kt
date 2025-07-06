@@ -187,7 +187,7 @@ class DocumentViewModel : BaseViewModel() {
         loadDocuments()
     }
     
-    fun clearError() {
+    override fun clearError() {
         super.clearError()
     }
 }

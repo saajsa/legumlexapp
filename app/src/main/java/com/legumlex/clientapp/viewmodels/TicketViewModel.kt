@@ -216,7 +216,7 @@ class TicketViewModel : BaseViewModel() {
         loadTickets()
     }
     
-    fun clearError() {
+    override fun clearError() {
         super.clearError()
     }
 }
