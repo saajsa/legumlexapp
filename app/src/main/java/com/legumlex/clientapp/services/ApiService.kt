@@ -85,7 +85,39 @@ interface ApiService {
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 20,
         @Query("customer_id") customerId: String? = null
-    ): Response<List<Any>>
+    ): Response<List<Contract>>
+    
+    @GET("contracts/{id}")
+    suspend fun getContract(
+        @Path("id") contractId: String
+    ): Response<Contract>
+    
+    // Case endpoints (Projects can be used as Cases in legal context)
+    @GET("projects")
+    suspend fun getCases(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 20,
+        @Query("customer_id") customerId: String? = null
+    ): Response<List<Case>>
+    
+    @GET("projects/{id}")
+    suspend fun getCase(
+        @Path("id") caseId: String
+    ): Response<Case>
+    
+    // Document endpoints
+    @GET("files")
+    suspend fun getDocuments(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 20,
+        @Query("rel_type") relType: String? = null,
+        @Query("rel_id") relId: String? = null
+    ): Response<List<Document>>
+    
+    @GET("files/{id}")
+    suspend fun getDocument(
+        @Path("id") documentId: String
+    ): Response<Document>
     
     // Proposal endpoints
     @GET("proposals")
@@ -108,8 +140,14 @@ interface ApiService {
     suspend fun getPayments(
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 20,
-        @Query("customer_id") customerId: String? = null
-    ): Response<List<Any>>
+        @Query("customer_id") customerId: String? = null,
+        @Query("invoice_id") invoiceId: String? = null
+    ): Response<List<Payment>>
+    
+    @GET("payments/{id}")
+    suspend fun getPayment(
+        @Path("id") paymentId: String
+    ): Response<Payment>
     
     // File download
     @GET("files/{id}")
