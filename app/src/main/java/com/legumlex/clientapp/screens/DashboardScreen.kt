@@ -82,7 +82,7 @@ fun DashboardScreen(
                             StatCard(
                                 title = "Active Cases",
                                 value = uiState.summaryStats.activeCases.toString(),
-                                icon = Icons.Default.FolderOpen,
+                                icon = Icons.Default.Folder,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -94,7 +94,7 @@ fun DashboardScreen(
                             StatCard(
                                 title = "Unpaid Invoices",
                                 value = uiState.summaryStats.unpaidInvoices.toString(),
-                                icon = Icons.Default.Payment,
+                                icon = Icons.Default.Receipt,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -114,7 +114,7 @@ fun DashboardScreen(
                             StatCard(
                                 title = "Documents",
                                 value = uiState.summaryStats.totalDocuments.toString(),
-                                icon = Icons.Default.Article,
+                                icon = Icons.Default.Description,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -126,7 +126,7 @@ fun DashboardScreen(
                             StatCard(
                                 title = "Open Tickets",
                                 value = uiState.summaryStats.openTickets.toString(),
-                                icon = Icons.Default.Help,
+                                icon = Icons.Default.Support,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

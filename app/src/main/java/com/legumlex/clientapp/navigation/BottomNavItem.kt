@@ -20,22 +20,22 @@ val bottomNavItems = listOf(
     BottomNavItem(
         name = "Cases",
         route = Screen.Cases.route,
-        icon = Icons.Default.FolderOpen,
-        selectedIcon = Icons.Default.FolderOpen
+        icon = Icons.Default.Folder,
+        selectedIcon = Icons.Default.Folder
     ),
     BottomNavItem(
         name = "Documents",
         route = Screen.Documents.route,
-        icon = Icons.Default.Article
+        icon = Icons.Default.Description
     ),
     BottomNavItem(
         name = "Invoices",
         route = Screen.Invoices.route,
-        icon = Icons.Default.Payment
+        icon = Icons.Default.Receipt
     ),
     BottomNavItem(
         name = "Tickets",
         route = Screen.Tickets.route,
-        icon = Icons.Default.Help
+        icon = Icons.Default.Support
     )
 )
