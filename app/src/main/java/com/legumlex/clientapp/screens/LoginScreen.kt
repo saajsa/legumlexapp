@@ -30,27 +30,23 @@ import com.legumlex.clientapp.R
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
-import com.legumlex.clientapp.viewmodels.LoginViewModel
+import com.legumlex.clientapp.SimpleLoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
+    viewModel: SimpleLoginViewModel,
     onNavigateToMain: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
     
     val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
     
-    // Navigate to main screen on successful login
-    LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn) {
-            onNavigateToMain()
-        }
-    }
+    // This will be handled by the parent composable observing auth state
     
     Column(
         modifier = Modifier
@@ -106,7 +102,7 @@ fun LoginScreen(
                 
                 // Email field
                 OutlinedTextField(
-                    value = uiState.email,
+                    value = email,
                     onValueChange = viewModel::updateEmail,
                     label = { Text("Email") },
                     placeholder = { Text("Enter your email") },
@@ -135,7 +131,7 @@ fun LoginScreen(
                 
                 // Password field
                 OutlinedTextField(
-                    value = uiState.password,
+                    value = password,
                     onValueChange = viewModel::updatePassword,
                     label = { Text("Password") },
                     placeholder = { Text("Enter your password") },
@@ -181,7 +177,7 @@ fun LoginScreen(
                     text = if (isLoading) "Signing in..." else "Sign In",
                     onClick = { viewModel.login() },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading && uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
+                    enabled = !isLoading && email.isNotEmpty() && password.isNotEmpty()
                 )
                 
                 // Error message

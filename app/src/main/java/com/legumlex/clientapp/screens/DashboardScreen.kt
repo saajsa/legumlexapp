@@ -17,11 +17,12 @@ import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexInfoCard
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
-import com.legumlex.clientapp.viewmodels.DashboardViewModel
+import com.legumlex.clientapp.SimpleDashboardViewModel
+import com.legumlex.clientapp.DashboardStats
 
 @Composable
 fun DashboardScreen(
-    viewModel: DashboardViewModel,
+    viewModel: SimpleDashboardViewModel,
     onNavigateToCases: () -> Unit,
     onNavigateToDocuments: () -> Unit,
     onNavigateToInvoices: () -> Unit,
@@ -29,9 +30,8 @@ fun DashboardScreen(
     onNavigateToCaseDetail: (String) -> Unit,
     onNavigateToInvoiceDetail: (String) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val stats by viewModel.stats.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
     
     Column(
         modifier = Modifier
@@ -90,7 +90,7 @@ fun DashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = uiState.summaryStats.activeCases.toString(),
+                                text = stats.activeCases.toString(),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.W600
                                 ),
@@ -115,7 +115,7 @@ fun DashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = uiState.summaryStats.unpaidInvoices.toString(),
+                                text = stats.unpaidInvoices.toString(),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.W600
                                 ),
@@ -148,7 +148,7 @@ fun DashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = uiState.summaryStats.totalDocuments.toString(),
+                                text = stats.totalDocuments.toString(),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.W600
                                 ),
@@ -173,7 +173,7 @@ fun DashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = uiState.summaryStats.openTickets.toString(),
+                                text = stats.openTickets.toString(),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.W600
                                 ),
@@ -187,66 +187,7 @@ fun DashboardScreen(
                         }
                     }
                 }
-                
-                // Recent Activity Section
-                item {
-                    Text(
-                        text = "Recent Activity",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        modifier = Modifier.padding(top = 24.dp, bottom = 16.dp)
-                    )
-                }
-                
-                if (uiState.recentCases.isEmpty() && uiState.recentInvoices.isEmpty()) {
-                    item {
-                        LegumLexCard(
-                            elevation = LegumLexCardElevation.Default
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Home,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(48.dp)
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(
-                                    text = "Welcome to your legal client portal",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Your cases, documents, invoices, and support tickets will appear here",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                }
             }
-        }
-        
-        // Error handling
-        error?.let { errorMessage ->
-            LaunchedEffect(errorMessage) {
-                // Show snackbar or handle error display
-            }
-        }
-        
-        // Pull to refresh
-        if (uiState.isRefreshing) {
-            LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth()
-            )
         }
     }
 }
