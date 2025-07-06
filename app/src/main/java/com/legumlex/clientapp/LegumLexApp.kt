@@ -1,7 +1,6 @@
 package com.legumlex.clientapp
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -69,21 +68,12 @@ fun LegumLexApp() {
             },
             containerColor = MaterialTheme.colorScheme.background
         ) { innerPadding ->
-            LegumLexNavigation(
-                navController = navController,
-                modifier = Modifier.padding(innerPadding)
-            )
+            Box(modifier = Modifier.padding(innerPadding)) {
+                LegumLexNavigation(
+                    navController = navController
+                )
+            }
         }
     }
 }
 
-@Composable
-private fun LegumLexNavigation(
-    navController: androidx.navigation.NavHostController,
-    modifier: Modifier = Modifier
-) {
-    LegumLexNavigation(
-        navController = navController,
-        startDestination = Screen.Dashboard.route
-    )
-}

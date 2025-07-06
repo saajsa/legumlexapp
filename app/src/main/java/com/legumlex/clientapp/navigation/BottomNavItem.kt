@@ -15,27 +15,27 @@ val bottomNavItems = listOf(
     BottomNavItem(
         name = "Dashboard",
         route = Screen.Dashboard.route,
-        icon = Icons.Default.Dashboard
+        icon = Icons.Default.Home
     ),
     BottomNavItem(
         name = "Cases",
         route = Screen.Cases.route,
-        icon = Icons.Default.Folder,
-        selectedIcon = Icons.Default.Folder
+        icon = Icons.Default.FolderOpen,
+        selectedIcon = Icons.Default.FolderOpen
     ),
     BottomNavItem(
         name = "Documents",
         route = Screen.Documents.route,
-        icon = Icons.Default.Description
+        icon = Icons.Default.Article
     ),
     BottomNavItem(
         name = "Invoices",
         route = Screen.Invoices.route,
-        icon = Icons.Default.Receipt
+        icon = Icons.Default.Payment
     ),
     BottomNavItem(
         name = "Tickets",
         route = Screen.Tickets.route,
-        icon = Icons.Default.Support
+        icon = Icons.Default.Help
     )
 )

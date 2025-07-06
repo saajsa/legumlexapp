@@ -1,5 +1,6 @@
 package com.legumlex.clientapp.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -12,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.legumlex.clientapp.ui.components.InfoCard
+import com.legumlex.clientapp.ui.components.StatCard
 import com.legumlex.clientapp.viewmodels.DashboardViewModel
 
 @Composable
@@ -73,20 +74,30 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        InfoCard(
-                            title = "Active Cases",
-                            value = uiState.summaryStats.activeCases.toString(),
-                            icon = Icons.Default.Folder,
-                            modifier = Modifier.weight(1f),
-                            onClick = onNavigateToCases
-                        )
-                        InfoCard(
-                            title = "Unpaid Invoices",
-                            value = uiState.summaryStats.unpaidInvoices.toString(),
-                            icon = Icons.Default.Receipt,
-                            modifier = Modifier.weight(1f),
-                            onClick = onNavigateToInvoices
-                        )
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onNavigateToCases() }
+                        ) {
+                            StatCard(
+                                title = "Active Cases",
+                                value = uiState.summaryStats.activeCases.toString(),
+                                icon = Icons.Default.FolderOpen,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onNavigateToInvoices() }
+                        ) {
+                            StatCard(
+                                title = "Unpaid Invoices",
+                                value = uiState.summaryStats.unpaidInvoices.toString(),
+                                icon = Icons.Default.Payment,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
                 
@@ -95,20 +106,30 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        InfoCard(
-                            title = "Documents",
-                            value = uiState.summaryStats.totalDocuments.toString(),
-                            icon = Icons.Default.Description,
-                            modifier = Modifier.weight(1f),
-                            onClick = onNavigateToDocuments
-                        )
-                        InfoCard(
-                            title = "Open Tickets",
-                            value = uiState.summaryStats.openTickets.toString(),
-                            icon = Icons.Default.Support,
-                            modifier = Modifier.weight(1f),
-                            onClick = onNavigateToTickets
-                        )
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onNavigateToDocuments() }
+                        ) {
+                            StatCard(
+                                title = "Documents",
+                                value = uiState.summaryStats.totalDocuments.toString(),
+                                icon = Icons.Default.Article,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onNavigateToTickets() }
+                        ) {
+                            StatCard(
+                                title = "Open Tickets",
+                                value = uiState.summaryStats.openTickets.toString(),
+                                icon = Icons.Default.Help,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
                 
@@ -138,7 +159,7 @@ fun DashboardScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Dashboard,
+                                    imageVector = Icons.Default.Home,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(48.dp)
