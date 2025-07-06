@@ -38,7 +38,7 @@ fun DashboardScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (isLoading && uiState.recentCases.isEmpty()) {
+        if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

@@ -2,78 +2,64 @@ package com.legumlex.clientapp
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.legumlex.clientapp.navigation.LegumLexNavigation
-import com.legumlex.clientapp.navigation.Screen
-import com.legumlex.clientapp.navigation.bottomNavItems
-import com.legumlex.clientapp.ui.components.LegumLexBottomBar
-import com.legumlex.clientapp.ui.components.LegumLexTopBar
-import com.legumlex.clientapp.ui.theme.LegumLexClientAppTheme
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.legumlex.clientapp.screens.DashboardScreen
+import com.legumlex.clientapp.screens.LoginScreen
+import com.legumlex.clientapp.di.AppContainer
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LegumLexApp() {
-    LegumLexClientAppTheme {
-        val navController = rememberNavController()
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        
-        // Determine if we should show bottom navigation
-        val showBottomBar = currentRoute in bottomNavItems.map { it.route }
-        
-        // Determine if we should show back button
-        val showBackButton = when (currentRoute) {
-            Screen.Dashboard.route,
-            Screen.Cases.route,
-            Screen.Documents.route,
-            Screen.Invoices.route,
-            Screen.Tickets.route -> false
-            else -> true
-        }
-        
-        // Get title based on current route
-        val title = when (currentRoute) {
-            Screen.Dashboard.route -> "LegumLex Portal"
-            Screen.Cases.route -> "My Cases"
-            Screen.CaseDetail.route -> "Case Details"
-            Screen.Documents.route -> "Documents"
-            Screen.DocumentDetail.route -> "Document"
-            Screen.Invoices.route -> "Invoices"
-            Screen.InvoiceDetail.route -> "Invoice Details"
-            Screen.Tickets.route -> "Support Tickets"
-            Screen.TicketDetail.route -> "Ticket Details"
-            Screen.CreateTicket.route -> "Create Ticket"
-            Screen.Profile.route -> "Profile"
-            Screen.Settings.route -> "Settings"
-            else -> "LegumLex Portal"
-        }
-        
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                LegumLexTopBar(
-                    title = title,
-                    navController = navController,
-                    showBackButton = showBackButton
-                )
-            },
-            bottomBar = {
-                if (showBottomBar) {
-                    LegumLexBottomBar(navController = navController)
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.background
-        ) { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
-                LegumLexNavigation(
-                    navController = navController
-                )
-            }
-        }
+fun LegumLexApp(appContainer: AppContainer) {
+    val authManager = appContainer.authManager
+    val isLoggedIn by authManager.isLoggedIn.collectAsStateWithLifecycle()
+    
+    if (isLoggedIn) {
+        // Main app content
+        val dashboardViewModel = appContainer.createDashboardViewModel()
+        DashboardScreen(
+            viewModel = dashboardViewModel,
+            onNavigateToCases = { /* TODO */ },
+            onNavigateToDocuments = { /* TODO */ },
+            onNavigateToInvoices = { /* TODO */ },
+            onNavigateToTickets = { /* TODO */ },
+            onNavigateToCaseDetail = { /* TODO */ },
+            onNavigateToInvoiceDetail = { /* TODO */ }
+        )
+    } else {
+        // Login screen
+        val loginViewModel = appContainer.createLoginViewModel()
+        LoginScreen(
+            viewModel = loginViewModel,
+            onNavigateToMain = { /* Navigation handled by auth state */ }
+        )
+    }
+}
+
+@Composable
+fun PlaceholderScreen(title: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Coming Soon",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
