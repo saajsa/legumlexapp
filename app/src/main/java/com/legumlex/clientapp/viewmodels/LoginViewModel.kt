@@ -2,7 +2,7 @@ package com.legumlex.clientapp.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import com.legumlex.clientapp.auth.AuthManager
-import com.legumlex.clientapp.data.repository.ApiResult
+import com.legumlex.clientapp.services.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

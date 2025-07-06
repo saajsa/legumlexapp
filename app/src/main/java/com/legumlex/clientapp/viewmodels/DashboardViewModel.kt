@@ -3,6 +3,7 @@ package com.legumlex.clientapp.viewmodels
 import androidx.lifecycle.viewModelScope
 import com.legumlex.clientapp.models.*
 import com.legumlex.clientapp.services.ApiResult
+import com.legumlex.clientapp.services.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +29,9 @@ data class DashboardStats(
     val unpaidAmount: Double = 0.0
 )
 
-class DashboardViewModel : BaseViewModel() {
+class DashboardViewModel(
+    private val repository: Repository
+) : BaseViewModel() {
     
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()

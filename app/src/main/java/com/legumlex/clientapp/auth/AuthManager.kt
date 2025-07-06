@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.legumlex.clientapp.services.ApiService
-import com.legumlex.clientapp.data.models.User
-import com.legumlex.clientapp.data.repository.ApiResult
+import com.legumlex.clientapp.models.User
+import com.legumlex.clientapp.services.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

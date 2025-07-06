@@ -1,5 +1,6 @@
 package com.legumlex.clientapp.services
 
+import android.content.Context
 import com.legumlex.clientapp.models.*
 import retrofit2.Response
 import kotlinx.coroutines.flow.Flow
@@ -14,10 +15,10 @@ sealed class ApiResult<out T> {
     object Loading : ApiResult<Nothing>()
 }
 
-class Repository {
-    
-    private val apiService = ApiClient.apiService
-    private val downloadService = ApiClient.downloadService
+class Repository(
+    private val apiService: ApiService,
+    private val context: Context
+) {
     
     // Generic method to handle API calls with proper error handling
     private suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResult<T> {

@@ -11,12 +11,10 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
     
-    protected val repository = Repository.getInstance()
-    
-    private val _isLoading = MutableStateFlow(false)
+    protected val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     
-    private val _error = MutableStateFlow<String?>(null)
+    protected val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
     
     protected fun <T> handleApiResult(

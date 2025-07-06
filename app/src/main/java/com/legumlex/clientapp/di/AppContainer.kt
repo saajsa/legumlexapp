@@ -2,8 +2,7 @@ package com.legumlex.clientapp.di
 
 import android.content.Context
 import com.legumlex.clientapp.auth.AuthManager
-import com.legumlex.clientapp.data.repository.Repository
-import com.legumlex.clientapp.services.ApiClient
+import com.legumlex.clientapp.services.Repository
 import com.legumlex.clientapp.services.ApiService
 import com.legumlex.clientapp.utils.ApiConfig
 import com.legumlex.clientapp.viewmodels.*
