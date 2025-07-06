@@ -10,13 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.legumlex.clientapp.R
 import com.legumlex.clientapp.activities.MainActivity
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class NotificationManager @Inject constructor(
-    @ApplicationContext private val context: Context
+class LegumLexNotificationManager(
+    private val context: Context
 ) {
     
     companion object {

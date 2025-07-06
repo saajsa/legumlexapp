@@ -12,18 +12,16 @@ import com.legumlex.clientapp.data.repository.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
 
-@Singleton
-class AuthManager @Inject constructor(
+class AuthManager(
     private val context: Context,
-    private val api: ApiService,
-    private val json: Json
+    private val api: ApiService
 ) {
+    private val gson = Gson()
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
         private val USER_KEY = stringPreferencesKey("user_data")
@@ -37,7 +35,7 @@ class AuthManager @Inject constructor(
     val currentUser: Flow<User?> = context.dataStore.data.map { preferences ->
         preferences[USER_KEY]?.let { userJson ->
             try {
-                json.decodeFromString<User>(userJson)
+                gson.fromJson(userJson, User::class.java)
             } catch (e: Exception) {
                 null
             }
@@ -61,7 +59,7 @@ class AuthManager @Inject constructor(
                     // Save auth data
                     context.dataStore.edit { preferences ->
                         preferences[TOKEN_KEY] = loginResponse.token
-                        preferences[USER_KEY] = json.encodeToString(User.serializer(), loginResponse.user)
+                        preferences[USER_KEY] = gson.toJson(loginResponse.user)
                         loginResponse.refreshToken?.let { refreshToken ->
                             preferences[REFRESH_TOKEN_KEY] = refreshToken
                         }
@@ -102,7 +100,7 @@ class AuthManager @Inject constructor(
                 if (user != null) {
                     // Update user data in storage
                     context.dataStore.edit { preferences ->
-                        preferences[USER_KEY] = json.encodeToString(User.serializer(), user)
+                        preferences[USER_KEY] = gson.toJson(user)
                     }
                     ApiResult.Success(user)
                 } else {

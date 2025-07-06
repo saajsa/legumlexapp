@@ -1,10 +1,13 @@
 package com.legumlex.clientapp
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.legumlex.clientapp.di.AppContainer
 
-@HiltAndroidApp
 class LegumLexApplication : Application() {
+    
+    val appContainer: AppContainer by lazy {
+        AppContainer(this)
+    }
     
     override fun onCreate() {
         super.onCreate()
