@@ -14,17 +14,18 @@ interface PerfexApiService {
     suspend fun getCurrentCustomer(): Response<User>
     
     // Dashboard Statistics - Real Perfex CRM endpoints
+    // Perfex API returns direct arrays, not wrapped objects
     @GET("customers")
-    suspend fun getCustomers(): Response<ApiListResponse<User>>
+    suspend fun getCustomers(): Response<List<User>>
     
     @GET("projects")
-    suspend fun getProjects(): Response<ApiListResponse<Project>>
+    suspend fun getProjects(): Response<List<Project>>
     
     @GET("invoices")
-    suspend fun getInvoices(): Response<ApiListResponse<Invoice>>
+    suspend fun getInvoices(): Response<List<Invoice>>
     
     @GET("tickets")
-    suspend fun getTickets(): Response<ApiListResponse<Ticket>>
+    suspend fun getTickets(): Response<List<Ticket>>
     
     // Detailed endpoints
     @GET("customers/{id}")

@@ -24,9 +24,9 @@ class SimpleRepository {
             // Check if all calls were successful
             if (projectsResponse.isSuccessful && invoicesResponse.isSuccessful && ticketsResponse.isSuccessful) {
                 
-                val projects = projectsResponse.body()?.data ?: emptyList()
-                val invoices = invoicesResponse.body()?.data ?: emptyList()
-                val tickets = ticketsResponse.body()?.data ?: emptyList()
+                val projects = projectsResponse.body() ?: emptyList()
+                val invoices = invoicesResponse.body() ?: emptyList()
+                val tickets = ticketsResponse.body() ?: emptyList()
                 
                 // Calculate real statistics from API data
                 val stats = DashboardStats(
@@ -59,7 +59,7 @@ class SimpleRepository {
             val response = apiService.getProjects()
             
             if (response.isSuccessful && response.body() != null) {
-                val projects = response.body()!!.data ?: emptyList()
+                val projects = response.body()!!
                 
                 // Convert API projects to CaseItem format
                 val cases = projects.map { project ->
@@ -95,7 +95,7 @@ class SimpleRepository {
             val response = apiService.getInvoices()
             
             if (response.isSuccessful && response.body() != null) {
-                val invoices = response.body()!!.data ?: emptyList()
+                val invoices = response.body()!!
                 
                 // Convert API invoices to InvoiceItem format
                 val invoiceItems = invoices.map { invoice ->
