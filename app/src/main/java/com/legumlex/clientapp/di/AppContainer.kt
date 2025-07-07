@@ -30,4 +30,16 @@ class AppContainer(private val context: Context) {
     fun createCasesViewModel(): SimpleCasesViewModel {
         return SimpleCasesViewModel(repository)
     }
+    
+    fun createDocumentsViewModel(): SimpleDocumentsViewModel {
+        return SimpleDocumentsViewModel(repository)
+    }
+    
+    fun createInvoicesViewModel(): SimpleInvoicesViewModel {
+        return SimpleInvoicesViewModel(repository)
+    }
+    
+    fun createTicketsViewModel(): SimpleTicketsViewModel {
+        return SimpleTicketsViewModel(repository)
+    }
 }

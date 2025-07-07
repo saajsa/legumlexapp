@@ -13,44 +13,36 @@ class SimpleRepository {
     
     private val apiService = ApiClient.getInstance()
     
-    // Get dashboard statistics from real Perfex CRM API
+    // Get dashboard statistics using both Perfex CRM and Legal Practice Management API
     suspend fun getDashboardStats(): SimpleApiResult<DashboardStats> {
         return try {
-            // Make real API calls to Perfex CRM
-            val projectsResponse = apiService.getProjects()
+            // Make API calls to both Perfex CRM and Legal Practice Management API
+            val casesResponse = apiService.getCases()
             val invoicesResponse = apiService.getInvoices()
+            val ticketsResponse = apiService.getTickets()
+            val documentsResponse = apiService.getLegalDocuments()
             
-            // Check if core calls were successful (tickets optional)
-            if (projectsResponse.isSuccessful && invoicesResponse.isSuccessful) {
+            // Check if core calls were successful
+            if (casesResponse.isSuccessful && invoicesResponse.isSuccessful) {
                 
-                val projects = projectsResponse.body() ?: emptyList()
+                val cases = casesResponse.body() ?: emptyList()
                 val invoices = invoicesResponse.body() ?: emptyList()
-                
-                // Try to get tickets, but don't fail if endpoint doesn't exist
-                var openTickets = 0
-                try {
-                    val ticketsResponse = apiService.getTickets()
-                    if (ticketsResponse.isSuccessful) {
-                        val tickets = ticketsResponse.body() ?: emptyList()
-                        openTickets = tickets.count { it.status == "open" || it.status == "1" }
-                    }
-                } catch (e: Exception) {
-                    // Tickets endpoint not available - that's okay
-                }
+                val tickets = ticketsResponse.body() ?: emptyList()
+                val documents = documentsResponse.body() ?: emptyList()
                 
                 // Calculate real statistics from API data
                 val stats = DashboardStats(
-                    activeCases = projects.size, // All projects for the client
-                    unpaidInvoices = invoices.count { it.status == "unpaid" || it.status == "1" },
-                    totalDocuments = 0, // Will need separate documents API call
-                    openTickets = openTickets
+                    activeCases = cases.count { it.isActive },
+                    unpaidInvoices = invoices.count { it.status == "1" }, // Unpaid status
+                    totalDocuments = documents.size,
+                    openTickets = tickets.count { it.status == "open" || it.status == "1" }
                 )
                 
                 SimpleApiResult.Success(stats)
             } else {
                 // If core API calls fail, return error with details
                 val errorMessage = when {
-                    !projectsResponse.isSuccessful -> "Failed to fetch projects: ${projectsResponse.message()}"
+                    !casesResponse.isSuccessful -> "Failed to fetch cases: ${casesResponse.message()}"
                     !invoicesResponse.isSuccessful -> "Failed to fetch invoices: ${invoicesResponse.message()}"
                     else -> "Failed to fetch dashboard data"
                 }
@@ -62,33 +54,26 @@ class SimpleRepository {
         }
     }
     
-    // Get detailed case/project data from real API
+    // Get detailed case data from Legal Practice Management API
     suspend fun getCases(): SimpleApiResult<List<CaseItem>> {
         return try {
-            val response = apiService.getProjects()
+            val response = apiService.getCases()
             
             if (response.isSuccessful && response.body() != null) {
-                val projects = response.body()!!
+                val cases = response.body()!!
                 
-                // Convert API projects to CaseItem format
-                val cases = projects.map { project ->
+                // Convert API cases to CaseItem format
+                val caseItems = cases.map { case ->
                     CaseItem(
-                        id = project.id,
-                        title = project.name ?: "Untitled Project",
-                        status = when (project.status) {
-                            "1" -> "Active"
-                            "2" -> "In Progress" 
-                            "3" -> "On Hold"
-                            "4" -> "Cancelled"
-                            "5" -> "Finished"
-                            else -> "Unknown"
-                        },
-                        lastUpdate = project.projectCreated ?: "Unknown",
-                        priority = "Normal" // Project model doesn't have priority field
+                        id = case.id,
+                        title = case.displayName,
+                        status = case.statusText,
+                        lastUpdate = case.updatedDate ?: case.createdDate ?: "Unknown",
+                        priority = case.priorityText
                     )
                 }
                 
-                SimpleApiResult.Success(cases)
+                SimpleApiResult.Success(caseItems)
             } else {
                 SimpleApiResult.Error("Failed to fetch cases: ${response.message()}")
             }
@@ -98,7 +83,7 @@ class SimpleRepository {
         }
     }
     
-    // Get invoice data from real API
+    // Get invoice data from Perfex CRM API
     suspend fun getInvoices(): SimpleApiResult<List<InvoiceItem>> {
         return try {
             val response = apiService.getInvoices()
@@ -133,6 +118,78 @@ class SimpleRepository {
             SimpleApiResult.Error("Failed to fetch invoices: ${e.message}")
         }
     }
+    
+    // Get documents data from Legal Practice Management API
+    suspend fun getDocuments(): SimpleApiResult<List<DocumentItem>> {
+        return try {
+            val response = apiService.getLegalDocuments()
+            
+            if (response.isSuccessful && response.body() != null) {
+                val documents = response.body()!!
+                
+                // Convert API documents to DocumentItem format
+                val documentItems = documents.map { document ->
+                    DocumentItem(
+                        id = document.id,
+                        name = document.name ?: "Unknown Document",
+                        description = document.description ?: "No description available",
+                        type = document.fileType ?: "unknown",
+                        uploadDate = document.createdDate ?: "Unknown date"
+                    )
+                }
+                
+                SimpleApiResult.Success(documentItems)
+            } else {
+                SimpleApiResult.Error("Failed to fetch documents: ${response.message()}")
+            }
+            
+        } catch (e: Exception) {
+            SimpleApiResult.Error("Failed to fetch documents: ${e.message}")
+        }
+    }
+    
+    // Get tickets data from Perfex CRM API
+    suspend fun getTickets(): SimpleApiResult<List<TicketItem>> {
+        return try {
+            val response = apiService.getTickets()
+            
+            if (response.isSuccessful && response.body() != null) {
+                val tickets = response.body()!!
+                
+                // Convert API tickets to TicketItem format
+                val ticketItems = tickets.map { ticket ->
+                    TicketItem(
+                        id = ticket.id,
+                        subject = ticket.subject ?: "No subject",
+                        description = ticket.message ?: "No description available",
+                        status = when (ticket.status) {
+                            "1" -> "Open"
+                            "2" -> "In Progress"
+                            "3" -> "Answered"
+                            "4" -> "On Hold"
+                            "5" -> "Closed"
+                            else -> "Unknown"
+                        },
+                        priority = when (ticket.priority) {
+                            "1" -> "Low"
+                            "2" -> "Medium"
+                            "3" -> "High"
+                            "4" -> "Urgent"
+                            else -> "Normal"
+                        },
+                        createdDate = ticket.date ?: "Unknown date"
+                    )
+                }
+                
+                SimpleApiResult.Success(ticketItems)
+            } else {
+                SimpleApiResult.Error("Failed to fetch tickets: ${response.message()}")
+            }
+            
+        } catch (e: Exception) {
+            SimpleApiResult.Error("Failed to fetch tickets: ${e.message}")
+        }
+    }
 }
 
 data class DashboardStats(
@@ -156,4 +213,21 @@ data class InvoiceItem(
     val status: String,
     val dueDate: String,
     val description: String
+)
+
+data class DocumentItem(
+    val id: String,
+    val name: String,
+    val description: String,
+    val type: String,
+    val uploadDate: String
+)
+
+data class TicketItem(
+    val id: String,
+    val subject: String,
+    val description: String,
+    val status: String,
+    val priority: String,
+    val createdDate: String
 )

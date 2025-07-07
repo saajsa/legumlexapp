@@ -14,6 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.legumlex.clientapp.screens.DashboardScreen
 import com.legumlex.clientapp.screens.LoginScreen
 import com.legumlex.clientapp.screens.CasesScreen
+import com.legumlex.clientapp.screens.DocumentsScreen
+import com.legumlex.clientapp.screens.InvoicesScreen
+import com.legumlex.clientapp.screens.TicketsScreen
 import com.legumlex.clientapp.di.AppContainer
 import com.legumlex.clientapp.navigation.Screen
 import com.legumlex.clientapp.ui.components.LegumLexBottomBar
@@ -86,15 +89,33 @@ fun MainAppContent(appContainer: AppContainer) {
             }
             
             composable(Screen.Documents.route) {
-                PlaceholderScreen("Documents")
+                val documentsViewModel = appContainer.createDocumentsViewModel()
+                DocumentsScreen(
+                    viewModel = documentsViewModel,
+                    onNavigateToDocumentDetail = { documentId ->
+                        navController.navigate(Screen.DocumentDetail.createRoute(documentId))
+                    }
+                )
             }
             
             composable(Screen.Invoices.route) {
-                PlaceholderScreen("Invoices")
+                val invoicesViewModel = appContainer.createInvoicesViewModel()
+                InvoicesScreen(
+                    viewModel = invoicesViewModel,
+                    onNavigateToInvoiceDetail = { invoiceId ->
+                        navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId))
+                    }
+                )
             }
             
             composable(Screen.Tickets.route) {
-                PlaceholderScreen("Support Tickets")
+                val ticketsViewModel = appContainer.createTicketsViewModel()
+                TicketsScreen(
+                    viewModel = ticketsViewModel,
+                    onNavigateToTicketDetail = { ticketId ->
+                        navController.navigate(Screen.TicketDetail.createRoute(ticketId))
+                    }
+                )
             }
             
             composable(Screen.CaseDetail.route) {

@@ -149,3 +149,141 @@ class SimpleCasesViewModel(private val repository: SimpleRepository) : ViewModel
         loadCases()
     }
 }
+
+// Simple Documents ViewModel
+class SimpleDocumentsViewModel(private val repository: SimpleRepository) : ViewModel() {
+    
+    private val _documents = MutableStateFlow<List<DocumentItem>>(emptyList())
+    val documents: StateFlow<List<DocumentItem>> = _documents
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+    
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+    
+    init {
+        loadDocuments()
+    }
+    
+    private fun loadDocuments() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            
+            try {
+                when (val result = repository.getDocuments()) {
+                    is SimpleApiResult.Success -> {
+                        _documents.value = result.data
+                    }
+                    is SimpleApiResult.Error -> {
+                        _error.value = result.message
+                    }
+                    is SimpleApiResult.Loading -> {
+                        // Already handled by _isLoading
+                    }
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load documents: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun refresh() {
+        loadDocuments()
+    }
+}
+
+// Simple Invoices ViewModel
+class SimpleInvoicesViewModel(private val repository: SimpleRepository) : ViewModel() {
+    
+    private val _invoices = MutableStateFlow<List<InvoiceItem>>(emptyList())
+    val invoices: StateFlow<List<InvoiceItem>> = _invoices
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+    
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+    
+    init {
+        loadInvoices()
+    }
+    
+    private fun loadInvoices() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            
+            try {
+                when (val result = repository.getInvoices()) {
+                    is SimpleApiResult.Success -> {
+                        _invoices.value = result.data
+                    }
+                    is SimpleApiResult.Error -> {
+                        _error.value = result.message
+                    }
+                    is SimpleApiResult.Loading -> {
+                        // Already handled by _isLoading
+                    }
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load invoices: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun refresh() {
+        loadInvoices()
+    }
+}
+
+// Simple Tickets ViewModel
+class SimpleTicketsViewModel(private val repository: SimpleRepository) : ViewModel() {
+    
+    private val _tickets = MutableStateFlow<List<TicketItem>>(emptyList())
+    val tickets: StateFlow<List<TicketItem>> = _tickets
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+    
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+    
+    init {
+        loadTickets()
+    }
+    
+    private fun loadTickets() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            
+            try {
+                when (val result = repository.getTickets()) {
+                    is SimpleApiResult.Success -> {
+                        _tickets.value = result.data
+                    }
+                    is SimpleApiResult.Error -> {
+                        _error.value = result.message
+                    }
+                    is SimpleApiResult.Loading -> {
+                        // Already handled by _isLoading
+                    }
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load tickets: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun refresh() {
+        loadTickets()
+    }
+}
