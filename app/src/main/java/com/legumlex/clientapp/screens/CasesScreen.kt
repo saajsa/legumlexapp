@@ -20,6 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
+import com.legumlex.clientapp.ui.components.LegumLexErrorSection
+import com.legumlex.clientapp.ui.components.LegumLexEmptyState
 import com.legumlex.clientapp.SimpleCasesViewModel
 import com.legumlex.clientapp.CaseItem
 
@@ -63,14 +65,18 @@ fun CasesScreen(
             }
             
             error != null -> {
-                ErrorSection(
+                LegumLexErrorSection(
                     error = error!!,
                     onRetry = { viewModel.refresh() }
                 )
             }
             
             cases.isEmpty() -> {
-                EmptyState()
+                LegumLexEmptyState(
+                    message = "No Cases Found",
+                    description = "You don't have any cases yet",
+                    icon = Icons.Default.Folder
+                )
             }
             
             else -> {
@@ -194,85 +200,4 @@ fun CaseItemCard(
     }
 }
 
-@Composable
-fun ErrorSection(
-    error: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Error,
-                    contentDescription = "Error",
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Failed to load cases",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Retry")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EmptyState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Folder,
-            contentDescription = "No Cases",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "No Cases Found",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "You don't have any cases yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-    }
-}
 

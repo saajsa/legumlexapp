@@ -20,7 +20,9 @@ fun LegumLexCard(
 ) {
     val elevationDp = when (elevation) {
         LegumLexCardElevation.None -> 0.dp
+        LegumLexCardElevation.Low -> 1.dp
         LegumLexCardElevation.Default -> 2.dp
+        LegumLexCardElevation.Medium -> 4.dp
         LegumLexCardElevation.High -> 8.dp // Similar to website box-shadow: 0 10px 20px rgba(52, 51, 82, 0.08)
     }
     
@@ -117,6 +119,8 @@ fun LegumLexInfoCard(
 
 enum class LegumLexCardElevation {
     None,
+    Low,
     Default,
+    Medium,
     High
 }

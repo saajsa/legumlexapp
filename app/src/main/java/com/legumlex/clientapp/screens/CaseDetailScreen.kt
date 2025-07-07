@@ -20,6 +20,10 @@ import com.legumlex.clientapp.models.LegalDocument
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
+import com.legumlex.clientapp.ui.components.LegumLexErrorSection
+import com.legumlex.clientapp.ui.components.LegumLexEmptyStateCard
+import com.legumlex.clientapp.ui.components.InfoItem
+import com.legumlex.clientapp.viewmodels.CaseDetailViewModel
 
 @Composable
 fun CaseDetailScreen(
@@ -82,7 +86,7 @@ fun CaseDetailScreen(
             }
             
             error != null -> {
-                ErrorSection(
+                LegumLexErrorSection(
                     error = error!!,
                     onRetry = { viewModel.loadCaseDetails(caseId) }
                 )
@@ -108,7 +112,7 @@ fun CaseDetailScreen(
                     
                     if (hearings.isEmpty()) {
                         item {
-                            EmptyStateCard(
+                            LegumLexEmptyStateCard(
                                 message = "No hearings scheduled",
                                 icon = Icons.Default.Gavel
                             )
@@ -133,7 +137,7 @@ fun CaseDetailScreen(
                     
                     if (documents.isEmpty()) {
                         item {
-                            EmptyStateCard(
+                            LegumLexEmptyStateCard(
                                 message = "No documents available",
                                 icon = Icons.Default.Description
                             )
@@ -372,103 +376,3 @@ private fun DocumentCard(
     }
 }
 
-@Composable
-private fun InfoItem(
-    label: String,
-    value: String
-) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Composable
-private fun EmptyStateCard(
-    message: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector
-) {
-    LegumLexCard(
-        elevation = LegumLexCardElevation.Low,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = message,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(48.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
-private fun ErrorSection(
-    error: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Error,
-                    contentDescription = "Error",
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Failed to load case details",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Retry")
-                }
-            }
-        }
-    }
-}

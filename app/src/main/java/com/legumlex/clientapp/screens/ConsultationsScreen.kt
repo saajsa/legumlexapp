@@ -20,6 +20,8 @@ import com.legumlex.clientapp.models.Consultation
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
+import com.legumlex.clientapp.ui.components.LegumLexErrorSection
+import com.legumlex.clientapp.ui.components.LegumLexEmptyState
 import com.legumlex.clientapp.viewmodels.ConsultationsViewModel
 
 @Composable
@@ -78,14 +80,18 @@ fun ConsultationsScreen(
             }
             
             error != null -> {
-                ErrorSection(
+                LegumLexErrorSection(
                     error = error!!,
                     onRetry = { viewModel.refresh() }
                 )
             }
             
             consultations.isEmpty() -> {
-                EmptyState()
+                LegumLexEmptyState(
+                    message = "No Consultations Found",
+                    description = "You don't have any consultations yet",
+                    icon = Icons.Default.EventNote
+                )
             }
             
             else -> {
@@ -274,82 +280,3 @@ fun ConsultationItemCard(
     }
 }
 
-@Composable
-fun ErrorSection(
-    error: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Error,
-                    contentDescription = "Error",
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Failed to load consultations",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Retry")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EmptyState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.EventNote,
-            contentDescription = "No Consultations",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "No Consultations Found",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "You don't have any consultations yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}

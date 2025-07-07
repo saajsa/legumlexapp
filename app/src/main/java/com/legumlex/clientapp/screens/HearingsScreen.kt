@@ -20,6 +20,8 @@ import com.legumlex.clientapp.models.Hearing
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
+import com.legumlex.clientapp.ui.components.LegumLexErrorSection
+import com.legumlex.clientapp.ui.components.LegumLexEmptyState
 import com.legumlex.clientapp.viewmodels.HearingsViewModel
 
 @Composable
@@ -105,7 +107,7 @@ fun HearingsScreen(
             }
             
             error != null -> {
-                ErrorSection(
+                LegumLexErrorSection(
                     error = error!!,
                     onRetry = { viewModel.refresh() }
                 )
@@ -115,7 +117,14 @@ fun HearingsScreen(
                 val hearingsToShow = if (showUpcomingOnly) upcomingHearings else hearings
                 
                 if (hearingsToShow.isEmpty()) {
-                    EmptyState(showUpcomingOnly = showUpcomingOnly)
+                    LegumLexEmptyState(
+                        message = if (showUpcomingOnly) "No Upcoming Hearings" else "No Hearings Found",
+                        description = if (showUpcomingOnly) 
+                            "You don't have any upcoming hearings scheduled" 
+                        else 
+                            "You don't have any hearings yet",
+                        icon = Icons.Default.Gavel
+                    )
                 } else {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -327,85 +336,3 @@ fun HearingItemCard(
     }
 }
 
-@Composable
-fun ErrorSection(
-    error: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Error,
-                    contentDescription = "Error",
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Failed to load hearings",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onRetry,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Retry")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EmptyState(showUpcomingOnly: Boolean) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Gavel,
-            contentDescription = "No Hearings",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = if (showUpcomingOnly) "No Upcoming Hearings" else "No Hearings Found",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = if (showUpcomingOnly) 
-                "You don't have any upcoming hearings scheduled" 
-            else 
-                "You don't have any hearings yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}

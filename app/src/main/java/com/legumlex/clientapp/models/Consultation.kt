@@ -101,4 +101,20 @@ data class Consultation(
     
     val displayName: String
         get() = if (tag.isNullOrBlank()) "Consultation #$id" else "$tag - Consultation"
+    
+    val phaseText: String
+        get() = when (status) {
+            "3" -> "Completed"
+            "5" -> "Litigation Phase"
+            else -> "Consultation Phase"
+        }
+    
+    val isInLitigation: Boolean
+        get() = status == "5"
+    
+    val canBeUpgraded: Boolean
+        get() = isCompleted && status != "5"
+    
+    val dateScheduled: String?
+        get() = scheduledDate
 }
