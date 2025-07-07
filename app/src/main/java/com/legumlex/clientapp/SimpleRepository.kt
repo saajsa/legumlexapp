@@ -19,30 +19,39 @@ class SimpleRepository {
             // Make real API calls to Perfex CRM
             val projectsResponse = apiService.getProjects()
             val invoicesResponse = apiService.getInvoices()
-            val ticketsResponse = apiService.getTickets()
             
-            // Check if all calls were successful
-            if (projectsResponse.isSuccessful && invoicesResponse.isSuccessful && ticketsResponse.isSuccessful) {
+            // Check if core calls were successful (tickets optional)
+            if (projectsResponse.isSuccessful && invoicesResponse.isSuccessful) {
                 
                 val projects = projectsResponse.body() ?: emptyList()
                 val invoices = invoicesResponse.body() ?: emptyList()
-                val tickets = ticketsResponse.body() ?: emptyList()
+                
+                // Try to get tickets, but don't fail if endpoint doesn't exist
+                var openTickets = 0
+                try {
+                    val ticketsResponse = apiService.getTickets()
+                    if (ticketsResponse.isSuccessful) {
+                        val tickets = ticketsResponse.body() ?: emptyList()
+                        openTickets = tickets.count { it.status == "open" || it.status == "1" }
+                    }
+                } catch (e: Exception) {
+                    // Tickets endpoint not available - that's okay
+                }
                 
                 // Calculate real statistics from API data
                 val stats = DashboardStats(
                     activeCases = projects.size, // All projects for the client
                     unpaidInvoices = invoices.count { it.status == "unpaid" || it.status == "1" },
                     totalDocuments = 0, // Will need separate documents API call
-                    openTickets = tickets.count { it.status == "open" || it.status == "1" }
+                    openTickets = openTickets
                 )
                 
                 SimpleApiResult.Success(stats)
             } else {
-                // If any API call fails, return error with details
+                // If core API calls fail, return error with details
                 val errorMessage = when {
                     !projectsResponse.isSuccessful -> "Failed to fetch projects: ${projectsResponse.message()}"
                     !invoicesResponse.isSuccessful -> "Failed to fetch invoices: ${invoicesResponse.message()}"
-                    !ticketsResponse.isSuccessful -> "Failed to fetch tickets: ${ticketsResponse.message()}"
                     else -> "Failed to fetch dashboard data"
                 }
                 SimpleApiResult.Error(errorMessage)
