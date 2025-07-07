@@ -6,15 +6,10 @@ import retrofit2.http.*
 
 interface PerfexApiService {
     
-    // Perfex CRM doesn't have a separate auth endpoint - authentication is done via API token in headers
-    // The API token should be obtained from Perfex CRM admin panel: Setup > API > API Management
+    // Perfex CRM API Endpoints (as per official API manual)
+    // Authentication is done via authtoken header (configured in ApiClient)
     
-    // Get current customer/client info (acts as auth verification)
-    @GET("customers/profile")
-    suspend fun getCurrentCustomer(): Response<User>
-    
-    // Dashboard Statistics - Real Perfex CRM endpoints
-    // Perfex API returns direct arrays, not wrapped objects
+    // Core Perfex CRM endpoints
     @GET("customers")
     suspend fun getCustomers(): Response<List<User>>
     
@@ -62,22 +57,57 @@ interface PerfexApiService {
     suspend fun getPayment(@Path("id") id: String): Response<Payment>
 }
 
-// Perfex CRM API Response wrapper
-data class ApiListResponse<T>(
-    val data: List<T>? = null,
-    val success: Boolean = false,
-    val message: String? = null,
-    val total: Int? = null
+// Backend API Request/Response Models
+data class LoginRequest(
+    val email: String,
+    val password: String
 )
 
-data class ApiSingleResponse<T>(
-    val data: T? = null,
-    val success: Boolean = false,
+data class AuthResponse(
+    val success: Boolean,
+    val message: String,
+    val token: String? = null,
+    val client: ClientInfo? = null
+)
+
+data class ClientInfo(
+    val id: String,
+    val name: String,
+    val email: String
+)
+
+data class ApiResponse(
+    val success: Boolean,
+    val message: String
+)
+
+data class DashboardStatsResponse(
+    val success: Boolean,
+    val data: DashboardStatsData? = null,
     val message: String? = null
 )
 
-data class ApiError(
-    val message: String,
-    val success: Boolean = false,
-    val code: Int? = null
+data class DashboardStatsData(
+    val activeCases: Int,
+    val unpaidInvoices: Int,
+    val totalDocuments: Int,
+    val openTickets: Int
+)
+
+data class ProjectsResponse(
+    val success: Boolean,
+    val data: List<Project>? = null,
+    val message: String? = null
+)
+
+data class InvoicesResponse(
+    val success: Boolean,
+    val data: List<Invoice>? = null,
+    val message: String? = null
+)
+
+data class TicketsResponse(
+    val success: Boolean,
+    val data: List<Ticket>? = null,
+    val message: String? = null
 )

@@ -1,10 +1,10 @@
 package com.legumlex.clientapp.utils
 
 object ApiConfig {
-    // Perfex CRM API Configuration
-    const val BASE_URL = "https://legumlex.com/accs/api/"
+    // Perfex CRM API Configuration (Direct API - as per API manual)
+    const val BASE_URL = "https://www.legumlex.com/accs/api/"
     
-    // Your Perfex CRM API Token
+    // Perfex CRM API Token (from Setup > API > API Management)
     const val API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiIiwibmFtZSI6IiIsIkFQSV9USU1FIjoxNzUxNzg4MzA1fQ.3Yjs0Pr86OUVEFNb1VN1eGIlKtV2yQ9Nn_o9kTNHGiI"
     
     // Request timeout in seconds
