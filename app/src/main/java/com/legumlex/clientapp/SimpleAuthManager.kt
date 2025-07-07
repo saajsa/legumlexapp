@@ -7,6 +7,9 @@ import com.legumlex.clientapp.services.TokenManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SimpleAuthManager(private val context: Context) {
     
@@ -25,7 +28,7 @@ class SimpleAuthManager(private val context: Context) {
     }
     
     private fun checkAuthStatus() {
-        kotlinx.coroutines.GlobalScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val isLoggedIn = tokenManager.isLoggedIn().first()
             _isLoggedIn.value = isLoggedIn
         }
