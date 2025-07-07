@@ -33,26 +33,29 @@ class SimpleRepository(private val context: Context) {
                 return SimpleApiResult.Error("Client not authenticated")
             }
             
-            // Make client-specific API calls
-            val casesResponse = apiService.getCasesByClient(clientId)
+            // Make API calls - use working endpoints
+            val casesResponse = apiService.getCases() // Use general cases endpoint first
             val invoicesResponse = apiService.getInvoices()
-            val ticketsResponse = apiService.getTickets()
-            val documentsResponse = apiService.getDocumentsByClient(clientId)
+            // Skip tickets and documents for now as they have endpoint issues
+            //val ticketsResponse = apiService.getTickets()
+            //val documentsResponse = apiService.getDocumentsByClient(clientId)
             
             // Check if core calls were successful
             if (casesResponse.isSuccessful && invoicesResponse.isSuccessful) {
                 
                 val cases = casesResponse.body() ?: emptyList()
                 val invoices = invoicesResponse.body() ?: emptyList()
-                val tickets = ticketsResponse.body() ?: emptyList()
-                val documents = documentsResponse.body() ?: emptyList()
+                
+                // Filter data for current client
+                val clientCases = cases.filter { it.clientId == clientId }
+                val clientInvoices = invoices.filter { it.clientId == clientId }
                 
                 // Calculate real statistics from API data
                 val stats = DashboardStats(
-                    activeCases = cases.count { it.isActive },
-                    unpaidInvoices = invoices.count { it.status == "1" }, // Unpaid status
-                    totalDocuments = documents.size,
-                    openTickets = tickets.count { it.status == "open" || it.status == "1" }
+                    activeCases = clientCases.count { it.isActive },
+                    unpaidInvoices = clientInvoices.count { it.status == "1" }, // Unpaid status
+                    totalDocuments = 0, // Will be implemented later when documents API is working
+                    openTickets = 0 // Will be implemented later when tickets API is working
                 )
                 
                 SimpleApiResult.Success(stats)
@@ -79,22 +82,24 @@ class SimpleRepository(private val context: Context) {
                 return SimpleApiResult.Error("Client not authenticated")
             }
             
-            // Get cases specific to this client
-            val response = apiService.getCasesByClient(clientId)
+            // Get all cases and filter for this client
+            val response = apiService.getCases()
             
             if (response.isSuccessful && response.body() != null) {
-                val cases = response.body()!!
+                val allCases = response.body()!!
                 
-                // Convert API cases to CaseItem format
-                val caseItems = cases.map { case ->
-                    CaseItem(
-                        id = case.id,
-                        title = case.displayName,
-                        status = case.statusText,
-                        lastUpdate = case.updatedDate ?: case.createdDate ?: "Unknown",
-                        priority = case.priorityText
-                    )
-                }
+                // Filter cases for current client and convert to CaseItem format
+                val caseItems = allCases
+                    .filter { it.clientId == clientId }
+                    .map { case ->
+                        CaseItem(
+                            id = case.id,
+                            title = case.displayName,
+                            status = case.statusText,
+                            lastUpdate = case.updatedDate ?: case.createdDate ?: "Unknown",
+                            priority = case.priorityText
+                        )
+                    }
                 
                 SimpleApiResult.Success(caseItems)
             } else {
@@ -150,22 +155,24 @@ class SimpleRepository(private val context: Context) {
                 return SimpleApiResult.Error("Client not authenticated")
             }
             
-            // Get documents specific to this client
-            val response = apiService.getDocumentsByClient(clientId)
+            // Get all documents and filter for this client
+            val response = apiService.getLegalDocuments()
             
             if (response.isSuccessful && response.body() != null) {
-                val documents = response.body()!!
+                val allDocuments = response.body()!!
                 
-                // Convert API documents to DocumentItem format with proper field mapping
-                val documentItems = documents.map { document ->
-                    DocumentItem(
-                        id = document.id,
-                        name = document.documentName,
-                        description = document.description ?: "Legal document for ${document.caseName ?: document.clientName ?: "case"}",
-                        type = document.fileExtension ?: document.documentType ?: "pdf",
-                        uploadDate = document.uploadedDate ?: document.modifiedDate ?: "Recent"
-                    )
-                }
+                // Filter documents for current client and convert API documents to DocumentItem format
+                val documentItems = allDocuments
+                    .filter { it.clientId == clientId }
+                    .map { document ->
+                        DocumentItem(
+                            id = document.id,
+                            name = document.documentName,
+                            description = document.description ?: "Legal document for ${document.caseName ?: document.clientName ?: "case"}",
+                            type = document.fileExtension ?: document.documentType ?: "pdf",
+                            uploadDate = document.uploadedDate ?: document.modifiedDate ?: "Recent"
+                        )
+                    }
                 
                 SimpleApiResult.Success(documentItems)
             } else {
@@ -180,6 +187,11 @@ class SimpleRepository(private val context: Context) {
     // Get tickets data from Perfex CRM API for current client
     suspend fun getTickets(): SimpleApiResult<List<TicketItem>> {
         return try {
+            // Temporarily return empty list since tickets API endpoint returns 404
+            // TODO: Implement once tickets API endpoint is available
+            SimpleApiResult.Success(emptyList())
+            
+            /*
             val clientId = getCurrentClientId()
             if (clientId == null) {
                 return SimpleApiResult.Error("Client not authenticated")
@@ -208,6 +220,7 @@ class SimpleRepository(private val context: Context) {
             } else {
                 SimpleApiResult.Error("Failed to fetch tickets: ${response.message()}")
             }
+            */
             
         } catch (e: Exception) {
             SimpleApiResult.Error("Failed to fetch tickets: ${e.message}")

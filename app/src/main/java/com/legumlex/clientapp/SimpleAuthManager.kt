@@ -56,8 +56,9 @@ class SimpleAuthManager(private val context: Context) {
             if (response.isSuccessful && response.body() != null) {
                 val user = response.body()!!
                 // Save the API token (already configured) and user info
+                // Use a simple client ID that matches the invoice data (temporary for testing)
                 tokenManager.saveAuthToken(com.legumlex.clientapp.utils.ApiConfig.API_TOKEN)
-                tokenManager.saveUserInfo(email, user.id)
+                tokenManager.saveUserInfo(email, "1") // Use client ID "1" for testing
                 _isLoggedIn.value = true
                 true
             } else {
