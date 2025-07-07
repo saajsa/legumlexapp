@@ -8,9 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.legumlex.clientapp.screens.DashboardScreen
 import com.legumlex.clientapp.screens.LoginScreen
 import com.legumlex.clientapp.di.AppContainer
+import com.legumlex.clientapp.navigation.Screen
+import com.legumlex.clientapp.ui.components.LegumLexBottomBar
 
 @Composable
 fun LegumLexApp(appContainer: AppContainer) {
@@ -18,17 +23,8 @@ fun LegumLexApp(appContainer: AppContainer) {
     val isLoggedIn by authManager.isLoggedIn.collectAsStateWithLifecycle()
     
     if (isLoggedIn) {
-        // Main app content
-        val dashboardViewModel = appContainer.createDashboardViewModel()
-        DashboardScreen(
-            viewModel = dashboardViewModel,
-            onNavigateToCases = { /* TODO */ },
-            onNavigateToDocuments = { /* TODO */ },
-            onNavigateToInvoices = { /* TODO */ },
-            onNavigateToTickets = { /* TODO */ },
-            onNavigateToCaseDetail = { /* TODO */ },
-            onNavigateToInvoiceDetail = { /* TODO */ }
-        )
+        // Main app content with navigation
+        MainAppContent(appContainer = appContainer)
     } else {
         // Login screen
         val loginViewModel = appContainer.createLoginViewModel()
@@ -36,6 +32,72 @@ fun LegumLexApp(appContainer: AppContainer) {
             viewModel = loginViewModel,
             onNavigateToMain = { /* Navigation handled by auth state */ }
         )
+    }
+}
+
+@Composable
+fun MainAppContent(appContainer: AppContainer) {
+    val navController = rememberNavController()
+    
+    Scaffold(
+        bottomBar = {
+            LegumLexBottomBar(navController = navController)
+        }
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Dashboard.route,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            composable(Screen.Dashboard.route) {
+                val dashboardViewModel = appContainer.createDashboardViewModel()
+                DashboardScreen(
+                    viewModel = dashboardViewModel,
+                    onNavigateToCases = { 
+                        navController.navigate(Screen.Cases.route) 
+                    },
+                    onNavigateToDocuments = { 
+                        navController.navigate(Screen.Documents.route) 
+                    },
+                    onNavigateToInvoices = { 
+                        navController.navigate(Screen.Invoices.route) 
+                    },
+                    onNavigateToTickets = { 
+                        navController.navigate(Screen.Tickets.route) 
+                    },
+                    onNavigateToCaseDetail = { caseId ->
+                        navController.navigate(Screen.CaseDetail.createRoute(caseId))
+                    },
+                    onNavigateToInvoiceDetail = { invoiceId ->
+                        navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId))
+                    }
+                )
+            }
+            
+            composable(Screen.Cases.route) {
+                PlaceholderScreen("Cases")
+            }
+            
+            composable(Screen.Documents.route) {
+                PlaceholderScreen("Documents")
+            }
+            
+            composable(Screen.Invoices.route) {
+                PlaceholderScreen("Invoices")
+            }
+            
+            composable(Screen.Tickets.route) {
+                PlaceholderScreen("Support Tickets")
+            }
+            
+            composable(Screen.CaseDetail.route) {
+                PlaceholderScreen("Case Details")
+            }
+            
+            composable(Screen.InvoiceDetail.route) {
+                PlaceholderScreen("Invoice Details")
+            }
+        }
     }
 }
 
