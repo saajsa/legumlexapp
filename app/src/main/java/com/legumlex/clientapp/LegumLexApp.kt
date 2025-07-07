@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.legumlex.clientapp.screens.DashboardScreen
 import com.legumlex.clientapp.screens.LoginScreen
+import com.legumlex.clientapp.screens.CasesScreen
 import com.legumlex.clientapp.di.AppContainer
 import com.legumlex.clientapp.navigation.Screen
 import com.legumlex.clientapp.ui.components.LegumLexBottomBar
@@ -75,7 +76,13 @@ fun MainAppContent(appContainer: AppContainer) {
             }
             
             composable(Screen.Cases.route) {
-                PlaceholderScreen("Cases")
+                val casesViewModel = appContainer.createCasesViewModel()
+                CasesScreen(
+                    viewModel = casesViewModel,
+                    onNavigateToCaseDetail = { caseId ->
+                        navController.navigate(Screen.CaseDetail.createRoute(caseId))
+                    }
+                )
             }
             
             composable(Screen.Documents.route) {

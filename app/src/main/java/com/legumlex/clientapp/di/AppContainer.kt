@@ -5,6 +5,7 @@ import com.legumlex.clientapp.SimpleAuthManager
 import com.legumlex.clientapp.SimpleRepository
 import com.legumlex.clientapp.SimpleLoginViewModel
 import com.legumlex.clientapp.SimpleDashboardViewModel
+import com.legumlex.clientapp.SimpleCasesViewModel
 
 class AppContainer(private val context: Context) {
     
@@ -24,5 +25,9 @@ class AppContainer(private val context: Context) {
     
     fun createDashboardViewModel(): SimpleDashboardViewModel {
         return SimpleDashboardViewModel(repository)
+    }
+    
+    fun createCasesViewModel(): SimpleCasesViewModel {
+        return SimpleCasesViewModel(repository)
     }
 }

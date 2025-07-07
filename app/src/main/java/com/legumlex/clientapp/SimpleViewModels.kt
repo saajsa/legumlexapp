@@ -103,3 +103,49 @@ class SimpleDashboardViewModel(private val repository: SimpleRepository) : ViewM
         loadStats()
     }
 }
+
+// Simple Cases ViewModel
+class SimpleCasesViewModel(private val repository: SimpleRepository) : ViewModel() {
+    
+    private val _cases = MutableStateFlow<List<CaseItem>>(emptyList())
+    val cases: StateFlow<List<CaseItem>> = _cases
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+    
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+    
+    init {
+        loadCases()
+    }
+    
+    private fun loadCases() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            
+            try {
+                when (val result = repository.getCases()) {
+                    is SimpleApiResult.Success -> {
+                        _cases.value = result.data
+                    }
+                    is SimpleApiResult.Error -> {
+                        _error.value = result.message
+                    }
+                    is SimpleApiResult.Loading -> {
+                        // Already handled by _isLoading
+                    }
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load cases: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun refresh() {
+        loadCases()
+    }
+}
