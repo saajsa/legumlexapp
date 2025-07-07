@@ -2,7 +2,6 @@ package com.legumlex.clientapp
 
 import android.content.Context
 import com.legumlex.clientapp.services.ApiClient
-import com.legumlex.clientapp.services.LoginRequest
 import com.legumlex.clientapp.services.TokenManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -74,14 +74,8 @@ class SimpleRepository {
                             "5" -> "Finished"
                             else -> "Unknown"
                         },
-                        lastUpdate = project.dateCreated ?: "Unknown",
-                        priority = when (project.priority) {
-                            "1" -> "Low"
-                            "2" -> "Medium"
-                            "3" -> "High"
-                            "4" -> "Urgent"
-                            else -> "Normal"
-                        }
+                        lastUpdate = project.projectCreated ?: "Unknown",
+                        priority = "Normal" // Project model doesn't have priority field
                     )
                 }
                 
