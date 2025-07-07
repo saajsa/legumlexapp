@@ -19,6 +19,7 @@ import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
+import com.legumlex.clientapp.ui.components.PriorityChip
 import com.legumlex.clientapp.SimpleTicketsViewModel
 import com.legumlex.clientapp.TicketItem
 
@@ -204,21 +205,7 @@ private fun TicketCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     
                     StatusChip(
-                        text = ticket.status,
-                        containerColor = when (ticket.status.lowercase()) {
-                            "open" -> MaterialTheme.colorScheme.errorContainer
-                            "closed" -> MaterialTheme.colorScheme.primaryContainer
-                            "in progress" -> MaterialTheme.colorScheme.tertiaryContainer
-                            "resolved" -> MaterialTheme.colorScheme.surfaceVariant
-                            else -> MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        contentColor = when (ticket.status.lowercase()) {
-                            "open" -> MaterialTheme.colorScheme.onErrorContainer
-                            "closed" -> MaterialTheme.colorScheme.onPrimaryContainer
-                            "in progress" -> MaterialTheme.colorScheme.onTertiaryContainer
-                            "resolved" -> MaterialTheme.colorScheme.onSurfaceVariant
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant
-                        }
+                        status = ticket.status
                     )
                 }
                 
@@ -245,28 +232,9 @@ private fun TicketCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = when (ticket.priority.lowercase()) {
-                                "high", "urgent" -> MaterialTheme.colorScheme.errorContainer
-                                "medium" -> MaterialTheme.colorScheme.tertiaryContainer
-                                else -> MaterialTheme.colorScheme.surfaceVariant
-                            }
-                        )
-                    ) {
-                        Text(
-                            text = "${ticket.priority} Priority",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.W600
-                            ),
-                            color = when (ticket.priority.lowercase()) {
-                                "high", "urgent" -> MaterialTheme.colorScheme.onErrorContainer
-                                "medium" -> MaterialTheme.colorScheme.onTertiaryContainer
-                                else -> MaterialTheme.colorScheme.onSurfaceVariant
-                            },
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
+                    PriorityChip(
+                        priority = ticket.priority
+                    )
                 }
             }
             

@@ -118,9 +118,3 @@ interface LegalApiService {
     @GET("files/{id}")
     suspend fun getFile(@Path("id") id: String): Response<Document>
 }
-
-// Simple response wrapper for API errors
-data class ApiError(
-    val message: String,
-    val code: Int? = null
-)

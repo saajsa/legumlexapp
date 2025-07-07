@@ -131,10 +131,10 @@ class SimpleRepository {
                 val documentItems = documents.map { document ->
                     DocumentItem(
                         id = document.id,
-                        name = document.name ?: "Unknown Document",
+                        name = document.documentName ?: "Unknown Document",
                         description = document.description ?: "No description available",
-                        type = document.fileType ?: "unknown",
-                        uploadDate = document.createdDate ?: "Unknown date"
+                        type = document.fileExtension ?: "unknown",
+                        uploadDate = document.uploadedDate ?: "Unknown date"
                     )
                 }
                 

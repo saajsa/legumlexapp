@@ -218,21 +218,7 @@ private fun InvoiceCard(
                     )
                     
                     StatusChip(
-                        text = invoice.status,
-                        containerColor = when (invoice.status.lowercase()) {
-                            "paid" -> MaterialTheme.colorScheme.primaryContainer
-                            "unpaid" -> MaterialTheme.colorScheme.errorContainer
-                            "overdue" -> MaterialTheme.colorScheme.error
-                            "partially paid" -> MaterialTheme.colorScheme.tertiaryContainer
-                            else -> MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        contentColor = when (invoice.status.lowercase()) {
-                            "paid" -> MaterialTheme.colorScheme.onPrimaryContainer
-                            "unpaid" -> MaterialTheme.colorScheme.onErrorContainer
-                            "overdue" -> MaterialTheme.colorScheme.onError
-                            "partially paid" -> MaterialTheme.colorScheme.onTertiaryContainer
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant
-                        }
+                        status = invoice.status
                     )
                 }
             }

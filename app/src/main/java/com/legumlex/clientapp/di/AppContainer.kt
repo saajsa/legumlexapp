@@ -6,6 +6,9 @@ import com.legumlex.clientapp.SimpleRepository
 import com.legumlex.clientapp.SimpleLoginViewModel
 import com.legumlex.clientapp.SimpleDashboardViewModel
 import com.legumlex.clientapp.SimpleCasesViewModel
+import com.legumlex.clientapp.SimpleDocumentsViewModel
+import com.legumlex.clientapp.SimpleInvoicesViewModel
+import com.legumlex.clientapp.SimpleTicketsViewModel
 
 class AppContainer(private val context: Context) {
     
