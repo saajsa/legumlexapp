@@ -18,7 +18,7 @@ class AppContainer(private val context: Context) {
     }
     
     val repository: SimpleRepository by lazy {
-        SimpleRepository()
+        SimpleRepository(context)
     }
     
     // ViewModels

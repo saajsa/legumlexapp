@@ -1,7 +1,10 @@
 package com.legumlex.clientapp
 
+import android.content.Context
 import com.legumlex.clientapp.services.ApiClient
+import com.legumlex.clientapp.services.TokenManager
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 sealed class SimpleApiResult<out T> {
     data class Success<out T>(val data: T) : SimpleApiResult<T>()
@@ -9,18 +12,32 @@ sealed class SimpleApiResult<out T> {
     object Loading : SimpleApiResult<Nothing>()
 }
 
-class SimpleRepository {
+class SimpleRepository(private val context: Context) {
     
     private val apiService = ApiClient.getInstance()
+    private val tokenManager = TokenManager(context)
     
-    // Get dashboard statistics using both Perfex CRM and Legal Practice Management API
+    private suspend fun getCurrentClientId(): String? {
+        return try {
+            tokenManager.getUserId().first()
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
+    // Get dashboard statistics using client-specific data
     suspend fun getDashboardStats(): SimpleApiResult<DashboardStats> {
         return try {
-            // Make API calls to both Perfex CRM and Legal Practice Management API
-            val casesResponse = apiService.getCases()
+            val clientId = getCurrentClientId()
+            if (clientId == null) {
+                return SimpleApiResult.Error("Client not authenticated")
+            }
+            
+            // Make client-specific API calls
+            val casesResponse = apiService.getCasesByClient(clientId)
             val invoicesResponse = apiService.getInvoices()
             val ticketsResponse = apiService.getTickets()
-            val documentsResponse = apiService.getLegalDocuments()
+            val documentsResponse = apiService.getDocumentsByClient(clientId)
             
             // Check if core calls were successful
             if (casesResponse.isSuccessful && invoicesResponse.isSuccessful) {
@@ -54,10 +71,16 @@ class SimpleRepository {
         }
     }
     
-    // Get detailed case data from Legal Practice Management API
+    // Get detailed case data from Legal Practice Management API for current client
     suspend fun getCases(): SimpleApiResult<List<CaseItem>> {
         return try {
-            val response = apiService.getCases()
+            val clientId = getCurrentClientId()
+            if (clientId == null) {
+                return SimpleApiResult.Error("Client not authenticated")
+            }
+            
+            // Get cases specific to this client
+            val response = apiService.getCasesByClient(clientId)
             
             if (response.isSuccessful && response.body() != null) {
                 val cases = response.body()!!
@@ -83,31 +106,31 @@ class SimpleRepository {
         }
     }
     
-    // Get invoice data from Perfex CRM API
+    // Get invoice data from Perfex CRM API for current client
     suspend fun getInvoices(): SimpleApiResult<List<InvoiceItem>> {
         return try {
+            val clientId = getCurrentClientId()
+            if (clientId == null) {
+                return SimpleApiResult.Error("Client not authenticated")
+            }
+            
             val response = apiService.getInvoices()
             
             if (response.isSuccessful && response.body() != null) {
-                val invoices = response.body()!!
+                val allInvoices = response.body()!!
                 
-                // Convert API invoices to InvoiceItem format
-                val invoiceItems = invoices.map { invoice ->
-                    InvoiceItem(
-                        id = invoice.number ?: invoice.id,
-                        amount = "$${invoice.total ?: "0.00"}",
-                        status = when (invoice.status) {
-                            "1" -> "Unpaid"
-                            "2" -> "Paid"
-                            "3" -> "Partially Paid"
-                            "4" -> "Overdue"
-                            "5" -> "Cancelled"
-                            else -> "Unknown"
-                        },
-                        dueDate = invoice.dueDate ?: "No due date",
-                        description = "Invoice #${invoice.number ?: invoice.id}"
-                    )
-                }
+                // Filter invoices for current client and convert to InvoiceItem format
+                val invoiceItems = allInvoices
+                    .filter { it.clientId == clientId }
+                    .map { invoice ->
+                        InvoiceItem(
+                            id = invoice.formattedNumber,
+                            amount = "${invoice.currency ?: "$"}${invoice.total}",
+                            status = invoice.statusText,
+                            dueDate = invoice.dueDate ?: "No due date",
+                            description = "Invoice ${invoice.formattedNumber} - ${invoice.clientNote ?: "Legal Services"}"
+                        )
+                    }
                 
                 SimpleApiResult.Success(invoiceItems)
             } else {
@@ -119,22 +142,28 @@ class SimpleRepository {
         }
     }
     
-    // Get documents data from Legal Practice Management API
+    // Get documents data from Legal Practice Management API for current client
     suspend fun getDocuments(): SimpleApiResult<List<DocumentItem>> {
         return try {
-            val response = apiService.getLegalDocuments()
+            val clientId = getCurrentClientId()
+            if (clientId == null) {
+                return SimpleApiResult.Error("Client not authenticated")
+            }
+            
+            // Get documents specific to this client
+            val response = apiService.getDocumentsByClient(clientId)
             
             if (response.isSuccessful && response.body() != null) {
                 val documents = response.body()!!
                 
-                // Convert API documents to DocumentItem format
+                // Convert API documents to DocumentItem format with proper field mapping
                 val documentItems = documents.map { document ->
                     DocumentItem(
                         id = document.id,
-                        name = document.documentName ?: "Unknown Document",
-                        description = document.description ?: "No description available",
-                        type = document.fileExtension ?: "unknown",
-                        uploadDate = document.uploadedDate ?: "Unknown date"
+                        name = document.documentName,
+                        description = document.description ?: "Legal document for ${document.caseName ?: document.clientName ?: "case"}",
+                        type = document.fileExtension ?: document.documentType ?: "pdf",
+                        uploadDate = document.uploadedDate ?: document.modifiedDate ?: "Recent"
                     )
                 }
                 
@@ -148,38 +177,32 @@ class SimpleRepository {
         }
     }
     
-    // Get tickets data from Perfex CRM API
+    // Get tickets data from Perfex CRM API for current client
     suspend fun getTickets(): SimpleApiResult<List<TicketItem>> {
         return try {
+            val clientId = getCurrentClientId()
+            if (clientId == null) {
+                return SimpleApiResult.Error("Client not authenticated")
+            }
+            
             val response = apiService.getTickets()
             
             if (response.isSuccessful && response.body() != null) {
-                val tickets = response.body()!!
+                val allTickets = response.body()!!
                 
-                // Convert API tickets to TicketItem format
-                val ticketItems = tickets.map { ticket ->
-                    TicketItem(
-                        id = ticket.id,
-                        subject = ticket.subject ?: "No subject",
-                        description = ticket.message ?: "No description available",
-                        status = when (ticket.status) {
-                            "1" -> "Open"
-                            "2" -> "In Progress"
-                            "3" -> "Answered"
-                            "4" -> "On Hold"
-                            "5" -> "Closed"
-                            else -> "Unknown"
-                        },
-                        priority = when (ticket.priority) {
-                            "1" -> "Low"
-                            "2" -> "Medium"
-                            "3" -> "High"
-                            "4" -> "Urgent"
-                            else -> "Normal"
-                        },
-                        createdDate = ticket.date ?: "Unknown date"
-                    )
-                }
+                // Filter tickets for current client and convert API tickets to TicketItem format
+                val ticketItems = allTickets
+                    .filter { it.userId == clientId || it.contactId == clientId }
+                    .map { ticket ->
+                        TicketItem(
+                            id = ticket.id,
+                            subject = ticket.subject,
+                            description = ticket.message ?: "Support ticket regarding legal services",
+                            status = ticket.statusText,
+                            priority = ticket.priorityText,
+                            createdDate = ticket.date
+                        )
+                    }
                 
                 SimpleApiResult.Success(ticketItems)
             } else {
