@@ -14,9 +14,15 @@ import androidx.navigation.compose.rememberNavController
 import com.legumlex.clientapp.screens.DashboardScreen
 import com.legumlex.clientapp.screens.LoginScreen
 import com.legumlex.clientapp.screens.CasesScreen
+import com.legumlex.clientapp.screens.CaseDetailScreen
+import com.legumlex.clientapp.screens.ConsultationsScreen
+import com.legumlex.clientapp.screens.HearingsScreen
 import com.legumlex.clientapp.screens.DocumentsScreen
 import com.legumlex.clientapp.screens.InvoicesScreen
 import com.legumlex.clientapp.screens.TicketsScreen
+import com.legumlex.clientapp.viewmodels.CaseDetailViewModel
+import com.legumlex.clientapp.viewmodels.ConsultationsViewModel
+import com.legumlex.clientapp.viewmodels.HearingsViewModel
 import com.legumlex.clientapp.di.AppContainer
 import com.legumlex.clientapp.navigation.Screen
 import com.legumlex.clientapp.ui.components.LegumLexBottomBar

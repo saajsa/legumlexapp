@@ -43,29 +43,29 @@ class SimpleAuthManager(private val context: Context) {
                 return false
             }
             
-            // For Perfex CRM, we need to validate the API token by making a test call
-            // In a real implementation, you would:
-            // 1. Send email/password to your backend
-            // 2. Your backend validates with Perfex CRM
-            // 3. Your backend returns the API token
-            // 4. Store the token securely
+            // Test the API connection with cases endpoint to verify access
+            val response = apiService.getCases()
             
-            // For now, we'll test the existing API token with a real API call
-            val response = apiService.getCurrentCustomer()
-            
-            if (response.isSuccessful && response.body() != null) {
-                val user = response.body()!!
+            if (response.isSuccessful) {
+                val cases = response.body() ?: emptyList()
+                
+                // For demo purposes, extract client info from first case if available
+                val clientId = if (cases.isNotEmpty()) {
+                    cases.first().clientId
+                } else {
+                    "1" // Default client ID
+                }
+                
                 // Save the API token (already configured) and user info
-                // Use a simple client ID that matches the invoice data (temporary for testing)
                 tokenManager.saveAuthToken(com.legumlex.clientapp.utils.ApiConfig.API_TOKEN)
-                tokenManager.saveUserInfo(email, "1") // Use client ID "1" for testing
+                tokenManager.saveUserInfo(email, clientId)
                 _isLoggedIn.value = true
                 true
             } else {
                 when (response.code()) {
                     401 -> _error.value = "Invalid credentials or API token"
                     403 -> _error.value = "Access denied"
-                    404 -> _error.value = "Service not found"
+                    404 -> _error.value = "Service not found - Please check API configuration"
                     else -> _error.value = "Login failed: ${response.message()}"
                 }
                 false

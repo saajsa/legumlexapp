@@ -9,9 +9,9 @@ interface LegalApiService {
     // Legal Practice Management API Endpoints
     // Authentication is done via authtoken header (configured in ApiClient)
     
-    // Authentication verification endpoint
-    @GET("customers/profile")
-    suspend fun getCurrentCustomer(): Response<User>
+    // Authentication verification endpoint - Use cases endpoint to verify access
+    @GET("cases")
+    suspend fun getCurrentCustomer(): Response<List<Case>>
     
     // Core Legal Practice Management endpoints
     @GET("cases")

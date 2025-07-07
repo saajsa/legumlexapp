@@ -13,22 +13,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.legumlex.clientapp.models.Consultation
 import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
-import com.legumlex.clientapp.SimpleCasesViewModel
-import com.legumlex.clientapp.CaseItem
+import com.legumlex.clientapp.viewmodels.ConsultationsViewModel
 
 @Composable
-fun CasesScreen(
-    viewModel: SimpleCasesViewModel,
-    onNavigateToCaseDetail: (String) -> Unit
+fun ConsultationsScreen(
+    viewModel: ConsultationsViewModel,
+    onNavigateToConsultationDetail: (String) -> Unit
 ) {
-    val cases by viewModel.cases.collectAsStateWithLifecycle()
+    val consultations by viewModel.consultations.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
     
@@ -39,13 +38,29 @@ fun CasesScreen(
             .padding(16.dp)
     ) {
         // Header
-        Text(
-            text = "My Cases",
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "My Consultations",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            
+            IconButton(
+                onClick = { viewModel.refresh() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Refresh",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
         
         Spacer(modifier = Modifier.height(16.dp))
         
@@ -69,7 +84,7 @@ fun CasesScreen(
                 )
             }
             
-            cases.isEmpty() -> {
+            consultations.isEmpty() -> {
                 EmptyState()
             }
             
@@ -77,10 +92,10 @@ fun CasesScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(cases) { case ->
-                        CaseItemCard(
-                            case = case,
-                            onClick = { onNavigateToCaseDetail(case.id) }
+                    items(consultations) { consultation ->
+                        ConsultationItemCard(
+                            consultation = consultation,
+                            onClick = { onNavigateToConsultationDetail(consultation.id) }
                         )
                     }
                 }
@@ -90,8 +105,8 @@ fun CasesScreen(
 }
 
 @Composable
-fun CaseItemCard(
-    case: CaseItem,
+fun ConsultationItemCard(
+    consultation: Consultation,
     onClick: () -> Unit
 ) {
     LegumLexCard(
@@ -112,7 +127,7 @@ fun CaseItemCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = case.title,
+                        text = consultation.displayName,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.W600
                         ),
@@ -123,33 +138,35 @@ fun CaseItemCard(
                     
                     Spacer(modifier = Modifier.height(4.dp))
                     
-                    Text(
-                        text = case.status,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    if (!consultation.clientName.isNullOrBlank()) {
+                        Text(
+                            text = "Client: ${consultation.clientName}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
                 
                 StatusChip(
-                    status = case.status
+                    status = consultation.statusText
                 )
             }
             
             Spacer(modifier = Modifier.height(12.dp))
             
-            // Case details row
+            // Consultation type and phase
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
                     Text(
-                        text = "Priority",
+                        text = "Type",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = case.priority,
+                        text = consultation.consultationTypeFormatted,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -157,14 +174,77 @@ fun CaseItemCard(
                 
                 Column {
                     Text(
-                        text = "Last Updated",
+                        text = "Phase",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = case.lastUpdate,
+                        text = consultation.phaseText,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (consultation.isInLitigation) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Fee and scheduled date
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Fee",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = if (consultation.feeAmount > 0) 
+                            "$${consultation.feeAmount}" 
+                        else 
+                            "Not set",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                
+                Column {
+                    Text(
+                        text = "Scheduled",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = consultation.dateScheduled ?: "Not scheduled",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+            
+            // Show upgrade indicator if applicable
+            if (consultation.canBeUpgraded) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.TrendingUp,
+                        contentDescription = "Can upgrade",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Can upgrade to case",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -222,7 +302,7 @@ fun ErrorSection(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Failed to load cases",
+                    text = "Failed to load consultations",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onErrorContainer
                 )
@@ -230,8 +310,7 @@ fun ErrorSection(
                 Text(
                     text = error,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    textAlign = TextAlign.Center
+                    color = MaterialTheme.colorScheme.onErrorContainer
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
@@ -255,24 +334,22 @@ fun EmptyState() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Default.Folder,
-            contentDescription = "No Cases",
+            imageVector = Icons.Default.EventNote,
+            contentDescription = "No Consultations",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(64.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "No Cases Found",
+            text = "No Consultations Found",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "You don't have any cases yet",
+            text = "You don't have any consultations yet",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
-

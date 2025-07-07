@@ -6,114 +6,88 @@ data class Case(
     @SerializedName("id")
     val id: String,
     
-    @SerializedName("name")
-    val name: String,
+    @SerializedName("consultation_id")
+    val consultationId: String?,
     
-    @SerializedName("description")
-    val description: String?,
-    
-    @SerializedName("status")
-    val status: String,
-    
-    @SerializedName("clientid")
-    val clientId: String,
-    
-    @SerializedName("case_type")
-    val caseType: String?,
-    
-    @SerializedName("priority")
-    val priority: String,
-    
-    @SerializedName("start_date")
-    val startDate: String?,
-    
-    @SerializedName("end_date")
-    val endDate: String?,
-    
-    @SerializedName("court")
-    val court: String?,
-    
-    @SerializedName("judge")
-    val judge: String?,
-    
-    @SerializedName("opposing_party")
-    val opposingParty: String?,
-    
-    @SerializedName("assigned_lawyer")
-    val assignedLawyer: String?,
+    @SerializedName("case_title")
+    val caseTitle: String,
     
     @SerializedName("case_number")
     val caseNumber: String?,
     
-    @SerializedName("billing_type")
-    val billingType: String?,
+    @SerializedName("client_id")
+    val clientId: String,
     
-    @SerializedName("hourly_rate")
-    val hourlyRate: String?,
+    @SerializedName("contact_id")
+    val contactId: String?,
     
-    @SerializedName("retainer_amount")
-    val retainerAmount: String?,
+    @SerializedName("court_room_id")
+    val courtRoomId: String?,
     
-    @SerializedName("total_hours")
-    val totalHours: String?,
+    @SerializedName("date_filed")
+    val dateFiled: String?,
     
-    @SerializedName("total_cost")
-    val totalCost: String?,
+    @SerializedName("date_created")
+    val dateCreated: String?,
     
-    @SerializedName("notes")
-    val notes: String?,
+    @SerializedName("client_name")
+    val clientName: String?,
     
-    @SerializedName("created_date")
-    val createdDate: String?,
+    @SerializedName("contact_name")
+    val contactName: String?,
     
-    @SerializedName("updated_date")
-    val updatedDate: String?,
+    @SerializedName("court_name")
+    val courtName: String?,
     
-    @SerializedName("closed_date")
-    val closedDate: String?
+    @SerializedName("court_no")
+    val courtNo: String?,
+    
+    @SerializedName("judge_name")
+    val judgeName: String?,
+    
+    @SerializedName("court_display")
+    val courtDisplay: String?,
+    
+    @SerializedName("consultation_reference")
+    val consultationReference: String?,
+    
+    @SerializedName("hearing_count")
+    val hearingCount: Int? = 0,
+    
+    @SerializedName("document_count")
+    val documentCount: Int? = 0
 ) {
-    val statusText: String
-        get() = when (status) {
-            "1" -> "Open"
-            "2" -> "In Progress"
-            "3" -> "Pending"
-            "4" -> "Closed"
-            "5" -> "Won"
-            "6" -> "Lost"
-            "7" -> "Settled"
-            else -> "Unknown"
-        }
+    val displayName: String
+        get() = if (caseNumber.isNullOrBlank()) caseTitle else "$caseNumber - $caseTitle"
     
-    val priorityText: String
-        get() = when (priority) {
-            "1" -> "Low"
-            "2" -> "Medium"
-            "3" -> "High"
-            "4" -> "Urgent"
-            else -> "Normal"
-        }
+    val hasHearings: Boolean
+        get() = (hearingCount ?: 0) > 0
+    
+    val hasDocuments: Boolean
+        get() = (documentCount ?: 0) > 0
     
     val isActive: Boolean
-        get() = status in listOf("1", "2", "3")
+        get() = dateCreated != null
     
-    val isClosed: Boolean
-        get() = status in listOf("4", "5", "6", "7")
+    val shortDescription: String
+        get() = when {
+            !clientName.isNullOrBlank() && !courtName.isNullOrBlank() -> "$clientName • $courtName"
+            !clientName.isNullOrBlank() -> clientName
+            !courtName.isNullOrBlank() -> courtName
+            else -> "Case #$id"
+        }
     
-    val totalCostAmount: Double
-        get() = totalCost?.toDoubleOrNull() ?: 0.0
+    val statusText: String
+        get() = when {
+            dateFiled != null -> "Filed"
+            courtRoomId != null -> "Assigned to Court"
+            consultationId != null -> "From Consultation"
+            else -> "Active"
+        }
     
-    val totalHoursWorked: Double
-        get() = totalHours?.toDoubleOrNull() ?: 0.0
+    val formattedDateFiled: String
+        get() = dateFiled ?: "Not filed yet"
     
-    val hourlyRateAmount: Double
-        get() = hourlyRate?.toDoubleOrNull() ?: 0.0
-    
-    val retainerAmountValue: Double
-        get() = retainerAmount?.toDoubleOrNull() ?: 0.0
-    
-    val caseTypeFormatted: String
-        get() = caseType?.replaceFirstChar { it.uppercase() } ?: "General"
-    
-    val displayName: String
-        get() = if (caseNumber.isNullOrBlank()) name else "$caseNumber - $name"
+    val formattedDateCreated: String
+        get() = dateCreated ?: "Unknown"
 }

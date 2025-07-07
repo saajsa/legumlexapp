@@ -96,8 +96,8 @@ class SimpleRepository(private val context: Context) {
                             id = case.id,
                             title = case.displayName,
                             status = case.statusText,
-                            lastUpdate = case.updatedDate ?: case.createdDate ?: "Unknown",
-                            priority = case.priorityText
+                            lastUpdate = case.formattedDateCreated,
+                            priority = "Normal" // Default priority since backend doesn't have priority field
                         )
                     }
                 
