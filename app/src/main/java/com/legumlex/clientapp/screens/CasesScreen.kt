@@ -64,7 +64,7 @@ fun CasesScreen(
             
             error != null -> {
                 ErrorSection(
-                    error = error,
+                    error = error!!,
                     onRetry = { viewModel.refresh() }
                 )
             }
@@ -131,8 +131,7 @@ fun CaseItemCard(
                 }
                 
                 StatusChip(
-                    status = case.status,
-                    backgroundColor = getStatusColor(case.status)
+                    status = case.status
                 )
             }
             
@@ -277,13 +276,3 @@ fun EmptyState() {
     }
 }
 
-fun getStatusColor(status: String): Color {
-    return when (status.lowercase()) {
-        "active" -> Color(0xFF4CAF50)
-        "in progress" -> Color(0xFF2196F3)
-        "on hold" -> Color(0xFFFF9800)
-        "cancelled" -> Color(0xFFF44336)
-        "finished" -> Color(0xFF9C27B0)
-        else -> Color(0xFF757575)
-    }
-}
