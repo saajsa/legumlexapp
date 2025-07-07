@@ -24,11 +24,13 @@ class SimpleLoginViewModel(private val authManager: SimpleAuthManager) : ViewMod
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _error.value = null
+        authManager.clearError()
     }
     
     fun updatePassword(newPassword: String) {
         _password.value = newPassword
         _error.value = null
+        authManager.clearError()
     }
     
     fun login() {
@@ -39,11 +41,18 @@ class SimpleLoginViewModel(private val authManager: SimpleAuthManager) : ViewMod
         
         viewModelScope.launch {
             _isLoading.value = true
-            val success = authManager.login(_email.value, _password.value)
-            _isLoading.value = false
+            _error.value = null
             
-            if (!success) {
-                _error.value = "Login failed"
+            try {
+                val success = authManager.login(_email.value, _password.value)
+                if (!success) {
+                    // Get error from auth manager
+                    _error.value = authManager.error.value ?: "Login failed"
+                }
+            } catch (e: Exception) {
+                _error.value = "Login error: ${e.message}"
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -58,6 +67,9 @@ class SimpleDashboardViewModel(private val repository: SimpleRepository) : ViewM
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
     
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+    
     init {
         loadStats()
     }
@@ -65,18 +77,29 @@ class SimpleDashboardViewModel(private val repository: SimpleRepository) : ViewM
     private fun loadStats() {
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = repository.getDashboardStats()) {
-                is SimpleApiResult.Success -> {
-                    _stats.value = result.data
+            _error.value = null
+            
+            try {
+                when (val result = repository.getDashboardStats()) {
+                    is SimpleApiResult.Success -> {
+                        _stats.value = result.data
+                    }
+                    is SimpleApiResult.Error -> {
+                        _error.value = result.message
+                    }
+                    is SimpleApiResult.Loading -> {
+                        // Already handled by _isLoading
+                    }
                 }
-                is SimpleApiResult.Error -> {
-                    // Handle error
-                }
-                is SimpleApiResult.Loading -> {
-                    // Already handled
-                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load dashboard: ${e.message}"
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
+    }
+    
+    fun refresh() {
+        loadStats()
     }
 }
