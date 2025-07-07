@@ -13,118 +13,118 @@ class SimpleRepository {
     
     private val apiService = ApiClient.getInstance()
     
-    // Get dashboard statistics from API
+    // Get dashboard statistics from real Perfex CRM API
     suspend fun getDashboardStats(): SimpleApiResult<DashboardStats> {
         return try {
-            // Add small delay to simulate network call
-            delay(500)
-            
-            // TODO: Replace with actual API calls once endpoints are confirmed
-            // For now, we'll use enhanced mock data that could come from API
-            
-            /* TODO: Implement real API calls
-            val customersResponse = apiService.getCustomers()
+            // Make real API calls to Perfex CRM
             val projectsResponse = apiService.getProjects()
             val invoicesResponse = apiService.getInvoices()
             val ticketsResponse = apiService.getTickets()
             
-            if (customersResponse.isSuccessful && projectsResponse.isSuccessful && 
-                invoicesResponse.isSuccessful && ticketsResponse.isSuccessful) {
+            // Check if all calls were successful
+            if (projectsResponse.isSuccessful && invoicesResponse.isSuccessful && ticketsResponse.isSuccessful) {
                 
-                val projects = projectsResponse.body() ?: emptyList()
-                val invoices = invoicesResponse.body() ?: emptyList()
-                val tickets = ticketsResponse.body() ?: emptyList()
+                val projects = projectsResponse.body()?.data ?: emptyList()
+                val invoices = invoicesResponse.body()?.data ?: emptyList()
+                val tickets = ticketsResponse.body()?.data ?: emptyList()
                 
+                // Calculate real statistics from API data
                 val stats = DashboardStats(
-                    activeCases = projects.count { it.status == "active" },
-                    unpaidInvoices = invoices.count { it.status == "unpaid" },
+                    activeCases = projects.size, // All projects for the client
+                    unpaidInvoices = invoices.count { it.status == "unpaid" || it.status == "1" },
                     totalDocuments = 0, // Will need separate documents API call
-                    openTickets = tickets.count { it.status == "open" }
+                    openTickets = tickets.count { it.status == "open" || it.status == "1" }
                 )
                 
                 SimpleApiResult.Success(stats)
             } else {
-                SimpleApiResult.Error("Failed to fetch dashboard data")
+                // If any API call fails, return error with details
+                val errorMessage = when {
+                    !projectsResponse.isSuccessful -> "Failed to fetch projects: ${projectsResponse.message()}"
+                    !invoicesResponse.isSuccessful -> "Failed to fetch invoices: ${invoicesResponse.message()}"
+                    !ticketsResponse.isSuccessful -> "Failed to fetch tickets: ${ticketsResponse.message()}"
+                    else -> "Failed to fetch dashboard data"
+                }
+                SimpleApiResult.Error(errorMessage)
             }
-            */
-            
-            // Enhanced mock data for demonstration
-            SimpleApiResult.Success(
-                DashboardStats(
-                    activeCases = 3,
-                    unpaidInvoices = 2,
-                    totalDocuments = 15,
-                    openTickets = 1
-                )
-            )
             
         } catch (e: Exception) {
             SimpleApiResult.Error("Network error: ${e.message}")
         }
     }
     
-    // Get detailed case/project data
+    // Get detailed case/project data from real API
     suspend fun getCases(): SimpleApiResult<List<CaseItem>> {
         return try {
-            delay(300)
+            val response = apiService.getProjects()
             
-            // TODO: Replace with actual API call
-            // val response = apiService.getProjects()
-            
-            val mockCases = listOf(
-                CaseItem(
-                    id = "1",
-                    title = "Personal Injury Case",
-                    status = "Active",
-                    lastUpdate = "2 days ago",
-                    priority = "High"
-                ),
-                CaseItem(
-                    id = "2", 
-                    title = "Contract Review",
-                    status = "In Progress",
-                    lastUpdate = "1 week ago",
-                    priority = "Medium"
-                ),
-                CaseItem(
-                    id = "3",
-                    title = "Estate Planning",
-                    status = "Pending",
-                    lastUpdate = "3 days ago",
-                    priority = "Low"
-                )
-            )
-            
-            SimpleApiResult.Success(mockCases)
+            if (response.isSuccessful && response.body() != null) {
+                val projects = response.body()!!.data ?: emptyList()
+                
+                // Convert API projects to CaseItem format
+                val cases = projects.map { project ->
+                    CaseItem(
+                        id = project.id,
+                        title = project.name ?: "Untitled Project",
+                        status = when (project.status) {
+                            "1" -> "Active"
+                            "2" -> "In Progress" 
+                            "3" -> "On Hold"
+                            "4" -> "Cancelled"
+                            "5" -> "Finished"
+                            else -> "Unknown"
+                        },
+                        lastUpdate = project.dateCreated ?: "Unknown",
+                        priority = when (project.priority) {
+                            "1" -> "Low"
+                            "2" -> "Medium"
+                            "3" -> "High"
+                            "4" -> "Urgent"
+                            else -> "Normal"
+                        }
+                    )
+                }
+                
+                SimpleApiResult.Success(cases)
+            } else {
+                SimpleApiResult.Error("Failed to fetch cases: ${response.message()}")
+            }
             
         } catch (e: Exception) {
             SimpleApiResult.Error("Failed to fetch cases: ${e.message}")
         }
     }
     
-    // Get invoice data
+    // Get invoice data from real API
     suspend fun getInvoices(): SimpleApiResult<List<InvoiceItem>> {
         return try {
-            delay(300)
+            val response = apiService.getInvoices()
             
-            val mockInvoices = listOf(
-                InvoiceItem(
-                    id = "INV-001",
-                    amount = "$1,250.00",
-                    status = "Unpaid",
-                    dueDate = "Jan 15, 2025",
-                    description = "Legal Consultation"
-                ),
-                InvoiceItem(
-                    id = "INV-002",
-                    amount = "$850.00", 
-                    status = "Paid",
-                    dueDate = "Dec 20, 2024",
-                    description = "Document Review"
-                )
-            )
-            
-            SimpleApiResult.Success(mockInvoices)
+            if (response.isSuccessful && response.body() != null) {
+                val invoices = response.body()!!.data ?: emptyList()
+                
+                // Convert API invoices to InvoiceItem format
+                val invoiceItems = invoices.map { invoice ->
+                    InvoiceItem(
+                        id = invoice.number ?: invoice.id,
+                        amount = "$${invoice.total ?: "0.00"}",
+                        status = when (invoice.status) {
+                            "1" -> "Unpaid"
+                            "2" -> "Paid"
+                            "3" -> "Partially Paid"
+                            "4" -> "Overdue"
+                            "5" -> "Cancelled"
+                            else -> "Unknown"
+                        },
+                        dueDate = invoice.dueDate ?: "No due date",
+                        description = "Invoice #${invoice.number ?: invoice.id}"
+                    )
+                }
+                
+                SimpleApiResult.Success(invoiceItems)
+            } else {
+                SimpleApiResult.Error("Failed to fetch invoices: ${response.message()}")
+            }
             
         } catch (e: Exception) {
             SimpleApiResult.Error("Failed to fetch invoices: ${e.message}")

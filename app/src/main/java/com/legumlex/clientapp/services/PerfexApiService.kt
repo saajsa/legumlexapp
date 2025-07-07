@@ -6,24 +6,25 @@ import retrofit2.http.*
 
 interface PerfexApiService {
     
-    // Authentication
-    @POST("auth")
-    suspend fun authenticate(
-        @Body credentials: LoginRequest
-    ): Response<AuthResponse>
+    // Perfex CRM doesn't have a separate auth endpoint - authentication is done via API token in headers
+    // The API token should be obtained from Perfex CRM admin panel: Setup > API > API Management
     
-    // Dashboard Statistics
+    // Get current customer/client info (acts as auth verification)
+    @GET("customers/profile")
+    suspend fun getCurrentCustomer(): Response<User>
+    
+    // Dashboard Statistics - Real Perfex CRM endpoints
     @GET("customers")
-    suspend fun getCustomers(): Response<List<User>>
+    suspend fun getCustomers(): Response<ApiListResponse<User>>
     
     @GET("projects")
-    suspend fun getProjects(): Response<List<Project>>
+    suspend fun getProjects(): Response<ApiListResponse<Project>>
     
     @GET("invoices")
-    suspend fun getInvoices(): Response<List<Invoice>>
+    suspend fun getInvoices(): Response<ApiListResponse<Invoice>>
     
     @GET("tickets")
-    suspend fun getTickets(): Response<List<Ticket>>
+    suspend fun getTickets(): Response<ApiListResponse<Ticket>>
     
     // Detailed endpoints
     @GET("customers/{id}")
@@ -60,19 +61,22 @@ interface PerfexApiService {
     suspend fun getPayment(@Path("id") id: String): Response<Payment>
 }
 
-data class LoginRequest(
-    val email: String,
-    val password: String
+// Perfex CRM API Response wrapper
+data class ApiListResponse<T>(
+    val data: List<T>? = null,
+    val success: Boolean = false,
+    val message: String? = null,
+    val total: Int? = null
 )
 
-data class AuthResponse(
-    val success: Boolean,
-    val message: String,
-    val token: String?,
-    val user: User?
+data class ApiSingleResponse<T>(
+    val data: T? = null,
+    val success: Boolean = false,
+    val message: String? = null
 )
 
 data class ApiError(
     val message: String,
+    val success: Boolean = false,
     val code: Int? = null
 )

@@ -44,34 +44,32 @@ class SimpleAuthManager(private val context: Context) {
                 return false
             }
             
-            // For now, use simple validation until we have proper API auth
-            // TODO: Replace with actual API call once Perfex auth endpoint is confirmed
-            val isValidCredentials = email.isNotEmpty() && password.isNotEmpty()
+            // For Perfex CRM, we need to validate the API token by making a test call
+            // In a real implementation, you would:
+            // 1. Send email/password to your backend
+            // 2. Your backend validates with Perfex CRM
+            // 3. Your backend returns the API token
+            // 4. Store the token securely
             
-            if (isValidCredentials) {
-                // Save mock token and user info
-                tokenManager.saveAuthToken("mock_token_${System.currentTimeMillis()}")
-                tokenManager.saveUserInfo(email, "user_${System.currentTimeMillis()}")
+            // For now, we'll test the existing API token with a real API call
+            val response = apiService.getCurrentCustomer()
+            
+            if (response.isSuccessful && response.body() != null) {
+                val user = response.body()!!
+                // Save the API token (already configured) and user info
+                tokenManager.saveAuthToken(com.legumlex.clientapp.utils.ApiConfig.API_TOKEN)
+                tokenManager.saveUserInfo(email, user.id)
                 _isLoggedIn.value = true
                 true
             } else {
-                _error.value = "Invalid credentials"
+                when (response.code()) {
+                    401 -> _error.value = "Invalid credentials or API token"
+                    403 -> _error.value = "Access denied"
+                    404 -> _error.value = "Service not found"
+                    else -> _error.value = "Login failed: ${response.message()}"
+                }
                 false
             }
-            
-            /* TODO: Implement real API authentication
-            val response = apiService.authenticate(LoginRequest(email, password))
-            if (response.isSuccessful && response.body()?.success == true) {
-                val authResponse = response.body()!!
-                tokenManager.saveAuthToken(authResponse.token!!)
-                tokenManager.saveUserInfo(email, authResponse.user!!.id)
-                _isLoggedIn.value = true
-                true
-            } else {
-                _error.value = response.body()?.message ?: "Login failed"
-                false
-            }
-            */
             
         } catch (e: Exception) {
             _error.value = "Network error: ${e.message}"
