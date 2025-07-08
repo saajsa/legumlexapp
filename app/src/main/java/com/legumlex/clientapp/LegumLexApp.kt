@@ -13,16 +13,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.legumlex.clientapp.screens.DashboardScreen
 import com.legumlex.clientapp.screens.LoginScreen
-import com.legumlex.clientapp.screens.CasesScreen
-import com.legumlex.clientapp.screens.CaseDetailScreen
-import com.legumlex.clientapp.screens.ConsultationsScreen
-import com.legumlex.clientapp.screens.HearingsScreen
-import com.legumlex.clientapp.screens.DocumentsScreen
 import com.legumlex.clientapp.screens.InvoicesScreen
-import com.legumlex.clientapp.screens.TicketsScreen
-import com.legumlex.clientapp.viewmodels.CaseDetailViewModel
-import com.legumlex.clientapp.viewmodels.ConsultationsViewModel
-import com.legumlex.clientapp.viewmodels.HearingsViewModel
+import com.legumlex.clientapp.viewmodels.DashboardViewModel
+import com.legumlex.clientapp.viewmodels.InvoicesViewModel
 import com.legumlex.clientapp.di.AppContainer
 import com.legumlex.clientapp.navigation.Screen
 import com.legumlex.clientapp.ui.components.LegumLexBottomBar
@@ -63,43 +56,8 @@ fun MainAppContent(appContainer: AppContainer) {
                 val dashboardViewModel = appContainer.createDashboardViewModel()
                 DashboardScreen(
                     viewModel = dashboardViewModel,
-                    onNavigateToCases = { 
-                        navController.navigate(Screen.Cases.route) 
-                    },
-                    onNavigateToDocuments = { 
-                        navController.navigate(Screen.Documents.route) 
-                    },
                     onNavigateToInvoices = { 
                         navController.navigate(Screen.Invoices.route) 
-                    },
-                    onNavigateToTickets = { 
-                        navController.navigate(Screen.Tickets.route) 
-                    },
-                    onNavigateToCaseDetail = { caseId ->
-                        navController.navigate(Screen.CaseDetail.createRoute(caseId))
-                    },
-                    onNavigateToInvoiceDetail = { invoiceId ->
-                        navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId))
-                    }
-                )
-            }
-            
-            composable(Screen.Cases.route) {
-                val casesViewModel = appContainer.createCasesViewModel()
-                CasesScreen(
-                    viewModel = casesViewModel,
-                    onNavigateToCaseDetail = { caseId ->
-                        navController.navigate(Screen.CaseDetail.createRoute(caseId))
-                    }
-                )
-            }
-            
-            composable(Screen.Documents.route) {
-                val documentsViewModel = appContainer.createDocumentsViewModel()
-                DocumentsScreen(
-                    viewModel = documentsViewModel,
-                    onNavigateToDocumentDetail = { documentId ->
-                        navController.navigate(Screen.DocumentDetail.createRoute(documentId))
                     }
                 )
             }
@@ -109,27 +67,9 @@ fun MainAppContent(appContainer: AppContainer) {
                 InvoicesScreen(
                     viewModel = invoicesViewModel,
                     onNavigateToInvoiceDetail = { invoiceId ->
-                        navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId))
+                        // TODO: Add invoice detail screen later
                     }
                 )
-            }
-            
-            composable(Screen.Tickets.route) {
-                val ticketsViewModel = appContainer.createTicketsViewModel()
-                TicketsScreen(
-                    viewModel = ticketsViewModel,
-                    onNavigateToTicketDetail = { ticketId ->
-                        navController.navigate(Screen.TicketDetail.createRoute(ticketId))
-                    }
-                )
-            }
-            
-            composable(Screen.CaseDetail.route) {
-                PlaceholderScreen("Case Details")
-            }
-            
-            composable(Screen.InvoiceDetail.route) {
-                PlaceholderScreen("Invoice Details")
             }
         }
     }

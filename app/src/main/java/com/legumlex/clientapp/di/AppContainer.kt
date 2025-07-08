@@ -4,21 +4,19 @@ import android.content.Context
 import com.legumlex.clientapp.SimpleAuthManager
 import com.legumlex.clientapp.SimpleRepository
 import com.legumlex.clientapp.SimpleLoginViewModel
-import com.legumlex.clientapp.SimpleDashboardViewModel
-import com.legumlex.clientapp.SimpleCasesViewModel
-import com.legumlex.clientapp.SimpleDocumentsViewModel
-import com.legumlex.clientapp.SimpleInvoicesViewModel
-import com.legumlex.clientapp.SimpleTicketsViewModel
+import com.legumlex.clientapp.viewmodels.DashboardViewModel
+import com.legumlex.clientapp.viewmodels.InvoicesViewModel
+import com.legumlex.clientapp.services.ClientRepository
 
 class AppContainer(private val context: Context) {
     
-    // Simple implementations
+    // Authentication and repositories
     val authManager: SimpleAuthManager by lazy {
         SimpleAuthManager(context)
     }
     
-    val repository: SimpleRepository by lazy {
-        SimpleRepository(context)
+    val clientRepository: ClientRepository by lazy {
+        ClientRepository(context)
     }
     
     // ViewModels
@@ -26,23 +24,11 @@ class AppContainer(private val context: Context) {
         return SimpleLoginViewModel(authManager)
     }
     
-    fun createDashboardViewModel(): SimpleDashboardViewModel {
-        return SimpleDashboardViewModel(repository)
+    fun createDashboardViewModel(): DashboardViewModel {
+        return DashboardViewModel(clientRepository)
     }
     
-    fun createCasesViewModel(): SimpleCasesViewModel {
-        return SimpleCasesViewModel(repository)
-    }
-    
-    fun createDocumentsViewModel(): SimpleDocumentsViewModel {
-        return SimpleDocumentsViewModel(repository)
-    }
-    
-    fun createInvoicesViewModel(): SimpleInvoicesViewModel {
-        return SimpleInvoicesViewModel(repository)
-    }
-    
-    fun createTicketsViewModel(): SimpleTicketsViewModel {
-        return SimpleTicketsViewModel(repository)
+    fun createInvoicesViewModel(): InvoicesViewModel {
+        return InvoicesViewModel(clientRepository)
     }
 }
