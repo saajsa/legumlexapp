@@ -1,5 +1,6 @@
 package com.legumlex.clientapp.services
 
+import com.legumlex.clientapp.BuildConfig
 import com.legumlex.clientapp.utils.ApiConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
