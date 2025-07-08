@@ -48,7 +48,7 @@ class CustomerAuthManager(private val context: Context) {
                 _isLoggedIn.value = false
                 false
             }
-            is ApiResult.Loading -> {
+            ApiResult.Loading -> {
                 false
             }
         }
@@ -70,7 +70,7 @@ class CustomerAuthManager(private val context: Context) {
                 _isLoggedIn.value = false
                 false
             }
-            is ApiResult.Loading -> {
+            ApiResult.Loading -> {
                 false
             }
         }

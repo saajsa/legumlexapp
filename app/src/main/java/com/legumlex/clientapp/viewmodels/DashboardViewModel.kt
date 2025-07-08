@@ -39,7 +39,7 @@ class DashboardViewModel(
                 is ApiResult.Error -> {
                     _error.value = result.message
                 }
-                is ApiResult.Loading -> {
+                ApiResult.Loading -> {
                     // Loading state already handled
                 }
             }

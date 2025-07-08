@@ -4,11 +4,6 @@ import android.content.Context
 import com.legumlex.clientapp.models.*
 import kotlinx.coroutines.flow.first
 
-sealed class ApiResult<out T> {
-    data class Success<out T>(val data: T) : ApiResult<T>()
-    data class Error(val message: String) : ApiResult<Nothing>()
-    object Loading : ApiResult<Nothing>()
-}
 
 class CustomerRepository(private val context: Context) {
     
@@ -34,10 +29,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(loginData)
             } else {
                 val errorMessage = response.body()?.message ?: "Login failed"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -56,7 +51,7 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Error("Logout failed")
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -88,10 +83,10 @@ class CustomerRepository(private val context: Context) {
                     !ticketsResponse.isSuccessful -> "Failed to fetch tickets: ${ticketsResponse.message()}"
                     else -> "Failed to fetch dashboard data"
                 }
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -104,10 +99,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(invoices)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch invoices"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -120,10 +115,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(projects)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch projects"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -136,10 +131,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(tickets)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch tickets"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -152,10 +147,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(invoice)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch invoice"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -168,10 +163,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(project)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch project"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
@@ -184,10 +179,10 @@ class CustomerRepository(private val context: Context) {
                 ApiResult.Success(ticket)
             } else {
                 val errorMessage = response.body()?.message ?: "Failed to fetch ticket"
-                ApiResult.Error(errorMessage)
+                ApiResult.Error(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
-            ApiResult.Error("Network error: ${e.message}")
+            ApiResult.Error(e, "Network error: ${e.message}")
         }
     }
     
