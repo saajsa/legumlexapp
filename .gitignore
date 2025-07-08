@@ -1,69 +1,45 @@
-# Android
-*.iml
-.gradle
-/local.properties
-/.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-
-# Generated files
-bin/
-gen/
-out/
-
-# Gradle files
-.gradle/
-build/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Log Files
+# Miscellaneous
+*.class
 *.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-# Android Studio Navigation editor temp files
-.navigation/
-
-# Android Studio captures folder
-captures/
-
-# IntelliJ
+# IntelliJ related
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/assetWizardSettings.xml
-.idea/dictionaries
-.idea/libraries
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/modules.xml
-.idea/.name
-.idea/misc.xml
-.idea/deploymentTargetDropDown.xml
-.idea/render.experimental.xml
+*.ipr
+*.iws
+.idea/
 
-# Keystore files
-*.jks
-*.keystore
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-# External native build folder generated in Android Studio 2.2 and later
-.externalNativeBuild
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Symbolication related
+app.*.symbols
 
-# Freeline
-freeline.py
-freeline/
-freeline_project_description.json
+# Obfuscation related
+app.*.map.json
 
-# fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
-fastlane/readme.md
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release

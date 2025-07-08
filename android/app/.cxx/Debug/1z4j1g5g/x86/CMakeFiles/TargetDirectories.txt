@@ -1,0 +1,2 @@
+F:/Flutex/flutex_customer/android/app/.cxx/Debug/1z4j1g5g/x86/CMakeFiles/edit_cache.dir
+F:/Flutex/flutex_customer/android/app/.cxx/Debug/1z4j1g5g/x86/CMakeFiles/rebuild_cache.dir
