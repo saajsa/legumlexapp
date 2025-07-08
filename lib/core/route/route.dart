@@ -4,6 +4,7 @@ import 'package:legumlex_customer/features/contract/view/contract_comments_scree
 import 'package:legumlex_customer/features/contract/view/contract_details_screen.dart';
 import 'package:legumlex_customer/features/contract/view/contracts_screen.dart';
 import 'package:legumlex_customer/features/dashboard/view/dashboard_screen.dart';
+import 'package:legumlex_customer/features/main_navigation/view/main_navigation_screen.dart';
 import 'package:legumlex_customer/features/estimate/view/estimate_details_screen.dart';
 import 'package:legumlex_customer/features/estimate/view/estimate_screen.dart';
 import 'package:legumlex_customer/features/invoice/view/invoice_details_screen.dart';
@@ -30,6 +31,7 @@ class RouteHelper {
   static const String registrationScreen = "/registration_screen";
 
   static const String dashboardScreen = "/dashboard_screen";
+  static const String mainNavigationScreen = "/main_navigation_screen";
   static const String projectScreen = "/project_screen";
   static const String projectDetailsScreen = "/project_details_screen";
   static const String invoiceScreen = "/invoice_screen";
@@ -55,6 +57,7 @@ class RouteHelper {
     GetPage(name: loginScreen, page: () => const LoginScreen()),
     GetPage(name: registrationScreen, page: () => const RegistrationScreen()),
     GetPage(name: dashboardScreen, page: () => const DashboardScreen()),
+    GetPage(name: mainNavigationScreen, page: () => const MainNavigationScreen()),
     GetPage(name: projectScreen, page: () => const ProjectsScreen()),
     GetPage(
         name: projectDetailsScreen,

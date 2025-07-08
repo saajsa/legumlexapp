@@ -41,7 +41,7 @@ class LoginController extends GetxController {
         SharedPreferenceHelper.accessTokenKey,
         responseModel.data?.accessToken ?? '');
 
-    Get.offAndToNamed(RouteHelper.dashboardScreen);
+    Get.offAndToNamed(RouteHelper.mainNavigationScreen);
 
     if (remember) {
       changeRememberMe();
