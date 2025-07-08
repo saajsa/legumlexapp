@@ -22,24 +22,51 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> 
+    with SingleTickerProviderStateMixin {
   final formKey = GlobalKey<FormState>();
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
+    super.initState();
+    
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.elasticOut,
+    ));
+
     Get.put(ApiClient(sharedPreferences: Get.find()));
     Get.put(AuthRepo(apiClient: Get.find()));
     Get.put(LoginController(loginRepo: Get.find()));
 
-    super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<LoginController>().remember = false;
+      _animationController.forward();
     });
   }
 
   @override
   void dispose() {
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -70,8 +97,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding:
                             const EdgeInsets.only(top: 140.0, bottom: 30.0),
                         child: Center(
-                          child: Image.asset(MyImages.appLogo,
-                              color: ColorResources.colorWhite, height: 60),
+                          child: Column(
+                            children: [
+                              Image.asset(MyImages.appLogo,
+                                  color: ColorResources.colorWhite, height: 80),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Legum Lex',
+                                style: TextStyle(
+                                  color: ColorResources.colorWhite,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -86,28 +127,42 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text(
                                 LocalStrings.login.tr,
                                 style: mediumOverLarge.copyWith(
-                                    fontSize: Dimensions.fontMegaLarge,
-                                    color: Colors.white),
+                                    fontSize: Dimensions.fontMegaLarge + 4,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
                               ),
+                              const SizedBox(height: 8),
                               Text(
                                 LocalStrings.loginDesc.tr,
                                 style: regularDefault.copyWith(
-                                    fontSize: Dimensions.fontDefault,
-                                    color: Colors.white),
+                                    fontSize: Dimensions.fontDefault + 2,
+                                    color: Colors.white.withOpacity(0.9),
+                                    height: 1.4),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            )),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: Dimensions.space20),
+                      SlideTransition(
+                        position: _slideAnimation,
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(24),
+                                  topRight: Radius.circular(24),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, -4),
+                                  ),
+                                ]),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: Dimensions.space30),
                         child: Form(
                           key: formKey,
                           child: Column(
@@ -204,17 +259,72 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )
                                 ],
                               ),
-                              const SizedBox(height: Dimensions.space20),
-                              controller.isSubmitLoading
-                                  ? const RoundedLoadingBtn()
-                                  : RoundedButton(
-                                      text: LocalStrings.signIn.tr,
-                                      press: () {
-                                        if (formKey.currentState!.validate()) {
-                                          controller.loginUser();
-                                        }
-                                      }),
-                              const SizedBox(height: Dimensions.space20),
+                              const SizedBox(height: Dimensions.space30),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: controller.isSubmitLoading
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              ColorResources.primaryColor.withOpacity(0.8),
+                                              ColorResources.primaryColor,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () {
+                                          if (formKey.currentState!.validate()) {
+                                            controller.loginUser();
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                        ).copyWith(
+                                          backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                                        ),
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                ColorResources.primaryColor,
+                                                ColorResources.accentColor,
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              LocalStrings.signIn.tr,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                              const SizedBox(height: Dimensions.space30),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -242,6 +352,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                             ],
+                          ),
+                        ),
                           ),
                         ),
                       )
