@@ -19,12 +19,12 @@ import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.ui.components.StatusChip
-import com.legumlex.clientapp.SimpleInvoicesViewModel
-import com.legumlex.clientapp.InvoiceItem
+import com.legumlex.clientapp.viewmodels.InvoicesViewModel
+import com.legumlex.clientapp.models.Invoice
 
 @Composable
 fun InvoicesScreen(
-    viewModel: SimpleInvoicesViewModel,
+    viewModel: InvoicesViewModel,
     onNavigateToInvoiceDetail: (String) -> Unit = {}
 ) {
     val invoices by viewModel.invoices.collectAsStateWithLifecycle()
@@ -149,7 +149,7 @@ fun InvoicesScreen(
 
 @Composable
 private fun InvoiceCard(
-    invoice: InvoiceItem,
+    invoice: Invoice,
     onClick: () -> Unit
 ) {
     LegumLexCard(
@@ -183,7 +183,7 @@ private fun InvoiceCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = invoice.description,
+                        text = invoice.formattedNumber,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.W600
                         ),
@@ -196,7 +196,7 @@ private fun InvoiceCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     
                     Text(
-                        text = invoice.amount,
+                        text = "$${invoice.total}",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -212,13 +212,13 @@ private fun InvoiceCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Due: ${invoice.dueDate}",
+                        text = "Due: ${invoice.dueDate ?: "Not specified"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
                     StatusChip(
-                        status = invoice.status
+                        status = invoice.statusText
                     )
                 }
             }

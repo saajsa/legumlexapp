@@ -19,18 +19,13 @@ import com.legumlex.clientapp.ui.components.LegumLexCard
 import com.legumlex.clientapp.ui.components.LegumLexInfoCard
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
-import com.legumlex.clientapp.SimpleDashboardViewModel
-import com.legumlex.clientapp.DashboardStats
+import com.legumlex.clientapp.viewmodels.DashboardViewModel
+import com.legumlex.clientapp.services.DashboardStats
 
 @Composable
 fun DashboardScreen(
-    viewModel: SimpleDashboardViewModel,
-    onNavigateToCases: () -> Unit,
-    onNavigateToDocuments: () -> Unit,
-    onNavigateToInvoices: () -> Unit,
-    onNavigateToTickets: () -> Unit,
-    onNavigateToCaseDetail: (String) -> Unit,
-    onNavigateToInvoiceDetail: (String) -> Unit
+    viewModel: DashboardViewModel,
+    onNavigateToInvoices: () -> Unit
 ) {
     val stats by viewModel.stats.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -119,7 +114,7 @@ fun DashboardScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 
-                // Quick Stats Row
+                // Invoices Stats
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -127,111 +122,65 @@ fun DashboardScreen(
                     ) {
                         LegumLexCard(
                             modifier = Modifier.weight(1f),
-                            onClick = { onNavigateToCases() },
+                            onClick = { onNavigateToInvoices() },
                             elevation = LegumLexCardElevation.Default
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Folder,
-                                contentDescription = "Cases",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = stats.activeCases.toString(),
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontWeight = FontWeight.W600
-                                ),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Active Cases",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Receipt,
+                                    contentDescription = "Total Invoices",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = stats.totalInvoices.toString(),
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontWeight = FontWeight.W600
+                                    ),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Total Invoices",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                         LegumLexCard(
                             modifier = Modifier.weight(1f),
                             onClick = { onNavigateToInvoices() },
                             elevation = LegumLexCardElevation.Default
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Receipt,
-                                contentDescription = "Invoices",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = stats.unpaidInvoices.toString(),
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontWeight = FontWeight.W600
-                                ),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Unpaid Invoices",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-                
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        LegumLexCard(
-                            modifier = Modifier.weight(1f),
-                            onClick = { onNavigateToDocuments() },
-                            elevation = LegumLexCardElevation.Default
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Description,
-                                contentDescription = "Documents",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = stats.totalDocuments.toString(),
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontWeight = FontWeight.W600
-                                ),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Documents",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        LegumLexCard(
-                            modifier = Modifier.weight(1f),
-                            onClick = { onNavigateToTickets() },
-                            elevation = LegumLexCardElevation.Default
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Support,
-                                contentDescription = "Support",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = stats.openTickets.toString(),
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontWeight = FontWeight.W600
-                                ),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Open Tickets",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    contentDescription = "Unpaid Invoices",
+                                    tint = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = stats.unpaidInvoices.toString(),
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontWeight = FontWeight.W600
+                                    ),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                                Text(
+                                    text = "Unpaid Invoices",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
