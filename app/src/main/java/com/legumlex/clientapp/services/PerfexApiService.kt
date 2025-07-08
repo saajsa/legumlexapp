@@ -82,7 +82,7 @@ interface PerfexApiService {
     suspend fun getLegalDocument(@Path("id") id: String): Response<LegalDocument>
     
     @GET("files")
-    suspend fun getDocumentsByCase(@Query("rel_type") relType: String = "project", @Query("rel_id") caseId: String): Response<List<LegalDocument>>
+    suspend fun getDocumentsByCase(@Query("rel_type") relType: String = "case", @Query("rel_id") caseId: String): Response<List<LegalDocument>>
     
     @GET("files")
     suspend fun getDocumentsByClient(@Query("clientid") clientId: String): Response<List<LegalDocument>>

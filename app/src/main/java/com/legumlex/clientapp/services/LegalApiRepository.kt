@@ -232,7 +232,7 @@ class LegalApiRepository {
     suspend fun getDocumentsByCase(caseId: String): Result<List<LegalDocument>> = withContext(Dispatchers.IO) {
         try {
             Log.d(TAG, "Fetching documents for case: $caseId")
-            val response = apiService.getDocumentsByCase(caseId)
+            val response = apiService.getDocumentsByCase(caseId = caseId)
             
             if (response.isSuccessful) {
                 val documents = response.body() ?: emptyList()
