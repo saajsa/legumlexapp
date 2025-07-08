@@ -16,6 +16,7 @@ class TokenManager(private val context: Context) {
         private val AUTH_TOKEN_KEY = stringPreferencesKey("auth_token")
         private val USER_EMAIL_KEY = stringPreferencesKey("user_email")
         private val USER_ID_KEY = stringPreferencesKey("user_id")
+        private val CONTACT_ID_KEY = stringPreferencesKey("contact_id")
     }
     
     // Save authentication token
@@ -65,6 +66,46 @@ class TokenManager(private val context: Context) {
     fun isLoggedIn(): Flow<Boolean> {
         return getAuthToken().map { token ->
             !token.isNullOrEmpty()
+        }
+    }
+    
+    // Additional methods for Customer API
+    suspend fun saveToken(token: String) = saveAuthToken(token)
+    fun getToken(): Flow<String?> = getAuthToken()
+    
+    suspend fun saveUserId(userId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[USER_ID_KEY] = userId
+        }
+    }
+    
+    suspend fun saveContactId(contactId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[CONTACT_ID_KEY] = contactId
+        }
+    }
+    
+    fun getContactId(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[CONTACT_ID_KEY]
+        }
+    }
+    
+    suspend fun clearToken() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(AUTH_TOKEN_KEY)
+        }
+    }
+    
+    suspend fun clearUserId() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(USER_ID_KEY)
+        }
+    }
+    
+    suspend fun clearContactId() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(CONTACT_ID_KEY)
         }
     }
 }

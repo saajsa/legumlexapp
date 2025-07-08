@@ -3,12 +3,13 @@ package com.legumlex.clientapp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.legumlex.clientapp.models.DashboardStats
+import com.legumlex.clientapp.services.CustomerAuthManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 // Simple Login ViewModel
-class SimpleLoginViewModel(private val authManager: SimpleAuthManager) : ViewModel() {
+class SimpleLoginViewModel(private val authManager: CustomerAuthManager) : ViewModel() {
     
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
@@ -47,7 +48,7 @@ class SimpleLoginViewModel(private val authManager: SimpleAuthManager) : ViewMod
             try {
                 val success = authManager.login(_email.value, _password.value)
                 if (!success) {
-                    // Get error from auth manager
+                    // Get error from auth manager  
                     _error.value = authManager.error.value ?: "Login failed"
                 }
             } catch (e: Exception) {

@@ -49,8 +49,13 @@ class ApiClient {
                     .header(ApiConfig.Headers.CONTENT_TYPE, ApiConfig.ContentTypes.JSON)
                     .header(ApiConfig.Headers.ACCEPT, ApiConfig.ContentTypes.JSON)
                     .header(ApiConfig.Headers.USER_AGENT, ApiConfig.USER_AGENT_VALUE)
-                    .header(ApiConfig.Headers.AUTH_TOKEN, ApiConfig.API_TOKEN)
                     .header(ApiConfig.Headers.X_REQUESTED_WITH, "XMLHttpRequest")
+                
+                // Only add Authorization header if we have a token
+                // For login endpoint, no token is needed
+                if (!original.url.encodedPath.contains("/authentication")) {
+                    requestBuilder.header(ApiConfig.Headers.AUTHORIZATION, ApiConfig.API_TOKEN)
+                }
                 
                 val request = requestBuilder.build()
                 chain.proceed(request)

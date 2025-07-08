@@ -1,33 +1,33 @@
 package com.legumlex.clientapp.utils
 
 object ApiConfig {
-    // Legal Practice Management API Configuration
-    const val BASE_URL = "https://www.legumlex.com/accs/api/"
+    // Perfex CRM Customer API Configuration
+    const val BASE_URL = "https://www.legumlex.com/accs/customers_api/v1/"
     
-    // Legal Practice Management API Token (JWT)
+    // Perfex CRM Customer API Token
     const val API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiIiwibmFtZSI6IiIsIkFQSV9USU1FIjoxNzUxNzg4MzA1fQ.3Yjs0Pr86OUVEFNb1VN1eGIlKtV2yQ9Nn_o9kTNHGiI"
     
     // Request timeout in seconds
     const val TIMEOUT_SECONDS = 30L
     
-    // Legal Practice Management API Endpoints
+    // Perfex CRM Customer API Endpoints
     object Endpoints {
-        const val CASES = "cases"
-        const val CONSULTATIONS = "consultations"
-        const val HEARINGS = "hearings"
-        const val LEGAL_DOCUMENTS = "legal_documents"
+        const val PROFILE = "profile"
         const val INVOICES = "invoices"
         const val TICKETS = "tickets"
+        const val PROJECTS = "projects"
         const val CONTRACTS = "contracts"
         const val PAYMENTS = "payments"
         const val FILES = "files"
+        const val CONTACTS = "contacts"
+        const val ESTIMATES = "estimates"
     }
     
-    // HTTP Headers - Legal API uses 'authtoken' header
+    // HTTP Headers - Perfex Customer API uses 'Authorization' header
     object Headers {
         const val CONTENT_TYPE = "Content-Type"
         const val ACCEPT = "Accept"
-        const val AUTH_TOKEN = "authtoken"  // Legal API auth header
+        const val AUTHORIZATION = "Authorization"  // Perfex Customer API auth header
         const val USER_AGENT = "User-Agent"
         const val X_REQUESTED_WITH = "X-Requested-With"
     }

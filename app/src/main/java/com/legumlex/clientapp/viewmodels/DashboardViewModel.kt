@@ -3,14 +3,14 @@ package com.legumlex.clientapp.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.legumlex.clientapp.services.ApiResult
-import com.legumlex.clientapp.services.ClientRepository
+import com.legumlex.clientapp.services.CustomerRepository
 import com.legumlex.clientapp.models.DashboardStats
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
-    private val repository: ClientRepository
+    private val repository: CustomerRepository
 ) : ViewModel() {
     
     private val _stats = MutableStateFlow(DashboardStats())

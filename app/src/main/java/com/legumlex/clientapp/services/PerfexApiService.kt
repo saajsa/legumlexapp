@@ -6,124 +6,260 @@ import retrofit2.http.*
 
 interface PerfexApiService {
     
-    // Perfex CRM API Endpoints (as per official API manual)
-    // Authentication is done via authtoken header (configured in ApiClient)
+    // Perfex CRM Customer API Endpoints (based on official customer API documentation)
+    // Authentication is done via Authorization header
     
-    // Authentication verification endpoint
-    @GET("customers/profile")
-    suspend fun getCurrentCustomer(): Response<User>
+    // Authentication endpoints
+    @POST("authentication")
+    suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
     
-    // Core Perfex CRM endpoints
-    @GET("customers")
-    suspend fun getCustomers(): Response<List<User>>
+    @POST("logout")
+    suspend fun logout(): Response<LogoutResponse>
     
-    @GET("projects")
-    suspend fun getProjects(): Response<List<Project>>
+    @POST("register")
+    suspend fun register(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
     
+    // Customer invoices - automatically filtered for authenticated customer
     @GET("invoices")
-    suspend fun getInvoices(): Response<List<Invoice>>
+    suspend fun getInvoices(): Response<CustomerApiResponse<List<Invoice>>>
     
+    @GET("invoices/id/{id}")
+    suspend fun getInvoice(@Path("id") id: String): Response<CustomerApiResponse<Invoice>>
+    
+    // Customer projects - automatically filtered for authenticated customer
+    @GET("projects")
+    suspend fun getProjects(): Response<CustomerApiResponse<List<Project>>>
+    
+    @GET("projects/id/{id}")
+    suspend fun getProject(@Path("id") id: String): Response<CustomerApiResponse<Project>>
+    
+    @GET("projects/id/{id}/group/{groupname}")
+    suspend fun getProjectGroup(
+        @Path("id") id: String, 
+        @Path("groupname") groupName: String
+    ): Response<CustomerApiResponse<List<ProjectGroup>>>
+    
+    // Customer tickets - automatically filtered for authenticated customer
     @GET("tickets")
-    suspend fun getTickets(): Response<List<Ticket>>
+    suspend fun getTickets(): Response<CustomerApiResponse<List<Ticket>>>
     
-    // Legal Practice Management API Endpoints (Extended)
-    // These endpoints integrate with the new Legal Practice Management API
+    @GET("tickets/id/{id}")
+    suspend fun getTicket(@Path("id") id: String): Response<CustomerApiResponse<Ticket>>
     
-    // Cases API (custom Cases module)
-    @GET("cases")
-    suspend fun getCases(): Response<List<Case>>
+    @POST("tickets")
+    suspend fun createTicket(@Body ticketRequest: CreateTicketRequest): Response<CustomerApiResponse<Any>>
     
-    @GET("cases/{id}")
-    suspend fun getCase(@Path("id") id: String): Response<Case>
+    @POST("tickets/add_reply/{id}")
+    suspend fun addTicketReply(
+        @Path("id") id: String,
+        @Body replyRequest: TicketReplyRequest
+    ): Response<CustomerApiResponse<Any>>
     
-    @GET("cases/client/{client_id}")
-    suspend fun getCasesByClient(@Path("client_id") clientId: String): Response<List<Case>>
+    // Customer estimates - automatically filtered for authenticated customer
+    @GET("estimates")
+    suspend fun getEstimates(): Response<CustomerApiResponse<List<Estimate>>>
     
-    @GET("cases/search")
-    suspend fun searchCases(@Query("q") query: String): Response<List<Case>>
+    @GET("estimates/id/{id}")
+    suspend fun getEstimate(@Path("id") id: String): Response<CustomerApiResponse<Estimate>>
     
-    // Consultations API
-    @GET("consultations")
-    suspend fun getConsultations(): Response<List<Consultation>>
+    // Customer proposals - automatically filtered for authenticated customer
+    @GET("proposals")
+    suspend fun getProposals(): Response<CustomerApiResponse<List<Proposal>>>
     
-    @GET("consultations/{id}")
-    suspend fun getConsultation(@Path("id") id: String): Response<Consultation>
+    @GET("proposals/id/{id}")
+    suspend fun getProposal(@Path("id") id: String): Response<CustomerApiResponse<Proposal>>
     
-    @POST("consultations")
-    suspend fun createConsultation(@Body consultation: Consultation): Response<Consultation>
+    @POST("proposals/id/{id}/group/proposals_comment")
+    suspend fun addProposalComment(
+        @Path("id") id: String,
+        @Body commentRequest: CommentRequest
+    ): Response<CustomerApiResponse<Any>>
     
-    @PUT("consultations/{id}")
-    suspend fun updateConsultation(@Path("id") id: String, @Body consultation: Consultation): Response<Consultation>
-    
-    @POST("consultations/{id}/upgrade")
-    suspend fun upgradeConsultationToCase(@Path("id") id: String): Response<Case>
-    
-    // Hearings API
-    @GET("hearings")
-    suspend fun getHearings(): Response<List<Hearing>>
-    
-    @GET("hearings/{id}")
-    suspend fun getHearing(@Path("id") id: String): Response<Hearing>
-    
-    @GET("hearings/case/{case_id}")
-    suspend fun getHearingsByCase(@Path("case_id") caseId: String): Response<List<Hearing>>
-    
-    @GET("hearings/upcoming")
-    suspend fun getUpcomingHearings(): Response<List<Hearing>>
-    
-    @GET("hearings/today")
-    suspend fun getTodaysHearings(): Response<List<Hearing>>
-    
-    // Legal Documents API (maps to files in Perfex CRM)
-    @GET("files")
-    suspend fun getLegalDocuments(): Response<List<LegalDocument>>
-    
-    @GET("files/{id}")
-    suspend fun getLegalDocument(@Path("id") id: String): Response<LegalDocument>
-    
-    @GET("files")
-    suspend fun getDocumentsByCase(@Query("rel_type") relType: String = "case", @Query("rel_id") caseId: String): Response<List<LegalDocument>>
-    
-    @GET("files")
-    suspend fun getDocumentsByClient(@Query("clientid") clientId: String): Response<List<LegalDocument>>
-    
-    // Detailed endpoints
-    @GET("customers/{id}")
-    suspend fun getCustomer(@Path("id") id: String): Response<User>
-    
-    @GET("projects/{id}")
-    suspend fun getProject(@Path("id") id: String): Response<Project>
-    
-    @GET("invoices/{id}")
-    suspend fun getInvoice(@Path("id") id: String): Response<Invoice>
-    
-    @GET("tickets/{id}")
-    suspend fun getTicket(@Path("id") id: String): Response<Ticket>
-    
-    // Documents/Files
-    @GET("files")
-    suspend fun getDocuments(): Response<List<Document>>
-    
-    @GET("files/{id}")
-    suspend fun getDocument(@Path("id") id: String): Response<Document>
-    
-    // Contracts
+    // Customer contracts - automatically filtered for authenticated customer
     @GET("contracts")
-    suspend fun getContracts(): Response<List<Contract>>
+    suspend fun getContracts(): Response<CustomerApiResponse<List<Contract>>>
     
-    @GET("contracts/{id}")
-    suspend fun getContract(@Path("id") id: String): Response<Contract>
+    @GET("contracts/id/{id}")
+    suspend fun getContract(@Path("id") id: String): Response<CustomerApiResponse<Contract>>
     
-    // Payments
-    @GET("payments")
-    suspend fun getPayments(): Response<List<Payment>>
+    @POST("contracts/id/{id}/group/contract_comment")
+    suspend fun addContractComment(
+        @Path("id") id: String,
+        @Body commentRequest: CommentRequest
+    ): Response<CustomerApiResponse<Any>>
     
-    @GET("payments/{id}")
-    suspend fun getPayment(@Path("id") id: String): Response<Payment>
+    // Task management for projects
+    @POST("projects/id/{id}/group/tasks")
+    suspend fun addTask(
+        @Path("id") projectId: String,
+        @Body taskRequest: CreateTaskRequest
+    ): Response<CustomerApiResponse<Any>>
+    
+    @PUT("projects/id/{id}/group/tasks")
+    suspend fun updateTask(
+        @Path("id") projectId: String,
+        @Body taskRequest: UpdateTaskRequest
+    ): Response<CustomerApiResponse<Any>>
+    
+    // Knowledge base (public access)
+    @GET("knowledge_base")
+    suspend fun getKnowledgeBase(): Response<CustomerApiResponse<List<KnowledgeGroup>>>
+    
+    @GET("knowledge_base/group/{slug}")
+    suspend fun getKnowledgeGroup(@Path("slug") slug: String): Response<CustomerApiResponse<List<KnowledgeGroup>>>
+    
+    @GET("knowledge_base/article/{slug}")
+    suspend fun getKnowledgeArticle(@Path("slug") slug: String): Response<CustomerApiResponse<KnowledgeArticle>>
+    
+    // Miscellaneous endpoints
+    @GET("miscellaneous/group/client_menu")
+    suspend fun getClientMenu(): Response<CustomerApiResponse<List<MenuItem>>>
+    
+    @GET("miscellaneous/group/departments")
+    suspend fun getDepartments(): Response<CustomerApiResponse<List<Department>>>
+    
+    @GET("miscellaneous/group/get_services")
+    suspend fun getServices(): Response<CustomerApiResponse<List<Service>>>
+    
+    @GET("miscellaneous/group/get_ticket_priorities")
+    suspend fun getTicketPriorities(): Response<CustomerApiResponse<List<Priority>>>
 }
 
-// Simple response wrapper for API errors
-data class ApiError(
-    val message: String,
-    val code: Int? = null
+// Request/Response models for Customer API
+
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val status: Boolean,
+    val data: LoginData?,
+    val message: String
+)
+
+data class LoginData(
+    val client_id: String,
+    val contact_id: String,
+    val client_logged_in: Boolean,
+    val API_TIME: Long,
+    val token: String
+)
+
+data class LogoutResponse(
+    val status: Boolean,
+    val message: String
+)
+
+data class RegisterRequest(
+    val company: String,
+    val firstname: String,
+    val lastname: String,
+    val email: String,
+    val password: String,
+    val passwordr: String,
+    val vat: String? = null,
+    val phonenumber: String? = null,
+    val contact_phonenumber: String? = null,
+    val website: String? = null,
+    val position: String? = null,
+    val country: Int? = null,
+    val city: String? = null,
+    val address: String? = null,
+    val zip: String? = null,
+    val state: String? = null
+)
+
+data class RegisterResponse(
+    val status: Boolean,
+    val message: String
+)
+
+data class CustomerApiResponse<T>(
+    val status: Boolean,
+    val data: T?,
+    val message: String
+)
+
+data class CreateTicketRequest(
+    val subject: String,
+    val department: Int,
+    val priority: Int,
+    val project: Int? = null,
+    val TicketBody: String
+)
+
+data class TicketReplyRequest(
+    val Message: String
+)
+
+data class CommentRequest(
+    val content: String
+)
+
+data class CreateTaskRequest(
+    val name: String,
+    val priority: Int,
+    val startdate: String,
+    val duedate: String? = null,
+    val assignees: List<Int>? = null,
+    val description: String? = null
+)
+
+data class UpdateTaskRequest(
+    val id: Int,
+    val name: String,
+    val priority: Int,
+    val startdate: String,
+    val duedate: String? = null,
+    val assignees: List<Int>? = null,
+    val description: String? = null
+)
+
+data class ProjectGroup(
+    val id: String,
+    val name: String
+)
+
+data class MenuItem(
+    val id: Int,
+    val name: String,
+    val short_name: String
+)
+
+data class Department(
+    val departmentid: String,
+    val name: String
+)
+
+data class Service(
+    val serviceid: String,
+    val name: String
+)
+
+data class Priority(
+    val priorityid: String,
+    val name: String
+)
+
+data class KnowledgeGroup(
+    val groupid: String,
+    val name: String,
+    val group_slug: String,
+    val description: String,
+    val active: String,
+    val color: String,
+    val group_order: String,
+    val articles: List<KnowledgeArticle>? = null
+)
+
+data class KnowledgeArticle(
+    val slug: String,
+    val subject: String,
+    val description: String,
+    val active_article: String,
+    val articlegroup: String,
+    val articleid: String,
+    val staff_article: String,
+    val datecreated: String
 )
