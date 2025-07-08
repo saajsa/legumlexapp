@@ -20,7 +20,7 @@ import com.legumlex.clientapp.ui.components.LegumLexInfoCard
 import com.legumlex.clientapp.ui.components.LegumLexButton
 import com.legumlex.clientapp.ui.components.LegumLexCardElevation
 import com.legumlex.clientapp.viewmodels.DashboardViewModel
-import com.legumlex.clientapp.services.DashboardStats
+import com.legumlex.clientapp.models.DashboardStats
 
 @Composable
 fun DashboardScreen(

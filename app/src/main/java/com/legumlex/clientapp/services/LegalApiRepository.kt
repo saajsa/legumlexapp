@@ -322,10 +322,3 @@ class LegalApiRepository {
     }
 }
 
-// Data class for dashboard stats
-data class DashboardStats(
-    val activeCases: Int,
-    val unpaidInvoices: Int,
-    val totalDocuments: Int,
-    val openTickets: Int
-)

@@ -1,6 +1,7 @@
 package com.legumlex.clientapp
 
 import android.content.Context
+import com.legumlex.clientapp.models.DashboardStats
 import com.legumlex.clientapp.services.ApiClient
 import com.legumlex.clientapp.services.TokenManager
 import kotlinx.coroutines.delay
@@ -228,12 +229,6 @@ class SimpleRepository(private val context: Context) {
     }
 }
 
-data class DashboardStats(
-    val activeCases: Int = 0,
-    val unpaidInvoices: Int = 0,
-    val totalDocuments: Int = 0,
-    val openTickets: Int = 0
-)
 
 data class CaseItem(
     val id: String,
