@@ -9,7 +9,7 @@ class MainNavigationRepo {
   MainNavigationRepo({required this.apiClient});
 
   Future<ResponseModel> getFeatureToggles() async {
-    String url = "${UrlContainer.baseUrl}${UrlContainer.menuEndpoint}";
+    String url = "${UrlContainer.baseUrl}${UrlContainer.getClientMenuUrl}";
     final response = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     return response;
   }

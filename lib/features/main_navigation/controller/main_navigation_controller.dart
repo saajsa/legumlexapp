@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:legumlex_customer/features/main_navigation/repo/main_navigation_repo.dart';
+import 'package:legumlex_customer/features/menu/model/menu_model.dart';
 import 'package:get/get.dart';
 
 class MainNavigationController extends GetxController {
@@ -31,13 +33,13 @@ class MainNavigationController extends GetxController {
       final response = await repo.getFeatureToggles();
       
       if (response.status) {
-        final data = response.data;
-        isProjectsEnable = data['projects_enable'] ?? true;
-        isInvoicesEnable = data['invoices_enable'] ?? true;
-        isContractsEnable = data['contracts_enable'] ?? true;
-        isProposalsEnable = data['proposals_enable'] ?? true;
-        isSupportEnable = data['support_enable'] ?? true;
-        isEstimatesEnable = data['estimates_enable'] ?? true;
+        MenuModel menuModel = MenuModel.fromJson(jsonDecode(response.responseJson));
+        isProjectsEnable = menuModel.data!.any((item) => item.name == 'Projects');
+        isInvoicesEnable = menuModel.data!.any((item) => item.name == 'Invoices');
+        isContractsEnable = menuModel.data!.any((item) => item.name == 'Contracts');
+        isProposalsEnable = menuModel.data!.any((item) => item.name == 'Proposals');
+        isSupportEnable = menuModel.data!.any((item) => item.name == 'Support');
+        isEstimatesEnable = menuModel.data!.any((item) => item.name == 'Estimates');
       }
     } catch (e) {
       // Default to all enabled if API fails
