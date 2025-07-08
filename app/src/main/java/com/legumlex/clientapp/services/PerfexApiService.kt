@@ -30,17 +30,17 @@ interface PerfexApiService {
     // These endpoints integrate with the new Legal Practice Management API
     
     // Cases API (maps to projects in Perfex CRM)
-    @GET("cases")
+    @GET("projects")
     suspend fun getCases(): Response<List<Case>>
     
-    @GET("cases/{id}")
+    @GET("projects/{id}")
     suspend fun getCase(@Path("id") id: String): Response<Case>
     
-    @GET("cases/client/{client_id}")
-    suspend fun getCasesByClient(@Path("client_id") clientId: String): Response<List<Case>>
+    @GET("projects")
+    suspend fun getCasesByClient(@Query("clientid") clientId: String): Response<List<Case>>
     
-    @GET("cases/search")
-    suspend fun searchCases(@Query("q") query: String): Response<List<Case>>
+    @GET("projects/search")
+    suspend fun searchCases(@Query("search") query: String): Response<List<Case>>
     
     // Consultations API
     @GET("consultations")
@@ -74,21 +74,18 @@ interface PerfexApiService {
     @GET("hearings/today")
     suspend fun getTodaysHearings(): Response<List<Hearing>>
     
-    // Legal Documents API
-    @GET("legal_documents")
+    // Legal Documents API (maps to files in Perfex CRM)
+    @GET("files")
     suspend fun getLegalDocuments(): Response<List<LegalDocument>>
     
-    @GET("legal_documents/{id}")
+    @GET("files/{id}")
     suspend fun getLegalDocument(@Path("id") id: String): Response<LegalDocument>
     
-    @GET("legal_documents/case/{case_id}")
-    suspend fun getDocumentsByCase(@Path("case_id") caseId: String): Response<List<LegalDocument>>
+    @GET("files")
+    suspend fun getDocumentsByCase(@Query("rel_type") relType: String = "project", @Query("rel_id") caseId: String): Response<List<LegalDocument>>
     
-    @GET("legal_documents/hearing/{hearing_id}")
-    suspend fun getDocumentsByHearing(@Path("hearing_id") hearingId: String): Response<List<LegalDocument>>
-    
-    @GET("legal_documents/client/{client_id}")
-    suspend fun getDocumentsByClient(@Path("client_id") clientId: String): Response<List<LegalDocument>>
+    @GET("files")
+    suspend fun getDocumentsByClient(@Query("clientid") clientId: String): Response<List<LegalDocument>>
     
     // Detailed endpoints
     @GET("customers/{id}")

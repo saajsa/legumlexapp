@@ -9,23 +9,17 @@ data class Document(
     @SerializedName("file_name")
     val fileName: String,
     
-    @SerializedName("original_name")
+    @SerializedName("original_file_name")
     val originalName: String?,
     
-    @SerializedName("file_type")
+    @SerializedName("filetype")
     val fileType: String?,
     
-    @SerializedName("file_size")
+    @SerializedName("filesize")
     val fileSize: String?,
     
     @SerializedName("description")
     val description: String?,
-    
-    @SerializedName("category")
-    val category: String?,
-    
-    @SerializedName("tags")
-    val tags: String?,
     
     @SerializedName("rel_id")
     val relId: String?, // Related entity ID (project, case, invoice, etc.)
@@ -41,9 +35,6 @@ data class Document(
     
     @SerializedName("contact_id")
     val contactId: String?,
-    
-    @SerializedName("is_public")
-    val isPublic: String?,
     
     @SerializedName("visible_to_customer")
     val visibleToCustomer: String?,
@@ -67,7 +58,17 @@ data class Document(
     val thumbnailLink: String?,
     
     @SerializedName("file_path")
-    val filePath: String?
+    val filePath: String?,
+    
+    // Legacy fields
+    @SerializedName("category")
+    val category: String?,
+    
+    @SerializedName("tags")
+    val tags: String?,
+    
+    @SerializedName("is_public")
+    val isPublic: String?
 ) {
     val displayName: String
         get() = originalName ?: fileName

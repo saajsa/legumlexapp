@@ -29,6 +29,7 @@ object ApiConfig {
         const val ACCEPT = "Accept"
         const val AUTH_TOKEN = "authtoken"  // Legal API auth header
         const val USER_AGENT = "User-Agent"
+        const val X_REQUESTED_WITH = "X-Requested-With"
     }
     
     // Content Types
