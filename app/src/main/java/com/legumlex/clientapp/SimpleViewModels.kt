@@ -2,6 +2,7 @@ package com.legumlex.clientapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.legumlex.clientapp.models.DashboardStats
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -80,7 +81,8 @@ class SimpleDashboardViewModel(private val repository: SimpleRepository) : ViewM
             _error.value = null
             
             try {
-                when (val result = repository.getDashboardStats()) {
+                val result = repository.getDashboardStats()
+                when (result) {
                     is SimpleApiResult.Success -> {
                         _stats.value = result.data
                     }
@@ -126,7 +128,8 @@ class SimpleCasesViewModel(private val repository: SimpleRepository) : ViewModel
             _error.value = null
             
             try {
-                when (val result = repository.getCases()) {
+                val result = repository.getCases()
+                when (result) {
                     is SimpleApiResult.Success -> {
                         _cases.value = result.data
                     }
@@ -172,7 +175,8 @@ class SimpleDocumentsViewModel(private val repository: SimpleRepository) : ViewM
             _error.value = null
             
             try {
-                when (val result = repository.getDocuments()) {
+                val result = repository.getDocuments()
+                when (result) {
                     is SimpleApiResult.Success -> {
                         _documents.value = result.data
                     }
@@ -218,7 +222,8 @@ class SimpleInvoicesViewModel(private val repository: SimpleRepository) : ViewMo
             _error.value = null
             
             try {
-                when (val result = repository.getInvoices()) {
+                val result = repository.getInvoices()
+                when (result) {
                     is SimpleApiResult.Success -> {
                         _invoices.value = result.data
                     }
@@ -264,7 +269,8 @@ class SimpleTicketsViewModel(private val repository: SimpleRepository) : ViewMod
             _error.value = null
             
             try {
-                when (val result = repository.getTickets()) {
+                val result = repository.getTickets()
+                when (result) {
                     is SimpleApiResult.Success -> {
                         _tickets.value = result.data
                     }
