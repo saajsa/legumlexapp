@@ -48,7 +48,7 @@ class CustomerRepository(private val context: Context) {
                 
                 ApiResult.Success(response.body()!!.message)
             } else {
-                ApiResult.Error("Logout failed")
+                ApiResult.Error(Exception("Logout failed"), "Logout failed")
             }
         } catch (e: Exception) {
             ApiResult.Error(e, "Network error: ${e.message}")
