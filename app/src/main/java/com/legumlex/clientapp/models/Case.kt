@@ -6,51 +6,50 @@ data class Case(
     @SerializedName("id")
     val id: String,
     
-    @SerializedName("name")
+    @SerializedName("case_title")
     val caseTitle: String,
     
-    @SerializedName("clientid")
+    @SerializedName("client_id")
     val clientId: String,
-    
-    @SerializedName("billing_type")
-    val billingType: String?,
-    
-    @SerializedName("status")
-    val status: String?,
-    
-    @SerializedName("start_date")
-    val dateFiled: String?,
-    
-    @SerializedName("datecreated")
-    val dateCreated: String?,
-    
-    @SerializedName("description")
-    val description: String?,
-    
-    @SerializedName("progress")
-    val progress: String?,
-    
-    @SerializedName("project_cost")
-    val projectCost: String?,
-    
-    @SerializedName("project_rate_per_hour")
-    val hourlyRate: String?,
-    
-    @SerializedName("estimated_hours")
-    val estimatedHours: String?,
-    
-    @SerializedName("deadline")
-    val deadline: String?,
-    
-    // Legacy fields for backward compatibility
-    @SerializedName("consultation_id")
-    val consultationId: String?,
     
     @SerializedName("case_number")
     val caseNumber: String?,
     
+    @SerializedName("contact_id")
+    val contactId: String?,
+    
+    @SerializedName("court_room_id")
+    val courtRoomId: String?,
+    
+    @SerializedName("date_filed")
+    val dateFiled: String?,
+    
+    @SerializedName("date_created")
+    val dateCreated: String?,
+    
     @SerializedName("client_name")
     val clientName: String?,
+    
+    @SerializedName("contact_name")
+    val contactName: String?,
+    
+    @SerializedName("court_name")
+    val courtName: String?,
+    
+    @SerializedName("court_no")
+    val courtNo: String?,
+    
+    @SerializedName("judge_name")
+    val judgeName: String?,
+    
+    @SerializedName("court_display")
+    val courtDisplay: String?,
+    
+    @SerializedName("consultation_reference")
+    val consultationReference: String?,
+    
+    @SerializedName("consultation_id")
+    val consultationId: String?,
     
     @SerializedName("hearing_count")
     val hearingCount: Int? = 0,
@@ -68,23 +67,21 @@ data class Case(
         get() = (documentCount ?: 0) > 0
     
     val isActive: Boolean
-        get() = status != "5" // 5 is typically completed/closed status
+        get() = dateCreated != null
     
     val shortDescription: String
         get() = when {
-            !clientName.isNullOrBlank() && !description.isNullOrBlank() -> "$clientName • ${description.take(50)}"
+            !clientName.isNullOrBlank() && !courtName.isNullOrBlank() -> "$clientName • $courtName"
             !clientName.isNullOrBlank() -> clientName
-            !description.isNullOrBlank() -> description.take(50)
-            else -> "Project #$id"
+            !courtName.isNullOrBlank() -> courtName
+            else -> "Case #$id"
         }
     
     val statusText: String
-        get() = when (status) {
-            "1" -> "Not Started"
-            "2" -> "In Progress"
-            "3" -> "On Hold"
-            "4" -> "Cancelled"
-            "5" -> "Completed"
+        get() = when {
+            dateFiled != null -> "Filed"
+            courtRoomId != null -> "Assigned to Court"
+            consultationId != null -> "From Consultation"
             else -> "Active"
         }
     

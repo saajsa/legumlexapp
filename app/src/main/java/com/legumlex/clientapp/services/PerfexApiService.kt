@@ -29,18 +29,18 @@ interface PerfexApiService {
     // Legal Practice Management API Endpoints (Extended)
     // These endpoints integrate with the new Legal Practice Management API
     
-    // Cases API (maps to projects in Perfex CRM)
-    @GET("projects")
+    // Cases API (custom Cases module)
+    @GET("cases")
     suspend fun getCases(): Response<List<Case>>
     
-    @GET("projects/{id}")
+    @GET("cases/{id}")
     suspend fun getCase(@Path("id") id: String): Response<Case>
     
-    @GET("projects")
-    suspend fun getCasesByClient(@Query("clientid") clientId: String): Response<List<Case>>
+    @GET("cases/client/{client_id}")
+    suspend fun getCasesByClient(@Path("client_id") clientId: String): Response<List<Case>>
     
-    @GET("projects/search")
-    suspend fun searchCases(@Query("search") query: String): Response<List<Case>>
+    @GET("cases/search")
+    suspend fun searchCases(@Query("q") query: String): Response<List<Case>>
     
     // Consultations API
     @GET("consultations")
