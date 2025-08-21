@@ -5,6 +5,7 @@ import 'package:legumlex_customer/common/models/response_model.dart';
 import 'package:legumlex_customer/core/utils/local_strings.dart';
 import 'package:legumlex_customer/features/estimate/model/estimate_model.dart';
 import 'package:legumlex_customer/features/invoice/model/invoice_model.dart';
+import 'package:legumlex_customer/features/main_navigation/controller/main_navigation_controller.dart';
 import 'package:legumlex_customer/features/project/model/discussions_model.dart';
 import 'package:legumlex_customer/features/project/model/project_details_model.dart';
 import 'package:legumlex_customer/features/project/model/project_model.dart';
@@ -51,9 +52,32 @@ class ProjectController extends GetxController {
   }
 
   Future<void> loadProjects() async {
-    ResponseModel responseModel = await projectRepo.getAllProjects();
-    projectsModel =
-        ProjectsModel.fromJson(jsonDecode(responseModel.responseJson));
+    try {
+      ResponseModel responseModel = await projectRepo.getAllProjects();
+      
+      if (responseModel.status && responseModel.responseJson.isNotEmpty) {
+        projectsModel = ProjectsModel.fromJson(jsonDecode(responseModel.responseJson));
+      } else {
+        // Handle permission denied or other errors
+        print('Projects load failed: ${responseModel.message}');
+        
+        // If it's a permission denied error, disable the feature in navigation
+        if (responseModel.message?.toLowerCase().contains('permission') == true) {
+          try {
+            final mainNavController = Get.find<MainNavigationController>();
+            mainNavController.disableFeatureOnPermissionDenied('projects');
+          } catch (e) {
+            print('Could not disable projects in navigation: $e');
+          }
+        }
+        
+        projectsModel = ProjectsModel(status: false, message: responseModel.message, data: []);
+      }
+    } catch (e) {
+      print('Error loading projects: $e');
+      projectsModel = ProjectsModel(status: false, message: 'Failed to load projects', data: []);
+    }
+    
     isLoading = false;
     update();
   }

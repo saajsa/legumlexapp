@@ -3,6 +3,7 @@ import 'package:legumlex_customer/features/cases/model/case_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
 import 'package:legumlex_customer/features/cases/repo/cases_repo.dart';
+import 'package:legumlex_customer/features/main_navigation/controller/main_navigation_controller.dart';
 
 class CasesController extends GetxController {
   CasesRepo get _casesRepo => Get.find<CasesRepo>();
@@ -38,6 +39,16 @@ class CasesController extends GetxController {
         _cases.assignAll(response.data!);
       } else {
         _errorMessage = response.message ?? 'Failed to load cases';
+        
+        // If it's a permission denied error, disable the feature in navigation
+        if (_errorMessage?.toLowerCase().contains('permission') == true) {
+          try {
+            final mainNavController = Get.find<MainNavigationController>();
+            mainNavController.disableFeatureOnPermissionDenied('cases');
+          } catch (e) {
+            print('Could not disable cases in navigation: $e');
+          }
+        }
       }
     } catch (e) {
       _errorMessage = 'Error occurred while fetching cases: $e';

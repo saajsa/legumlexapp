@@ -93,6 +93,38 @@ class MainNavigationController extends GetxController {
     update();
   }
 
+  // Method to disable a feature when API call fails with 403
+  void disableFeatureOnPermissionDenied(String feature) {
+    print('=== DISABLING FEATURE DUE TO 403: $feature ===');
+    
+    switch (feature.toLowerCase()) {
+      case 'projects':
+        isProjectsEnable = false;
+        break;
+      case 'invoices':
+        isInvoicesEnable = false;
+        break;
+      case 'contracts':
+        isContractsEnable = false;
+        break;
+      case 'proposals':
+        isProposalsEnable = false;
+        break;
+      case 'support':
+      case 'tickets':
+        isSupportEnable = false;
+        break;
+      case 'estimates':
+        isEstimatesEnable = false;
+        break;
+      case 'cases':
+        isCasesEnable = false;
+        break;
+    }
+    
+    update(); // Trigger UI rebuild
+  }
+
   // Navigation helpers
   List<String> getEnabledFeatures() {
     List<String> features = ['dashboard']; // Always enabled
