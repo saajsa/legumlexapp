@@ -175,13 +175,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildFilterPills() {
-    final filters = [
-      {'id': 'all', 'label': 'All Items'},
-      {'id': 'projects', 'label': 'Projects'},
-      {'id': 'invoices', 'label': 'Invoices'},
-      {'id': 'cases', 'label': 'Cases'},
-      {'id': 'consultations', 'label': 'Consultations'},
-    ];
+    return GetBuilder<DashboardController>(
+      builder: (controller) {
+        final filters = [
+          {'id': 'all', 'label': 'All Items'},
+          {'id': 'projects', 'label': 'Projects'},
+          {'id': 'invoices', 'label': 'Invoices'},
+          if (!controller.casesPermissionDenied) {'id': 'cases', 'label': 'Cases'},
+          if (!controller.casesPermissionDenied) {'id': 'consultations', 'label': 'Consultations'},
+        ];
 
     return Container(
       height: 40,
@@ -220,6 +222,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
       ),
     );
+      },
+    );
   }
 
   Widget _buildOverviewStats(DashboardController controller) {
@@ -247,7 +251,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         'color': CasesTheme.success,
         'onTap': () => Get.toNamed(RouteHelper.invoiceScreen),
       },
-      {
+      if (!controller.casesPermissionDenied) {
         'title': 'Active Cases',
         'count': controller.activeCasesCount,
         'icon': Icons.gavel,
@@ -509,7 +513,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 24),
         ],
-        if (selectedFilter == 'all' || selectedFilter == 'cases') ...[
+        if ((selectedFilter == 'all' || selectedFilter == 'cases') && !controller.casesPermissionDenied && controller.recentCases.isNotEmpty) ...[
           _buildActivitySection(
             'Recent Cases',
             () => Get.toNamed(RouteHelper.casesScreen),
@@ -517,12 +521,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 24),
         ],
-        if (selectedFilter == 'all' || selectedFilter == 'consultations') ...[
+        if ((selectedFilter == 'all' || selectedFilter == 'consultations') && !controller.casesPermissionDenied && controller.recentConsultations.isNotEmpty) ...[
           _buildActivitySection(
             'Recent Consultations',
             () => Get.toNamed(RouteHelper.casesScreen),
             _buildConsultationPreview(controller),
           ),
+        ],
+        if (controller.casesPermissionDenied && (selectedFilter == 'all' || selectedFilter == 'cases' || selectedFilter == 'consultations')) ...[
+          _buildPermissionDeniedMessage(),
+          const SizedBox(height: 24),
         ],
       ],
     );
@@ -801,6 +809,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildPermissionDeniedMessage() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: CasesTheme.warningBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: CasesTheme.warning),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            color: CasesTheme.warning,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Cases Module Access',
+                  style: CasesTheme.headingLg.copyWith(
+                    color: CasesTheme.warning,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Cases and consultations are not available for your account. Contact your administrator for access.',
+                  style: CasesTheme.bodySmall.copyWith(
+                    color: CasesTheme.textDefault,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

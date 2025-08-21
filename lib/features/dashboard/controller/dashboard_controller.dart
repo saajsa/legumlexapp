@@ -29,6 +29,7 @@ class DashboardController extends GetxController {
   List<CaseModel> recentCases = [];
   List<ConsultationModel> recentConsultations = [];
   int activeCasesCount = 0;
+  bool casesPermissionDenied = false;
 
   Future<void> initialData({bool shouldLoad = true}) async {
     isLoading = shouldLoad ? true : false;
@@ -72,13 +73,23 @@ class DashboardController extends GetxController {
       if (casesResponse.status == true && casesResponse.data != null) {
         recentCases = casesResponse.data!.take(3).toList();
         activeCasesCount = casesResponse.data!.where((c) => c.status == 'active').length;
+        casesPermissionDenied = false;
+      } else if (casesResponse.message?.contains('permission') == true) {
+        casesPermissionDenied = true;
+        activeCasesCount = 0;
+        recentCases.clear();
+        print('Cases access denied - hiding cases section');
       }
       
       if (consultationsResponse.status == true && consultationsResponse.data != null) {
         recentConsultations = consultationsResponse.data!.take(3).toList();
+      } else if (consultationsResponse.message?.contains('permission') == true) {
+        recentConsultations.clear();
+        print('Consultations access denied - hiding consultations section');
       }
     } catch (e) {
       print('Error loading cases data: $e');
+      casesPermissionDenied = true;
     }
   }
 
