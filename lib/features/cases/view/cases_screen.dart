@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-import 'package:legumlexapp/core/route/route.dart';
-import 'package:legumlexapp/features/cases/controller/cases_controller.dart';
-import 'package:legumlexapp/features/cases/controller/consultations_controller.dart';
-import 'package:legumlexapp/features/cases/controller/documents_controller.dart';
-import 'package:legumlexapp/features/cases/model/case_model.dart';
-import 'package:legumlexapp/features/cases/widget/case_card.dart';
-import 'package:legumlexapp/features/cases/widget/consultation_card.dart';
-import 'package:legumlexapp/features/cases/widget/document_card.dart';
+import 'package:legumlex_customer/core/route/route.dart';
+import 'package:legumlex_customer/features/cases/controller/cases_controller.dart';
+import 'package:legumlex_customer/features/cases/controller/consultations_controller.dart';
+import 'package:legumlex_customer/features/cases/controller/documents_controller.dart';
+import 'package:legumlex_customer/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/widget/case_card.dart';
+import 'package:legumlex_customer/features/cases/widget/consultation_card.dart';
+import 'package:legumlex_customer/features/cases/widget/document_card.dart';
 
 class CasesScreen extends StatefulWidget {
   @override
@@ -17,17 +16,25 @@ class CasesScreen extends StatefulWidget {
 
 class _CasesScreenState extends State<CasesScreen> with TickerProviderStateMixin {
   late TabController _tabController;
+  late CasesController casesController;
+  late ConsultationsController consultationsController;
+  late DocumentsController documentsController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     
+    // Initialize controllers
+    casesController = Get.put(CasesController());
+    consultationsController = Get.put(ConsultationsController());
+    documentsController = Get.put(DocumentsController());
+    
     // Fetch initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<CasesController>(context, listen: false).fetchCases();
-      Provider.of<ConsultationsController>(context, listen: false).fetchConsultations();
-      Provider.of<DocumentsController>(context, listen: false).fetchDocuments();
+      casesController.fetchCases();
+      consultationsController.fetchConsultations();
+      documentsController.fetchDocuments();
     });
   }
 
@@ -63,8 +70,8 @@ class _CasesScreenState extends State<CasesScreen> with TickerProviderStateMixin
   }
 
   Widget _buildCasesTab() {
-    return Consumer<CasesController>(
-      builder: (context, casesController, child) {
+    return GetBuilder<CasesController>(
+      builder: (casesController) {
         if (casesController.isLoading) {
           return Center(child: CircularProgressIndicator());
         }
@@ -100,8 +107,8 @@ class _CasesScreenState extends State<CasesScreen> with TickerProviderStateMixin
   }
 
   Widget _buildConsultationsTab() {
-    return Consumer<ConsultationsController>(
-      builder: (context, consultationsController, child) {
+    return GetBuilder<ConsultationsController>(
+      builder: (consultationsController) {
         if (consultationsController.isLoading) {
           return Center(child: CircularProgressIndicator());
         }
@@ -137,8 +144,8 @@ class _CasesScreenState extends State<CasesScreen> with TickerProviderStateMixin
   }
 
   Widget _buildDocumentsTab() {
-    return Consumer<DocumentsController>(
-      builder: (context, documentsController, child) {
+    return GetBuilder<DocumentsController>(
+      builder: (documentsController) {
         if (documentsController.isLoading) {
           return Center(child: CircularProgressIndicator());
         }

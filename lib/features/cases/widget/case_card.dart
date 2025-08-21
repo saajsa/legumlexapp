@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:legumlexapp/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/model/case_model.dart';
 
 class CaseCard extends StatelessWidget {
   final CaseModel caseModel;

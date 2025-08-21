@@ -1,5 +1,5 @@
-import 'package:legumlexapp/core/utils/urls.dart';
-import 'package:legumlexapp/features/cases/model/document_model.dart';
+import 'package:legumlex_customer/core/utils/urls.dart';
+import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

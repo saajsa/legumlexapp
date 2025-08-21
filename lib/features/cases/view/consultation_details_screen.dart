@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-import 'package:legumlexapp/features/cases/controller/consultations_controller.dart';
-import 'package:legumlexapp/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/controller/consultations_controller.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 
 class ConsultationDetailsScreen extends StatefulWidget {
   @override
@@ -11,15 +10,18 @@ class ConsultationDetailsScreen extends StatefulWidget {
 
 class _ConsultationDetailsScreenState extends State<ConsultationDetailsScreen> {
   late ConsultationModel consultation;
+  late ConsultationsController consultationsController;
 
   @override
   void initState() {
     super.initState();
     consultation = Get.arguments as ConsultationModel;
     
+    // Initialize controller
+    consultationsController = Get.put(ConsultationsController());
+    
     // Fetch consultation details
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final consultationsController = Provider.of<ConsultationsController>(context, listen: false);
       consultationsController.fetchConsultationById(consultation.id ?? 0);
     });
   }

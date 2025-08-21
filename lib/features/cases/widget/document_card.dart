@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:legumlexapp/features/cases/model/document_model.dart';
+import 'package:legumlex_customer/features/cases/model/document_model.dart';
 
 class DocumentCard extends StatelessWidget {
   final DocumentModel document;

@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:legumlexapp/features/cases/model/consultation_model.dart';
-import 'package:legumlexapp/features/cases/repo/consultations_repo.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/repo/consultations_repo.dart';
 
-class ConsultationsController extends ChangeNotifier {
+class ConsultationsController extends GetxController {
   ConsultationsRepo get _consultationsRepo => Get.find<ConsultationsRepo>();
   
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
-  List<ConsultationModel> _consultations = [];
+  List<ConsultationModel> _consultations = <ConsultationModel>[].obs;
   List<ConsultationModel> get consultations => _consultations;
   
   ConsultationModel? _selectedConsultation;
@@ -22,13 +21,13 @@ class ConsultationsController extends ChangeNotifier {
   Future<void> fetchConsultations() async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _consultationsRepo.getConsultations();
       
       if (response.status == true && response.data != null) {
-        _consultations = response.data!;
+        _consultations.assignAll(response.data!);
       } else {
         _errorMessage = response.message ?? 'Failed to load consultations';
       }
@@ -36,7 +35,7 @@ class ConsultationsController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching consultations: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
@@ -44,7 +43,7 @@ class ConsultationsController extends ChangeNotifier {
   Future<void> fetchConsultationById(int consultationId) async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _consultationsRepo.getConsultationById(consultationId);
@@ -58,19 +57,19 @@ class ConsultationsController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching consultation: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
   // Clear selected consultation
   void clearSelectedConsultation() {
     _selectedConsultation = null;
-    notifyListeners();
+    update();
   }
   
   // Clear error message
   void clearError() {
     _errorMessage = null;
-    notifyListeners();
+    update();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:legumlexapp/features/cases/model/hearing_model.dart';
+import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
 
 class HearingCard extends StatelessWidget {
   final HearingModel hearing;

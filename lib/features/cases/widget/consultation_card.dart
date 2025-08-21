@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:legumlexapp/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 
 class ConsultationCard extends StatelessWidget {
   final ConsultationModel consultation;

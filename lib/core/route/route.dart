@@ -98,7 +98,7 @@ class RouteHelper {
     GetPage(name: profileScreen, page: () => const ProfileScreen()),
     GetPage(name: settingsScreen, page: () => const MenuScreen()),
     GetPage(name: privacyScreen, page: () => const PrivacyPolicyScreen()),
-    GetPage(name: casesScreen, page: () => const CasesScreen()),
+    GetPage(name: casesScreen, page: () => CasesScreen()),
     GetPage(
         name: caseDetailsScreen,
         page: () => CaseDetailsScreen(caseModel: Get.arguments)),

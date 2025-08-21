@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-import 'package:legumlexapp/features/cases/controller/cases_controller.dart';
-import 'package:legumlexapp/features/cases/model/case_model.dart';
-import 'package:legumlexapp/features/cases/model/hearing_model.dart';
-import 'package:legumlexapp/features/cases/model/document_model.dart';
-import 'package:legumlexapp/features/cases/widget/hearing_card.dart';
-import 'package:legumlexapp/features/cases/widget/document_card.dart';
+import 'package:legumlex_customer/features/cases/controller/cases_controller.dart';
+import 'package:legumlex_customer/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
+import 'package:legumlex_customer/features/cases/model/document_model.dart';
+import 'package:legumlex_customer/features/cases/widget/hearing_card.dart';
+import 'package:legumlex_customer/features/cases/widget/document_card.dart';
 
 class CaseDetailsScreen extends StatefulWidget {
   @override
@@ -16,6 +15,7 @@ class CaseDetailsScreen extends StatefulWidget {
 class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   late CaseModel caseModel;
+  late CasesController casesController;
 
   @override
   void initState() {
@@ -23,9 +23,11 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProvid
     caseModel = Get.arguments as CaseModel;
     _tabController = TabController(length: 2, vsync: this);
     
+    // Initialize controller
+    casesController = Get.put(CasesController());
+    
     // Fetch case details, hearings, and documents
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final casesController = Provider.of<CasesController>(context, listen: false);
       casesController.fetchCaseById(caseModel.id ?? 0);
       casesController.fetchCaseHearings(caseModel.id ?? 0);
       casesController.fetchCaseDocuments(caseModel.id ?? 0);
@@ -78,8 +80,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProvid
   }
 
   Widget _buildHearingsAndDocumentsTab() {
-    return Consumer<CasesController>(
-      builder: (context, casesController, child) {
+    return GetBuilder<CasesController>(
+      builder: (casesController) {
         return DefaultTabController(
           length: 2,
           child: Column(
@@ -117,11 +119,11 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProvid
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 8.0),
-            _buildInfoRow('Case Title', widget.caseModel.caseTitle ?? 'N/A'),
-            _buildInfoRow('Case Number', widget.caseModel.caseNumber ?? 'N/A'),
-            _buildInfoRow('Date Filed', widget.caseModel.dateFiled ?? 'N/A'),
-            _buildInfoRow('Date Created', widget.caseModel.dateCreated ?? 'N/A'),
-            _buildInfoRow('Status', widget.caseModel.status ?? 'N/A'),
+            _buildInfoRow('Case Title', caseModel.caseTitle ?? 'N/A'),
+            _buildInfoRow('Case Number', caseModel.caseNumber ?? 'N/A'),
+            _buildInfoRow('Date Filed', caseModel.dateFiled ?? 'N/A'),
+            _buildInfoRow('Date Created', caseModel.dateCreated ?? 'N/A'),
+            _buildInfoRow('Status', caseModel.status ?? 'N/A'),
           ],
         ),
       ),
@@ -140,11 +142,11 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProvid
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 8.0),
-            _buildInfoRow('Court Name', widget.caseModel.courtName ?? 'N/A'),
-            _buildInfoRow('Court No', widget.caseModel.courtNo ?? 'N/A'),
-            _buildInfoRow('Judge Name', widget.caseModel.judgeName ?? 'N/A'),
-            _buildInfoRow('Court Display', widget.caseModel.courtDisplay ?? 'N/A'),
-            _buildInfoRow('Next Hearing Date', widget.caseModel.nextHearingDate ?? 'N/A'),
+            _buildInfoRow('Court Name', caseModel.courtName ?? 'N/A'),
+            _buildInfoRow('Court No', caseModel.courtNo ?? 'N/A'),
+            _buildInfoRow('Judge Name', caseModel.judgeName ?? 'N/A'),
+            _buildInfoRow('Court Display', caseModel.courtDisplay ?? 'N/A'),
+            _buildInfoRow('Next Hearing Date', caseModel.nextHearingDate ?? 'N/A'),
           ],
         ),
       ),
@@ -163,8 +165,8 @@ class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProvid
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 8.0),
-            _buildInfoRow('Client Name', widget.caseModel.clientName ?? 'N/A'),
-            _buildInfoRow('Contact Name', widget.caseModel.contactName ?? 'N/A'),
+            _buildInfoRow('Client Name', caseModel.clientName ?? 'N/A'),
+            _buildInfoRow('Contact Name', caseModel.contactName ?? 'N/A'),
           ],
         ),
       ),

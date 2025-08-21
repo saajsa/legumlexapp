@@ -1,27 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:legumlexapp/features/cases/model/case_model.dart';
-import 'package:legumlexapp/features/cases/model/consultation_model.dart';
-import 'package:legumlexapp/features/cases/model/document_model.dart';
-import 'package:legumlexapp/features/cases/model/hearing_model.dart';
-import 'package:legumlexapp/features/cases/repo/cases_repo.dart';
+import 'package:legumlex_customer/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/model/document_model.dart';
+import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
+import 'package:legumlex_customer/features/cases/repo/cases_repo.dart';
 
-class CasesController extends ChangeNotifier {
+class CasesController extends GetxController {
   CasesRepo get _casesRepo => Get.find<CasesRepo>();
   
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
-  List<CaseModel> _cases = [];
+  List<CaseModel> _cases = <CaseModel>[].obs;
   List<CaseModel> get cases => _cases;
   
   CaseModel? _selectedCase;
   CaseModel? get selectedCase => _selectedCase;
   
-  List<HearingModel> _hearings = [];
+  List<HearingModel> _hearings = <HearingModel>[].obs;
   List<HearingModel> get hearings => _hearings;
   
-  List<DocumentModel> _documents = [];
+  List<DocumentModel> _documents = <DocumentModel>[].obs;
   List<DocumentModel> get documents => _documents;
   
   String? _errorMessage;
@@ -31,13 +30,13 @@ class CasesController extends ChangeNotifier {
   Future<void> fetchCases() async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _casesRepo.getCases();
       
       if (response.status == true && response.data != null) {
-        _cases = response.data!;
+        _cases.assignAll(response.data!);
       } else {
         _errorMessage = response.message ?? 'Failed to load cases';
       }
@@ -45,7 +44,7 @@ class CasesController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching cases: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
@@ -53,7 +52,7 @@ class CasesController extends ChangeNotifier {
   Future<void> fetchCaseById(int caseId) async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _casesRepo.getCaseById(caseId);
@@ -67,7 +66,7 @@ class CasesController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching case: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
@@ -75,13 +74,13 @@ class CasesController extends ChangeNotifier {
   Future<void> fetchCaseHearings(int caseId) async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _casesRepo.getCaseHearings(caseId);
       
       if (response.status == true && response.data != null) {
-        _hearings = response.data!;
+        _hearings.assignAll(response.data!);
       } else {
         _errorMessage = response.message ?? 'Failed to load hearings';
       }
@@ -89,7 +88,7 @@ class CasesController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching hearings: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
@@ -97,13 +96,13 @@ class CasesController extends ChangeNotifier {
   Future<void> fetchCaseDocuments(int caseId) async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    update();
     
     try {
       final response = await _casesRepo.getCaseDocuments(caseId);
       
       if (response.status == true && response.data != null) {
-        _documents = response.data!;
+        _documents.assignAll(response.data!);
       } else {
         _errorMessage = response.message ?? 'Failed to load documents';
       }
@@ -111,19 +110,19 @@ class CasesController extends ChangeNotifier {
       _errorMessage = 'Error occurred while fetching documents: $e';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      update();
     }
   }
   
   // Clear selected case
   void clearSelectedCase() {
     _selectedCase = null;
-    notifyListeners();
+    update();
   }
   
   // Clear error message
   void clearError() {
     _errorMessage = null;
-    notifyListeners();
+    update();
   }
 }
