@@ -411,7 +411,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 1.8,
+                childAspectRatio: 2.2,
               ),
               itemCount: actions.length,
               itemBuilder: (context, index) {
@@ -471,13 +471,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     title,
                     style: CasesTheme.headingLg.copyWith(fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: CasesTheme.bodySmall,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Flexible(
+                    child: Text(
+                      description,
+                      style: CasesTheme.bodySmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -841,9 +845,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Cases and consultations are not available for your account. Contact your administrator for access.',
+                  'Cases and consultations are not available. If you recently gained access, try refreshing or restarting the app.',
                   style: CasesTheme.bodySmall.copyWith(
                     color: CasesTheme.textColor,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                GetBuilder<DashboardController>(
+                  builder: (controller) => ElevatedButton(
+                    onPressed: () async {
+                      controller.isLoading = true;
+                      controller.update();
+                      await controller.loadCasesData();
+                      controller.isLoading = false;
+                      controller.update();
+                    },
+                    style: CasesTheme.primaryButtonStyle.copyWith(
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
+                    ),
+                    child: Text(
+                      controller.isLoading ? 'Refreshing...' : 'Retry Access',
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
                 ),
               ],

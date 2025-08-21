@@ -74,22 +74,35 @@ class DashboardController extends GetxController {
         recentCases = casesResponse.data!.take(3).toList();
         activeCasesCount = casesResponse.data!.where((c) => c.status == 'active').length;
         casesPermissionDenied = false;
-      } else if (casesResponse.message?.contains('permission') == true) {
+      } else if (casesResponse.status == false && 
+                 casesResponse.message?.toLowerCase().contains('permission') == true) {
         casesPermissionDenied = true;
         activeCasesCount = 0;
         recentCases.clear();
-        // Cases access denied - hiding cases section
+        // Cases access denied - permissions may need refresh
+      } else {
+        // Other error - treat as no data available
+        activeCasesCount = 0;
+        recentCases.clear();
       }
       
       if (consultationsResponse.status == true && consultationsResponse.data != null) {
         recentConsultations = consultationsResponse.data!.take(3).toList();
-      } else if (consultationsResponse.message?.contains('permission') == true) {
+      } else if (consultationsResponse.status == false && 
+                 consultationsResponse.message?.toLowerCase().contains('permission') == true) {
         recentConsultations.clear();
-        // Consultations access denied - hiding consultations section
+        casesPermissionDenied = true;
+        // Consultations access denied - permissions may need refresh
+      } else {
+        // Other error - treat as no data available
+        recentConsultations.clear();
       }
     } catch (e) {
-      // Error loading cases data - permission denied
+      // Error loading cases data - treat as permission issue
       casesPermissionDenied = true;
+      activeCasesCount = 0;
+      recentCases.clear();
+      recentConsultations.clear();
     }
   }
 
