@@ -12,8 +12,12 @@ import 'package:legumlex_customer/core/utils/local_strings.dart';
 import 'package:legumlex_customer/core/utils/style.dart';
 import 'package:legumlex_customer/features/dashboard/controller/dashboard_controller.dart';
 import 'package:legumlex_customer/features/dashboard/repo/dashboard_repo.dart';
-import 'package:legumlex_customer/features/dashboard/widget/custom_container.dart';
-import 'package:legumlex_customer/features/dashboard/widget/custom_linerprogress.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_summary_card.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_section.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_invoice_preview.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_project_preview.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_case_preview.dart';
+import 'package:legumlex_customer/features/dashboard/widget/dashboard_consultation_preview.dart';
 import 'package:legumlex_customer/features/dashboard/widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -101,20 +105,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   },
                   color: Theme.of(context).primaryColor,
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(Dimensions.space10),
+                    padding: const EdgeInsets.all(Dimensions.space16),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(15),
+                        // Profile Section
+                        Container(
+                          padding: const EdgeInsets.all(Dimensions.space20),
+                          margin: const EdgeInsets.only(bottom: Dimensions.space20),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(Dimensions.cardRadius),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircleAvatar(
                                 backgroundColor: ColorResources.blueGreyColor,
-                                radius: 42,
+                                radius: 40,
                                 child: CircleImageWidget(
-                                  imagePath:
-                                      '${controller.dashboardModel.data!.contactImage}',
+                                  imagePath: '${controller.dashboardModel.data!.contactImage}',
                                   isAsset: false,
                                   isProfile: true,
                                   width: 80,
@@ -122,208 +137,184 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               const SizedBox(width: Dimensions.space20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
                                       text: TextSpan(children: [
-                                    TextSpan(
-                                      text: '${LocalStrings.welcome.tr} ',
-                                      style: regularLarge.copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color),
+                                        TextSpan(
+                                          text: '${LocalStrings.welcome.tr} ',
+                                          style: regularLarge.copyWith(
+                                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: controller.dashboardModel.data!.contactFirstName,
+                                          style: regularLarge.copyWith(
+                                            color: ColorResources.secondaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ])
                                     ),
-                                    TextSpan(
-                                      text: controller.dashboardModel.data!
-                                          .contactFirstName,
-                                      style: regularLarge.copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color),
-                                    ),
-                                  ])),
-                                  const SizedBox(height: Dimensions.space5),
-                                  Text(
-                                    '${controller.dashboardModel.data!.contactTitle} - ${controller.dashboardModel.data!.clientName}',
-                                    style: regularSmall.copyWith(
-                                        color: ColorResources.blueGreyColor),
-                                  )
-                                ],
+                                    const SizedBox(height: Dimensions.space5),
+                                    Text(
+                                      '${controller.dashboardModel.data!.contactTitle} - ${controller.dashboardModel.data!.clientName}',
+                                      style: regularSmall.copyWith(
+                                        color: ColorResources.blueGreyColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
                         ),
+
+                        // Summary Cards Row
                         Row(
                           children: [
-                            Container(
-                              width: 3,
-                              height: 15,
-                              color: ColorResources.secondaryColor,
-                            ),
-                            const SizedBox(width: Dimensions.space5),
-                            Text(
-                              LocalStrings.projectSummery.tr,
-                              style: regularLarge,
-                            ),
-                            const Spacer(),
-                            TextButton(
-                              onPressed: () {
-                                Get.toNamed(RouteHelper.projectScreen);
-                              },
-                              child: Text(
-                                LocalStrings.viewAll.tr,
-                                style: lightSmall.copyWith(
-                                    color: ColorResources.blueGreyColor),
+                            Expanded(
+                              child: DashboardSummaryCard(
+                                title: 'Total Projects',
+                                count: ((controller.dashboardModel.data!.projectsNotStarted ?? 0) +
+                                       (controller.dashboardModel.data!.projectsInProgress ?? 0) +
+                                       (controller.dashboardModel.data!.projectsOnHold ?? 0) +
+                                       (controller.dashboardModel.data!.projectsFinished ?? 0)).toString(),
+                                icon: Icons.work_outline,
+                                iconColor: ColorResources.blueColor,
+                                backgroundColor: ColorResources.blueColor,
+                                onTap: () => Get.toNamed(RouteHelper.projectScreen),
+                                subItems: [
+                                  {'label': 'In Progress', 'value': controller.dashboardModel.data!.projectsInProgress ?? 0, 'color': ColorResources.redColor},
+                                  {'label': 'Finished', 'value': controller.dashboardModel.data!.projectsFinished ?? 0, 'color': ColorResources.greenColor},
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: Dimensions.space10),
-                        Row(
-                          children: [
-                            CustomContainer(
-                                name: LocalStrings.notStarted.tr,
-                                number: controller
-                                    .dashboardModel.data!.projectsNotStarted
-                                    .toString(),
-                                color: ColorResources.blueColor),
-                            const SizedBox(width: Dimensions.space10),
-                            CustomContainer(
-                                name: LocalStrings.inProgress.tr,
-                                number: controller
-                                    .dashboardModel.data!.projectsInProgress
-                                    .toString(),
-                                color: ColorResources.redColor),
-                          ],
-                        ),
-                        const SizedBox(height: Dimensions.space10),
-                        Row(
-                          children: [
-                            CustomContainer(
-                                name: LocalStrings.onHold.tr,
-                                number: controller
-                                    .dashboardModel.data!.projectsOnHold
-                                    .toString(),
-                                color: ColorResources.yellowColor),
-                            const SizedBox(width: Dimensions.space10),
-                            CustomContainer(
-                                name: LocalStrings.finished.tr,
-                                number: controller
-                                    .dashboardModel.data!.projectsFinished
-                                    .toString(),
-                                color: ColorResources.greenColor),
-                          ],
-                        ),
-                        const SizedBox(height: Dimensions.space10),
-                        Row(
-                          children: [
-                            Container(
-                              width: 3,
-                              height: 15,
-                              color: ColorResources.secondaryColor,
                             ),
-                            const SizedBox(width: Dimensions.space5),
-                            Text(
-                              LocalStrings.quickInvoices.tr,
-                              style: regularLarge,
-                            ),
-                            const Spacer(),
-                            TextButton(
-                              onPressed: () {
-                                Get.toNamed(RouteHelper.invoiceScreen);
-                              },
-                              child: Text(
-                                LocalStrings.viewAll.tr,
-                                style: lightSmall.copyWith(
-                                    color: ColorResources.blueGreyColor),
+                            const SizedBox(width: Dimensions.space12),
+                            Expanded(
+                              child: DashboardSummaryCard(
+                                title: 'Total Invoices',
+                                count: (controller.dashboardModel.data!.invoicesTotal ?? 0).toString(),
+                                icon: Icons.receipt_long,
+                                iconColor: ColorResources.greenColor,
+                                backgroundColor: ColorResources.greenColor,
+                                onTap: () => Get.toNamed(RouteHelper.invoiceScreen),
+                                subItems: [
+                                  {'label': 'Unpaid', 'value': controller.dashboardModel.data!.invoicesUnPaid ?? 0, 'color': ColorResources.redColor},
+                                  {'label': 'Paid', 'value': controller.dashboardModel.data!.invoicesPaid ?? 0, 'color': ColorResources.greenColor},
+                                ],
                               ),
-                            )
+                            ),
                           ],
                         ),
-                        CustomLinerProgress(
-                          color: ColorResources.redColor,
-                          value: controller
-                                      .dashboardModel.data!.invoicesUnPaid !=
-                                  0
-                              ? controller.dashboardModel.data!.invoicesUnPaid!
-                                      .toDouble() /
-                                  controller.dashboardModel.data!.invoicesTotal!
-                                      .toDouble()
-                              : 0,
-                          name: LocalStrings.unpaid.tr,
-                          data:
-                              '${controller.dashboardModel.data!.invoicesUnPaid}/${controller.dashboardModel.data!.invoicesTotal}',
+                        const SizedBox(height: Dimensions.space12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DashboardSummaryCard(
+                                title: 'Cases',
+                                count: '0', // Since no case data in dashboard model
+                                icon: Icons.gavel,
+                                iconColor: ColorResources.secondaryColor,
+                                backgroundColor: ColorResources.secondaryColor,
+                                onTap: () => Get.toNamed(RouteHelper.casesScreen),
+                              ),
+                            ),
+                            const SizedBox(width: Dimensions.space12),
+                            Expanded(
+                              child: DashboardSummaryCard(
+                                title: 'Support Tickets',
+                                count: ((controller.dashboardModel.data!.ticketsOpen ?? 0) +
+                                       (controller.dashboardModel.data!.ticketsInProgress ?? 0) +
+                                       (controller.dashboardModel.data!.ticketsAnswered ?? 0) +
+                                       (controller.dashboardModel.data!.ticketsClosed ?? 0)).toString(),
+                                icon: Icons.support_agent,
+                                iconColor: ColorResources.purpleColor,
+                                backgroundColor: ColorResources.purpleColor,
+                                onTap: () => Get.toNamed(RouteHelper.ticketScreen),
+                                subItems: [
+                                  {'label': 'Open', 'value': controller.dashboardModel.data!.ticketsOpen ?? 0, 'color': ColorResources.redColor},
+                                  {'label': 'Closed', 'value': controller.dashboardModel.data!.ticketsClosed ?? 0, 'color': ColorResources.greenColor},
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: Dimensions.space10),
-                        CustomLinerProgress(
-                          color: ColorResources.greenColor,
-                          value: controller.dashboardModel.data!.invoicesPaid !=
-                                  0
-                              ? controller.dashboardModel.data!.invoicesPaid!
-                                      .toDouble() /
-                                  controller.dashboardModel.data!.invoicesTotal!
-                                      .toDouble()
-                              : 0,
-                          name: LocalStrings.paid.tr,
-                          data:
-                              '${controller.dashboardModel.data!.invoicesPaid}/${controller.dashboardModel.data!.invoicesTotal}',
+                        const SizedBox(height: Dimensions.space24),
+
+                        // Recent Projects Section
+                        DashboardSection(
+                          title: LocalStrings.projectSummery.tr,
+                          onViewAll: () => Get.toNamed(RouteHelper.projectScreen),
+                          children: _buildProjectPreviews(controller),
                         ),
-                        const SizedBox(height: Dimensions.space10),
-                        CustomLinerProgress(
-                          color: ColorResources.yellowColor,
-                          value: controller
-                                      .dashboardModel.data!.invoicesOverdue !=
-                                  0
-                              ? controller.dashboardModel.data!.invoicesOverdue!
-                                      .toDouble() /
-                                  controller.dashboardModel.data!.invoicesTotal!
-                                      .toDouble()
-                              : 0,
-                          name: LocalStrings.overdue.tr,
-                          data:
-                              '${controller.dashboardModel.data!.invoicesOverdue}/${controller.dashboardModel.data!.invoicesTotal}',
+
+                        // Recent Invoices Section
+                        DashboardSection(
+                          title: LocalStrings.quickInvoices.tr,
+                          onViewAll: () => Get.toNamed(RouteHelper.invoiceScreen),
+                          children: _buildInvoicePreviews(controller),
                         ),
-                        const SizedBox(height: Dimensions.space10),
-                        CustomLinerProgress(
-                          color: ColorResources.purpleColor,
-                          value: controller.dashboardModel.data!
-                                      .invoicesPartiallyPaid !=
-                                  0
-                              ? controller.dashboardModel.data!
-                                      .invoicesPartiallyPaid!
-                                      .toDouble() /
-                                  controller.dashboardModel.data!.invoicesTotal!
-                                      .toDouble()
-                              : 0,
-                          name: LocalStrings.partialyPaid.tr,
-                          data:
-                              '${controller.dashboardModel.data!.invoicesPartiallyPaid}/${controller.dashboardModel.data!.invoicesTotal}',
+
+                        // Recent Cases Section
+                        DashboardSection(
+                          title: 'Recent Cases',
+                          onViewAll: () => Get.toNamed(RouteHelper.casesScreen),
+                          children: _buildCasePreviews(),
                         ),
-                        const SizedBox(height: Dimensions.space10),
-                        SfCartesianChart(
-                          title: ChartTitle(
+
+                        // Recent Consultations Section
+                        DashboardSection(
+                          title: 'Recent Consultations',
+                          onViewAll: () => Get.toNamed(RouteHelper.casesScreen),
+                          children: _buildConsultationPreviews(),
+                        ),
+
+                        // Chart Section
+                        Container(
+                          margin: const EdgeInsets.only(top: Dimensions.space10),
+                          padding: const EdgeInsets.all(Dimensions.space16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(Dimensions.cardRadius),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: SfCartesianChart(
+                            title: ChartTitle(
                               text: LocalStrings.quickChart.tr,
-                              textStyle: Theme.of(context).textTheme.bodyLarge),
-                          plotAreaBorderWidth: 0,
-                          series: controller.invoicesChart(),
-                          primaryXAxis: const CategoryAxis(
+                              textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            plotAreaBorderWidth: 0,
+                            series: controller.invoicesChart(),
+                            primaryXAxis: const CategoryAxis(
                               arrangeByIndex: true,
                               labelStyle: regularSmall,
                               majorGridLines: MajorGridLines(width: 0),
-                              labelIntersectAction:
-                                  AxisLabelIntersectAction.multipleRows,
-                              edgeLabelPlacement: EdgeLabelPlacement.shift),
-                          primaryYAxis: const NumericAxis(
+                              labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                              edgeLabelPlacement: EdgeLabelPlacement.shift,
+                            ),
+                            primaryYAxis: const NumericAxis(
                               labelFormat: '{value}',
                               interval: 2,
                               labelStyle: regularSmall,
                               axisLine: AxisLine(width: 0),
-                              majorTickLines: MajorTickLines(size: 0)),
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                        )
+                              majorTickLines: MajorTickLines(size: 0),
+                            ),
+                            tooltipBehavior: TooltipBehavior(enable: true),
+                          ),
+                        ),
+                        const SizedBox(height: Dimensions.space20),
                       ],
                     ),
                   ),
@@ -331,5 +322,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildProjectPreviews(DashboardController controller) {
+    // Mock project data since we don't have individual project data in dashboard API
+    return [
+      DashboardProjectPreview(
+        projectName: 'Legal Case Management System',
+        clientName: controller.dashboardModel.data!.clientName ?? 'Unknown Client',
+        status: '2', // In Progress
+        progress: 75.0,
+        startDate: '2024-01-15',
+        onTap: () => Get.toNamed(RouteHelper.projectScreen),
+      ),
+      DashboardProjectPreview(
+        projectName: 'Contract Review & Drafting',
+        clientName: controller.dashboardModel.data!.clientName ?? 'Unknown Client',
+        status: '1', // Not Started
+        progress: 25.0,
+        startDate: '2024-02-01',
+        onTap: () => Get.toNamed(RouteHelper.projectScreen),
+      ),
+    ];
+  }
+
+  List<Widget> _buildInvoicePreviews(DashboardController controller) {
+    // Mock invoice data since we don't have individual invoice data in dashboard API
+    return [
+      DashboardInvoicePreview(
+        invoiceNumber: 'INV-2024-001',
+        clientName: controller.dashboardModel.data!.clientName ?? 'Unknown Client',
+        amount: '\$2,500.00',
+        status: 'unpaid',
+        date: '2024-01-15',
+        onTap: () => Get.toNamed(RouteHelper.invoiceScreen),
+      ),
+      DashboardInvoicePreview(
+        invoiceNumber: 'INV-2024-002',
+        clientName: controller.dashboardModel.data!.clientName ?? 'Unknown Client',
+        amount: '\$1,200.00',
+        status: 'paid',
+        date: '2024-01-10',
+        onTap: () => Get.toNamed(RouteHelper.invoiceScreen),
+      ),
+    ];
+  }
+
+  List<Widget> _buildCasePreviews() {
+    // Mock case data
+    return [
+      DashboardCasePreview(
+        caseTitle: 'Smith vs. Johnson Contract Dispute',
+        caseNumber: 'CASE-2024-001',
+        clientName: 'Smith Corporation',
+        courtDisplay: 'Superior Court of California',
+        nextHearingDate: '2024-02-15',
+        documentCount: 12,
+        onTap: () => Get.toNamed(RouteHelper.casesScreen),
+      ),
+      DashboardCasePreview(
+        caseTitle: 'Property Rights Litigation',
+        caseNumber: 'CASE-2024-002',
+        clientName: 'Johnson & Associates',
+        courtDisplay: 'District Court',
+        documentCount: 8,
+        onTap: () => Get.toNamed(RouteHelper.casesScreen),
+      ),
+    ];
+  }
+
+  List<Widget> _buildConsultationPreviews() {
+    // Mock consultation data
+    return [
+      DashboardConsultationPreview(
+        tag: 'Contract Review Consultation',
+        phase: 'consultation',
+        clientName: 'ABC Corporation',
+        note: 'Initial consultation for reviewing employment contracts and policies.',
+        dateAdded: '2024-01-20',
+        documentCount: 5,
+        onTap: () => Get.toNamed(RouteHelper.casesScreen),
+      ),
+      DashboardConsultationPreview(
+        tag: 'Legal Advisory Session',
+        phase: 'litigation',
+        clientName: 'XYZ Ltd',
+        note: 'Ongoing consultation regarding intellectual property disputes.',
+        dateAdded: '2024-01-18',
+        documentCount: 3,
+        onTap: () => Get.toNamed(RouteHelper.casesScreen),
+      ),
+    ];
   }
 }
