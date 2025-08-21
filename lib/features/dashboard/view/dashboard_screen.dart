@@ -131,9 +131,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildQuickActions(),
           const SizedBox(height: 24),
           _buildRecentActivities(controller),
-          const SizedBox(height: 24),
+          const SizedBox(height: 24.0),
           _buildAnalyticsChart(controller),
-          const SizedBox(height: 24),
+          const SizedBox(height: 24.0),
         ],
       ),
     );
