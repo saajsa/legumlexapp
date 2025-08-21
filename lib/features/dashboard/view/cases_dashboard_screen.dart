@@ -6,11 +6,8 @@ import 'package:legumlex_customer/common/components/will_pop_widget.dart';
 import 'package:legumlex_customer/core/route/route.dart';
 import 'package:legumlex_customer/core/service/api_service.dart';
 import 'package:legumlex_customer/core/utils/cases_theme.dart';
-import 'package:legumlex_customer/core/utils/color_resources.dart';
-import 'package:legumlex_customer/core/utils/dimensions.dart';
 import 'package:legumlex_customer/core/utils/images.dart';
 import 'package:legumlex_customer/core/utils/local_strings.dart';
-import 'package:legumlex_customer/core/utils/style.dart';
 import 'package:legumlex_customer/features/dashboard/controller/dashboard_controller.dart';
 import 'package:legumlex_customer/features/dashboard/repo/dashboard_repo.dart';
 import 'package:legumlex_customer/features/dashboard/widget/cases_card.dart';
@@ -68,7 +65,7 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
                   },
                   color: CasesTheme.primary,
                   child: CasesDashboardLayout(
-                    title: LocalStrings.welcome.tr + ' ${controller.dashboardModel.data!.contactFirstName}',
+                    title: '${LocalStrings.welcome.tr} ${controller.dashboardModel.data!.contactFirstName}',
                     subtitle: '${controller.dashboardModel.data!.contactTitle} - ${controller.dashboardModel.data!.clientName}',
                     children: [
                       _buildUserProfileSection(controller),
@@ -165,7 +162,7 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
               ],
             ),
           ),
-          CasesStatusBadge.active(text: 'Active'),
+          const CasesStatusBadge.active(text: 'Active'),
         ],
       ),
     );
@@ -212,40 +209,40 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
         ),
         CasesGridLayout.dashboard(
           children: [
-          _buildStatCard(
-            'Total Projects',
-            (controller.dashboardModel.data!.projectsNotStarted ?? 0) +
-                (controller.dashboardModel.data!.projectsInProgress ?? 0) +
-                (controller.dashboardModel.data!.projectsOnHold ?? 0) +
-                (controller.dashboardModel.data!.projectsFinished ?? 0),
-            Icons.work_outline,
-            CasesTheme.info,
-            () => Get.toNamed(RouteHelper.projectScreen),
-          ),
-          _buildStatCard(
-            'Total Invoices',
-            controller.dashboardModel.data!.invoicesTotal ?? 0,
-            Icons.receipt_long,
-            CasesTheme.success,
-            () => Get.toNamed(RouteHelper.invoiceScreen),
-          ),
-          _buildStatCard(
-            'Active Cases',
-            5, // Mock data since not available in model
-            Icons.gavel,
-            CasesTheme.warning,
-            () => Get.toNamed(RouteHelper.casesScreen),
-          ),
-          _buildStatCard(
-            'Support Tickets',
-            (controller.dashboardModel.data!.ticketsOpen ?? 0) +
-                (controller.dashboardModel.data!.ticketsInProgress ?? 0) +
-                (controller.dashboardModel.data!.ticketsAnswered ?? 0),
-            Icons.support_agent,
-            CasesTheme.danger,
-            () => Get.toNamed(RouteHelper.ticketScreen),
-          ),
-        ],
+            _buildStatCard(
+              'Total Projects',
+              (controller.dashboardModel.data!.projectsNotStarted ?? 0) +
+                  (controller.dashboardModel.data!.projectsInProgress ?? 0) +
+                  (controller.dashboardModel.data!.projectsOnHold ?? 0) +
+                  (controller.dashboardModel.data!.projectsFinished ?? 0),
+              Icons.work_outline,
+              CasesTheme.info,
+              () => Get.toNamed(RouteHelper.projectScreen),
+            ),
+            _buildStatCard(
+              'Total Invoices',
+              controller.dashboardModel.data!.invoicesTotal ?? 0,
+              Icons.receipt_long,
+              CasesTheme.success,
+              () => Get.toNamed(RouteHelper.invoiceScreen),
+            ),
+            _buildStatCard(
+              'Active Cases',
+              5, // Mock data since not available in model
+              Icons.gavel,
+              CasesTheme.warning,
+              () => Get.toNamed(RouteHelper.casesScreen),
+            ),
+            _buildStatCard(
+              'Support Tickets',
+              (controller.dashboardModel.data!.ticketsOpen ?? 0) +
+                  (controller.dashboardModel.data!.ticketsInProgress ?? 0) +
+                  (controller.dashboardModel.data!.ticketsAnswered ?? 0),
+              Icons.support_agent,
+              CasesTheme.danger,
+              () => Get.toNamed(RouteHelper.ticketScreen),
+            ),
+          ],
         ),
       ],
     );
@@ -282,7 +279,7 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
               Icon(
                 icon,
                 size: 32,
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
               ),
             ],
           ),
@@ -343,24 +340,25 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
                 ),
               ),
             ],
-            child: SizedBox(
-              height: 180,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
-                    child: _buildInvoicePreview(index),
-                  );
-                },
-              ),
+          ),
+          SizedBox(
+            height: 180,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
+                  child: _buildInvoicePreview(index),
+                );
+              },
             ),
           ),
+        ],
 
         // Recent Cases
-        if (selectedFilter == 'all' || selectedFilter == 'cases')
+        if (selectedFilter == 'all' || selectedFilter == 'cases') ...[
           CasesSectionHeader(
             title: 'Recent Cases',
             actions: [
@@ -375,24 +373,25 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
                 ),
               ),
             ],
-            child: SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
-                    child: _buildCasePreview(index),
-                  );
-                },
-              ),
+          ),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
+                  child: _buildCasePreview(index),
+                );
+              },
             ),
           ),
+        ],
 
         // Recent Consultations
-        if (selectedFilter == 'all' || selectedFilter == 'consultations')
+        if (selectedFilter == 'all' || selectedFilter == 'consultations') ...[
           CasesSectionHeader(
             title: 'Recent Consultations',
             actions: [
@@ -407,21 +406,22 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
                 ),
               ),
             ],
-            child: SizedBox(
-              height: 180,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
-                    child: _buildConsultationPreview(index),
-                  );
-                },
-              ),
+          ),
+          SizedBox(
+            height: 180,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  margin: const EdgeInsets.only(right: CasesTheme.spacingMd),
+                  child: _buildConsultationPreview(index),
+                );
+              },
             ),
           ),
+        ],
       ],
     );
   }
@@ -485,7 +485,7 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
   }
 
   Widget _buildCasePreview(int index) {
-    final cases = [
+    final caseData = [
       {
         'title': 'Smith vs. Johnson Contract Dispute',
         'number': 'CASE-2024-001',
@@ -504,14 +504,14 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
       },
     ];
 
-    final case = cases[index];
+    final caseItem = caseData[index];
     return DashboardCasePreview(
-      caseTitle: case['title'] as String,
-      caseNumber: case['number'] as String,
-      clientName: case['client'] as String,
-      courtDisplay: case['court'] as String,
-      nextHearingDate: case['nextHearing'] as String?,
-      documentCount: case['documents'] as int,
+      caseTitle: caseItem['title'] as String,
+      caseNumber: caseItem['number'] as String,
+      clientName: caseItem['client'] as String,
+      courtDisplay: caseItem['court'] as String,
+      nextHearingDate: caseItem['nextHearing'] as String?,
+      documentCount: caseItem['documents'] as int,
       onTap: () => Get.toNamed(RouteHelper.casesScreen),
     );
   }
@@ -549,40 +549,44 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
   }
 
   Widget _buildQuickActions() {
-    return CasesSectionHeader(
-      title: 'Quick Actions',
-      child: CasesGridLayout.twoColumn(
-        children: [
-          _buildQuickActionCard(
-            'New Case',
-            'Create a new legal case',
-            Icons.add_circle,
-            CasesTheme.success,
-            () => Get.toNamed(RouteHelper.casesScreen),
-          ),
-          _buildQuickActionCard(
-            'Upload Documents',
-            'Upload case documents',
-            Icons.upload_file,
-            CasesTheme.info,
-            () => Get.toNamed(RouteHelper.casesScreen),
-          ),
-          _buildQuickActionCard(
-            'Schedule Hearing',
-            'Schedule a court hearing',
-            Icons.event_available,
-            CasesTheme.warning,
-            () => Get.toNamed(RouteHelper.casesScreen),
-          ),
-          _buildQuickActionCard(
-            'Generate Report',
-            'Create case reports',
-            Icons.assessment,
-            CasesTheme.danger,
-            () => Get.toNamed(RouteHelper.casesScreen),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        CasesSectionHeader(
+          title: 'Quick Actions',
+        ),
+        CasesGridLayout.twoColumn(
+          children: [
+            _buildQuickActionCard(
+              'New Case',
+              'Create a new legal case',
+              Icons.add_circle,
+              CasesTheme.success,
+              () => Get.toNamed(RouteHelper.casesScreen),
+            ),
+            _buildQuickActionCard(
+              'Upload Documents',
+              'Upload case documents',
+              Icons.upload_file,
+              CasesTheme.info,
+              () => Get.toNamed(RouteHelper.casesScreen),
+            ),
+            _buildQuickActionCard(
+              'Schedule Hearing',
+              'Schedule a court hearing',
+              Icons.event_available,
+              CasesTheme.warning,
+              () => Get.toNamed(RouteHelper.casesScreen),
+            ),
+            _buildQuickActionCard(
+              'Generate Report',
+              'Create case reports',
+              Icons.assessment,
+              CasesTheme.danger,
+              () => Get.toNamed(RouteHelper.casesScreen),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -595,7 +599,7 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -627,50 +631,43 @@ class _CasesDashboardScreenState extends State<CasesDashboardScreen> {
   }
 
   Widget _buildAnalyticsChart(DashboardController controller) {
-    return CasesSectionHeader(
-      title: LocalStrings.quickChart.tr,
-      child: CasesContentSection(
-        child: SizedBox(
-          height: 300,
-          child: SfCartesianChart(
-            plotAreaBorderWidth: 0,
-            series: controller.invoicesChart(),
-            primaryXAxis: const CategoryAxis(
-              arrangeByIndex: true,
-              labelStyle: TextStyle(
-                fontFamily: CasesTheme.fontFamily,
-                fontSize: CasesTheme.fontSizeSm,
-                color: CasesTheme.textLight,
-              ),
-              majorGridLines: MajorGridLines(width: 0),
-              labelIntersectAction: AxisLabelIntersectAction.multipleRows,
-              edgeLabelPlacement: EdgeLabelPlacement.shift,
-            ),
-            primaryYAxis: const NumericAxis(
-              labelFormat: '{value}',
-              interval: 2,
-              labelStyle: TextStyle(
-                fontFamily: CasesTheme.fontFamily,
-                fontSize: CasesTheme.fontSizeSm,
-                color: CasesTheme.textLight,
-              ),
-              axisLine: AxisLine(width: 0),
-              majorTickLines: MajorTickLines(size: 0),
-            ),
-            tooltipBehavior: TooltipBehavior(enable: true),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-extension CasesSectionHeaderWithChild on CasesSectionHeader {
-  Widget child(Widget child) {
     return Column(
       children: [
-        this,
-        child,
+        CasesSectionHeader(
+          title: LocalStrings.quickChart.tr,
+        ),
+        CasesContentSection(
+          child: SizedBox(
+            height: 300,
+            child: SfCartesianChart(
+              plotAreaBorderWidth: 0,
+              series: controller.invoicesChart(),
+              primaryXAxis: const CategoryAxis(
+                arrangeByIndex: true,
+                labelStyle: TextStyle(
+                  fontFamily: CasesTheme.fontFamily,
+                  fontSize: CasesTheme.fontSizeSm,
+                  color: CasesTheme.textLight,
+                ),
+                majorGridLines: MajorGridLines(width: 0),
+                labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+                edgeLabelPlacement: EdgeLabelPlacement.shift,
+              ),
+              primaryYAxis: const NumericAxis(
+                labelFormat: '{value}',
+                interval: 2,
+                labelStyle: TextStyle(
+                  fontFamily: CasesTheme.fontFamily,
+                  fontSize: CasesTheme.fontSizeSm,
+                  color: CasesTheme.textLight,
+                ),
+                axisLine: AxisLine(width: 0),
+                majorTickLines: MajorTickLines(size: 0),
+              ),
+              tooltipBehavior: TooltipBehavior(enable: true),
+            ),
+          ),
+        ),
       ],
     );
   }
