@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
@@ -11,16 +12,16 @@ class CasesController extends GetxController {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
-  List<CaseModel> _cases = <CaseModel>[].obs;
+  final List<CaseModel> _cases = <CaseModel>[].obs;
   List<CaseModel> get cases => _cases;
   
   CaseModel? _selectedCase;
   CaseModel? get selectedCase => _selectedCase;
   
-  List<HearingModel> _hearings = <HearingModel>[].obs;
+  final List<HearingModel> _hearings = <HearingModel>[].obs;
   List<HearingModel> get hearings => _hearings;
   
-  List<DocumentModel> _documents = <DocumentModel>[].obs;
+  final List<DocumentModel> _documents = <DocumentModel>[].obs;
   List<DocumentModel> get documents => _documents;
   
   String? _errorMessage;
@@ -46,7 +47,7 @@ class CasesController extends GetxController {
             final mainNavController = Get.find<MainNavigationController>();
             mainNavController.disableFeatureOnPermissionDenied('cases');
           } catch (e) {
-            print('Could not disable cases in navigation: $e');
+            debugPrint('Could not disable cases in navigation: $e');
           }
         }
       }

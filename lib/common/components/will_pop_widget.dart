@@ -10,14 +10,12 @@ class WillPopWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        onPopInvoked: (didPop) async {
           if (nextRoute.isEmpty) {
             showExitDialog(context);
-            return Future.value(false);
           } else {
             Get.offAndToNamed(nextRoute);
-            return Future.value(false);
           }
         },
         child: child);

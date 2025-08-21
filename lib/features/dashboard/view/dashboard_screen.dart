@@ -11,11 +11,9 @@ import 'package:legumlex_customer/common/components/will_pop_widget.dart';
 import 'package:legumlex_customer/core/route/route.dart';
 import 'package:legumlex_customer/core/service/api_service.dart';
 import 'package:legumlex_customer/core/utils/cases_theme.dart';
-import 'package:legumlex_customer/core/utils/color_resources.dart';
 import 'package:legumlex_customer/core/utils/dimensions.dart';
 import 'package:legumlex_customer/core/utils/images.dart';
 import 'package:legumlex_customer/core/utils/local_strings.dart';
-import 'package:legumlex_customer/core/utils/style.dart';
 
 import 'package:legumlex_customer/features/dashboard/controller/dashboard_controller.dart';
 import 'package:legumlex_customer/features/dashboard/repo/dashboard_repo.dart';

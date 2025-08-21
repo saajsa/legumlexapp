@@ -8,7 +8,7 @@ class ConsultationsController extends GetxController {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
-  List<ConsultationModel> _consultations = <ConsultationModel>[].obs;
+  final List<ConsultationModel> _consultations = <ConsultationModel>[].obs;
   List<ConsultationModel> get consultations => _consultations;
   
   ConsultationModel? _selectedConsultation;

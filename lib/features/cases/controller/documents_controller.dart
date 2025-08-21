@@ -8,7 +8,7 @@ class DocumentsController extends GetxController {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
-  List<DocumentModel> _documents = <DocumentModel>[].obs;
+  final List<DocumentModel> _documents = <DocumentModel>[].obs;
   List<DocumentModel> get documents => _documents;
   
   String? _errorMessage;

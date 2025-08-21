@@ -86,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.7),
-                        Colors.black.withOpacity(0.3),
-                      ],
+                       Colors.black.withValues(alpha: 0.7),
+                       Colors.black.withValues(alpha: 0.3),
+                     ],
                     ),
                   ),
                   child: SafeArea(
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen>
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen>
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(

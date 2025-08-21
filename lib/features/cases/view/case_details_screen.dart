@@ -10,7 +10,7 @@ class CaseDetailsScreen extends StatefulWidget {
   const CaseDetailsScreen({super.key});
   
   @override
-  _CaseDetailsScreenState createState() => _CaseDetailsScreenState();
+  State<CaseDetailsScreen> createState() => _CaseDetailsScreenState();
 }
 
 class _CaseDetailsScreenState extends State<CaseDetailsScreen> with TickerProviderStateMixin {

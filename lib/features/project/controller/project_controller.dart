@@ -62,7 +62,7 @@ class ProjectController extends GetxController {
         print('Projects load failed: ${responseModel.message}');
         
         // If it's a permission denied error, disable the feature in navigation
-        if (responseModel.message?.toLowerCase().contains('permission') == true) {
+        if (responseModel.message.toLowerCase().contains('permission') == true) {
           try {
             final mainNavController = Get.find<MainNavigationController>();
             mainNavController.disableFeatureOnPermissionDenied('projects');

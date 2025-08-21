@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:legumlex_customer/core/utils/cases_theme.dart';
-import 'package:legumlex_customer/features/dashboard/widget/cases_card.dart';
-import 'package:legumlex_customer/features/dashboard/widget/cases_status_badge.dart';
 
 /// Cases Dashboard Layout Component
 /// Replicates dashboard layout patterns from CSS framework
