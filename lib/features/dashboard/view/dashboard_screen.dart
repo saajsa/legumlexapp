@@ -9,7 +9,6 @@ import 'package:legumlex_customer/common/components/will_pop_widget.dart';
 import 'package:legumlex_customer/core/route/route.dart';
 import 'package:legumlex_customer/core/service/api_service.dart';
 import 'package:legumlex_customer/core/utils/cases_theme.dart';
-import 'package:legumlex_customer/core/utils/dimensions.dart';
 import 'package:legumlex_customer/core/utils/images.dart';
 import 'package:legumlex_customer/core/utils/local_strings.dart';
 import 'package:legumlex_customer/features/dashboard/controller/dashboard_controller.dart';
@@ -270,7 +269,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 24) / 2;
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -398,7 +396,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 16) / 2;
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -933,7 +930,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 250,
+            height: 200.0,
             child: SfCartesianChart(
               plotAreaBorderWidth: 0,
               series: controller.invoicesChart(),
