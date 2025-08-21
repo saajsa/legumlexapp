@@ -22,6 +22,9 @@ import 'package:legumlex_customer/features/proposal/view/proposal_screen.dart';
 import 'package:legumlex_customer/features/splash/view/splash_screen.dart';
 import 'package:legumlex_customer/features/ticket/view/ticket_details_screen.dart';
 import 'package:legumlex_customer/features/ticket/view/ticket_screen.dart';
+import 'package:legumlex_customer/features/cases/view/cases_screen.dart';
+import 'package:legumlex_customer/features/cases/view/case_details_screen.dart';
+import 'package:legumlex_customer/features/cases/view/consultation_details_screen.dart';
 import 'package:get/get.dart';
 
 class RouteHelper {
@@ -50,6 +53,9 @@ class RouteHelper {
   static const String settingsScreen = "/settings_screen";
   static const String profileScreen = "/profile_screen";
   static const String privacyScreen = "/privacy_screen";
+  static const String casesScreen = "/cases_screen";
+  static const String caseDetailsScreen = "/case_details_screen";
+  static const String consultationDetailsScreen = "/consultation_details_screen";
 
   List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => const SplashScreen()),
@@ -92,5 +98,12 @@ class RouteHelper {
     GetPage(name: profileScreen, page: () => const ProfileScreen()),
     GetPage(name: settingsScreen, page: () => const MenuScreen()),
     GetPage(name: privacyScreen, page: () => const PrivacyPolicyScreen()),
+    GetPage(name: casesScreen, page: () => const CasesScreen()),
+    GetPage(
+        name: caseDetailsScreen,
+        page: () => CaseDetailsScreen(caseModel: Get.arguments)),
+    GetPage(
+        name: consultationDetailsScreen,
+        page: () => ConsultationDetailsScreen(consultation: Get.arguments)),
   ];
 }

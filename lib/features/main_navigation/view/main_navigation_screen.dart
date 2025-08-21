@@ -8,6 +8,7 @@ import 'package:legumlex_customer/features/main_navigation/repo/main_navigation_
 import 'package:legumlex_customer/features/profile/view/profile_screen.dart';
 import 'package:legumlex_customer/features/project/view/projects_screen.dart';
 import 'package:legumlex_customer/features/ticket/view/ticket_screen.dart';
+import 'package:legumlex_customer/features/cases/view/cases_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -88,6 +89,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
           screens.add(const TicketsScreen());
+        }
+        
+        // Cases (if enabled)
+        if (controller.isCasesEnable) {
+          navigationItems.add(
+            Icon(
+              Icons.gavel_rounded,
+              size: 28,
+              color: const Color(0xFF6B7280),
+            ),
+          );
+          screens.add(const CasesScreen());
         }
         
         // Profile (always available)

@@ -25,4 +25,9 @@ class UrlContainer {
   static const String knowledgeBaseUrl = 'knowledge_base';
   static const String privacyPolicyUrl =
       'knowledge_base/article/privacy-policy';
+  
+  // Cases
+  static const String casesUrl = 'cases';
+  static const String consultationsUrl = 'cases/consultations';
+  static const String documentsUrl = 'cases/documents';
 }

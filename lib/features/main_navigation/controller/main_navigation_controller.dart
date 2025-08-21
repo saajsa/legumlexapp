@@ -17,6 +17,7 @@ class MainNavigationController extends GetxController {
   bool isProposalsEnable = true;
   bool isSupportEnable = true;
   bool isEstimatesEnable = true;
+  bool isCasesEnable = true;
 
   @override
   void onInit() {
@@ -40,6 +41,7 @@ class MainNavigationController extends GetxController {
         isProposalsEnable = menuModel.data!.any((item) => item.name == 'Proposals');
         isSupportEnable = menuModel.data!.any((item) => item.name == 'Support');
         isEstimatesEnable = menuModel.data!.any((item) => item.name == 'Estimates');
+        isCasesEnable = menuModel.data!.any((item) => item.name == 'Cases');
       }
     } catch (e) {
       // Default to all enabled if API fails
@@ -62,6 +64,7 @@ class MainNavigationController extends GetxController {
     if (isProjectsEnable) features.add('projects');
     if (isInvoicesEnable) features.add('invoices');
     if (isSupportEnable) features.add('support');
+    if (isCasesEnable) features.add('cases');
     
     features.add('profile'); // Always enabled
     
@@ -74,6 +77,7 @@ class MainNavigationController extends GetxController {
     if (isProjectsEnable) count++;
     if (isInvoicesEnable) count++;
     if (isSupportEnable) count++;
+    if (isCasesEnable) count++;
     
     return count;
   }
