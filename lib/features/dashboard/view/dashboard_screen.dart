@@ -618,7 +618,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${project['progress'].toInt()}%',
+                      '${(project['progress'] as double).toInt()}%',
                       style: CasesTheme.captionSmall,
                     ),
                   ],
