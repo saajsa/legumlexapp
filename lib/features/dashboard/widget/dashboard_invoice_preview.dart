@@ -56,7 +56,7 @@ class DashboardInvoicePreview extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(Dimensions.space16),
+        padding: const EdgeInsets.all(Dimensions.space15),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.cardRadius),

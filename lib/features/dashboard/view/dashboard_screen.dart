@@ -105,7 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   },
                   color: Theme.of(context).primaryColor,
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(Dimensions.space16),
+                    padding: const EdgeInsets.all(Dimensions.space15),
                     child: Column(
                       children: [
                         // Profile Section
@@ -243,7 +243,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: Dimensions.space24),
+                        const SizedBox(height: Dimensions.space25),
 
                         // Recent Projects Section
                         DashboardSection(
@@ -276,7 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         // Chart Section
                         Container(
                           margin: const EdgeInsets.only(top: Dimensions.space10),
-                          padding: const EdgeInsets.all(Dimensions.space16),
+                          padding: const EdgeInsets.all(Dimensions.space15),
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(Dimensions.cardRadius),
