@@ -9,15 +9,19 @@ class MainNavigationController extends GetxController {
   MainNavigationController({required this.repo});
 
   bool isLoading = false;
+  bool _permissionsLoaded = false;
+  
+  bool get permissionsLoaded => _permissionsLoaded;
   
   // Feature toggles - these will be loaded from the API
-  bool isProjectsEnable = true;
-  bool isInvoicesEnable = true;
-  bool isContractsEnable = true;
-  bool isProposalsEnable = true;
-  bool isSupportEnable = true;
-  bool isEstimatesEnable = true;
-  bool isCasesEnable = true;
+  // Start with false to prevent showing tabs before permissions are loaded
+  bool isProjectsEnable = false;
+  bool isInvoicesEnable = false;
+  bool isContractsEnable = false;
+  bool isProposalsEnable = false;
+  bool isSupportEnable = false;
+  bool isEstimatesEnable = false;
+  bool isCasesEnable = false;
 
   @override
   void onInit() {
@@ -42,6 +46,7 @@ class MainNavigationController extends GetxController {
         isSupportEnable = menuModel.data!.any((item) => item.name == 'Support');
         isEstimatesEnable = menuModel.data!.any((item) => item.name == 'Estimates');
         isCasesEnable = menuModel.data!.any((item) => item.name == 'Cases');
+        _permissionsLoaded = true;
       }
     } catch (e) {
       // Default to all enabled if API fails
@@ -52,6 +57,7 @@ class MainNavigationController extends GetxController {
       isSupportEnable = true;
       isEstimatesEnable = true;
       isCasesEnable = true;
+      _permissionsLoaded = true;
     }
     
     isLoading = false;

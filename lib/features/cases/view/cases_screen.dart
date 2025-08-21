@@ -10,6 +10,7 @@ import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/widget/case_card.dart';
 import 'package:legumlex_customer/features/cases/widget/consultation_card.dart';
 import 'package:legumlex_customer/features/cases/widget/document_card.dart';
+import 'package:legumlex_customer/features/main_navigation/controller/main_navigation_controller.dart';
 
 class CasesScreen extends StatefulWidget {
   const CasesScreen({super.key});
@@ -50,6 +51,40 @@ class _CasesScreenState extends State<CasesScreen> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    // Check if user has permission to access Cases
+    final mainNavigationController = Get.find<MainNavigationController>();
+    
+    if (!mainNavigationController.isCasesEnable) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Access Denied'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.lock_outline,
+                size: 64,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Access Denied',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              SizedBox(height: 8),
+              Text(
+                'You do not have permission to access Cases.',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Cases'),

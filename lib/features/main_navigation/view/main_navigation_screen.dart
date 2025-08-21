@@ -41,6 +41,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return GetBuilder<MainNavigationController>(
       builder: (controller) {
+        // Show loading indicator while permissions are loading
+        if (controller.isLoading && !controller.permissionsLoaded) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        
         // Build navigation items based on enabled features
         List<Widget> navigationItems = [];
         List<Widget> screens = [];
