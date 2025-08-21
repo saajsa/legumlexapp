@@ -185,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (!controller.casesPermissionDenied) {'id': 'consultations', 'label': 'Consultations'},
         ];
 
-    return Container(
+    return SizedBox(
       height: 40,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -843,7 +843,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Text(
                   'Cases and consultations are not available for your account. Contact your administrator for access.',
                   style: CasesTheme.bodySmall.copyWith(
-                    color: CasesTheme.textDefault,
+                    color: CasesTheme.textColor,
                   ),
                 ),
               ],

@@ -78,17 +78,17 @@ class DashboardController extends GetxController {
         casesPermissionDenied = true;
         activeCasesCount = 0;
         recentCases.clear();
-        print('Cases access denied - hiding cases section');
+        // Cases access denied - hiding cases section
       }
       
       if (consultationsResponse.status == true && consultationsResponse.data != null) {
         recentConsultations = consultationsResponse.data!.take(3).toList();
       } else if (consultationsResponse.message?.contains('permission') == true) {
         recentConsultations.clear();
-        print('Consultations access denied - hiding consultations section');
+        // Consultations access denied - hiding consultations section
       }
     } catch (e) {
-      print('Error loading cases data: $e');
+      // Error loading cases data - permission denied
       casesPermissionDenied = true;
     }
   }
