@@ -14,6 +14,8 @@ import 'package:legumlex_customer/core/utils/local_strings.dart';
 import 'package:legumlex_customer/features/dashboard/controller/dashboard_controller.dart';
 import 'package:legumlex_customer/features/dashboard/repo/dashboard_repo.dart';
 import 'package:legumlex_customer/features/dashboard/widget/drawer.dart';
+import 'package:legumlex_customer/features/cases/repo/cases_repo.dart';
+import 'package:legumlex_customer/features/cases/repo/consultations_repo.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -29,6 +31,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     Get.put(ApiClient(sharedPreferences: Get.find()));
     Get.put(DashboardRepo(apiClient: Get.find()));
+    Get.put(CasesRepo(apiClient: Get.find()));
+    Get.put(ConsultationsRepo(apiClient: Get.find()));
     final controller = Get.put(DashboardController(dashboardRepo: Get.find()));
     controller.isLoading = true;
 
@@ -245,7 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       {
         'title': 'Active Cases',
-        'count': 5, // Mock data
+        'count': controller.activeCasesCount,
         'icon': Icons.gavel,
         'color': CasesTheme.warning,
         'onTap': () => Get.toNamed(RouteHelper.casesScreen),
@@ -509,7 +513,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActivitySection(
             'Recent Cases',
             () => Get.toNamed(RouteHelper.casesScreen),
-            _buildCasePreview(),
+            _buildCasePreview(controller),
           ),
           const SizedBox(height: 24),
         ],
@@ -517,7 +521,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildActivitySection(
             'Recent Consultations',
             () => Get.toNamed(RouteHelper.casesScreen),
-            _buildConsultationPreview(),
+            _buildConsultationPreview(controller),
           ),
         ],
       ],
@@ -723,25 +727,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildCasePreview() {
-    final cases = [
-      {
-        'title': 'Smith vs. Johnson Contract Dispute',
-        'number': 'CASE-2024-001',
-        'client': 'Smith Corporation',
-        'court': 'Superior Court of California',
-        'nextHearing': '2024-02-15',
-        'documents': 12,
-      },
-      {
-        'title': 'Property Rights Litigation',
-        'number': 'CASE-2024-002',
-        'client': 'Johnson & Associates',
-        'court': 'District Court',
-        'nextHearing': null,
-        'documents': 8,
-      },
-    ];
+  Widget _buildCasePreview(DashboardController controller) {
+    final cases = controller.recentCases;
 
     return SizedBox(
       height: 140,
@@ -766,14 +753,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  caseItem['title'] as String,
+                  caseItem.caseTitle ?? 'No Title',
                   style: CasesTheme.headingLg.copyWith(fontSize: 16),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  caseItem['number'] as String,
+                  caseItem.caseNumber ?? 'No Number',
                   style: CasesTheme.bodySmall.copyWith(
                     color: CasesTheme.textLight,
                     fontWeight: FontWeight.w500,
@@ -784,13 +771,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        caseItem['client'] as String,
+                        caseItem.clientName ?? 'No Client',
                         style: CasesTheme.bodySmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (caseItem['nextHearing'] != null) ...[
+                    if (caseItem.nextHearingDate != null) ...[
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -801,7 +788,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'Next: ${caseItem['nextHearing']}',
+                          'Next: ${caseItem.nextHearingDate}',
                           style: CasesTheme.captionSmall.copyWith(
                             color: CasesTheme.warning,
                           ),
@@ -818,25 +805,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildConsultationPreview() {
-    final consultations = [
-      {
-        'tag': 'Contract Review Consultation',
-        'phase': 'consultation',
-        'client': 'ABC Corporation',
-        'note': 'Initial consultation for reviewing employment contracts and policies.',
-        'date': '2024-01-20',
-        'documents': 5,
-      },
-      {
-        'tag': 'Legal Advisory Session',
-        'phase': 'litigation',
-        'client': 'XYZ Ltd',
-        'note': 'Ongoing consultation regarding intellectual property disputes.',
-        'date': '2024-01-18',
-        'documents': 3,
-      },
-    ];
+  Widget _buildConsultationPreview(DashboardController controller) {
+    final consultations = controller.recentConsultations;
 
     return SizedBox(
       height: 130,
@@ -846,8 +816,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         separatorBuilder: (context, index) => const SizedBox(width: 16),
         itemBuilder: (context, index) {
           final consultation = consultations[index];
-          final phaseColor = CasesTheme.getStatusColor(consultation['phase'] as String);
-          final phaseBgColor = CasesTheme.getStatusBackgroundColor(consultation['phase'] as String);
+          final phaseColor = CasesTheme.getStatusColor(consultation.phase ?? 'consultation');
+          final phaseBgColor = CasesTheme.getStatusBackgroundColor(consultation.phase ?? 'consultation');
           
           return Container(
             width: 300,
@@ -866,7 +836,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        consultation['tag'] as String,
+                        consultation.tag ?? 'No Tag',
                         style: CasesTheme.headingLg.copyWith(fontSize: 16),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -882,7 +852,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        consultation['phase'] as String,
+                        consultation.phase ?? 'consultation',
                         style: CasesTheme.captionSmall.copyWith(
                           color: phaseColor,
                         ),
@@ -892,12 +862,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  consultation['client'] as String,
+                  consultation.clientName ?? 'No Client',
                   style: CasesTheme.bodySmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  consultation['note'] as String,
+                  consultation.note ?? 'No note available',
                   style: CasesTheme.bodySmall.copyWith(
                     color: CasesTheme.textLight,
                   ),

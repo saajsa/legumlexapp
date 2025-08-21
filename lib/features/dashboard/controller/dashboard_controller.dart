@@ -7,6 +7,10 @@ import 'package:legumlex_customer/core/utils/local_strings.dart';
 import 'package:legumlex_customer/features/dashboard/model/chart_model.dart';
 import 'package:legumlex_customer/features/dashboard/model/dashboard_model.dart';
 import 'package:legumlex_customer/features/dashboard/repo/dashboard_repo.dart';
+import 'package:legumlex_customer/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/repo/cases_repo.dart';
+import 'package:legumlex_customer/features/cases/repo/consultations_repo.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -21,12 +25,17 @@ class DashboardController extends GetxController {
   String imagePath = "";
 
   DashboardModel dashboardModel = DashboardModel();
+  
+  List<CaseModel> recentCases = [];
+  List<ConsultationModel> recentConsultations = [];
+  int activeCasesCount = 0;
 
   Future<void> initialData({bool shouldLoad = true}) async {
     isLoading = shouldLoad ? true : false;
     update();
 
     await loadData();
+    await loadCasesData();
     isLoading = false;
     update();
   }
@@ -50,6 +59,27 @@ class DashboardController extends GetxController {
 
     isLoading = false;
     update();
+  }
+
+  Future<void> loadCasesData() async {
+    try {
+      final casesRepo = Get.find<CasesRepo>();
+      final consultationsRepo = Get.find<ConsultationsRepo>();
+      
+      final casesResponse = await casesRepo.getCases();
+      final consultationsResponse = await consultationsRepo.getConsultations();
+      
+      if (casesResponse.status == true && casesResponse.data != null) {
+        recentCases = casesResponse.data!.take(3).toList();
+        activeCasesCount = casesResponse.data!.where((c) => c.status == 'active').length;
+      }
+      
+      if (consultationsResponse.status == true && consultationsResponse.data != null) {
+        recentConsultations = consultationsResponse.data!.take(3).toList();
+      }
+    } catch (e) {
+      print('Error loading cases data: $e');
+    }
   }
 
   bool isVisibleItem = false;
