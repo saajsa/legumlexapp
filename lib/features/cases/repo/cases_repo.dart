@@ -15,7 +15,7 @@ class CasesRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return CasesResponse.fromJson(jsonData);
     } else {
@@ -30,7 +30,7 @@ class CasesRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return CasesResponse.fromJson(jsonData);
     } else {
@@ -45,7 +45,7 @@ class CasesRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/hearings';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return HearingsResponse.fromJson(jsonData);
     } else {
@@ -60,7 +60,7 @@ class CasesRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/documents';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return DocumentsResponse.fromJson(jsonData);
     } else {

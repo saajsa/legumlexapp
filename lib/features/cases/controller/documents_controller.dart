@@ -3,7 +3,7 @@ import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/repo/documents_repo.dart';
 
 class DocumentsController extends GetxController {
-  final DocumentsRepo _documentsRepo = DocumentsRepo();
+  DocumentsRepo get _documentsRepo => Get.find<DocumentsRepo>();
   
   bool _isLoading = false;
   bool get isLoading => _isLoading;

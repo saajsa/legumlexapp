@@ -13,7 +13,7 @@ class DocumentsRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.documentsUrl}';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return DocumentsResponse.fromJson(jsonData);
     } else {

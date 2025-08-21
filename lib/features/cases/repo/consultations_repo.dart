@@ -13,7 +13,7 @@ class ConsultationsRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.consultationsUrl}';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return ConsultationsResponse.fromJson(jsonData);
     } else {
@@ -28,7 +28,7 @@ class ConsultationsRepo {
     String url = '${UrlContainer.baseUrl}${UrlContainer.consultationsUrl}/id/$consultationId';
     ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
     
-    if (responseModel.isSuccess) {
+    if (responseModel.status) {
       final jsonData = json.decode(responseModel.responseJson);
       return ConsultationsResponse.fromJson(jsonData);
     } else {

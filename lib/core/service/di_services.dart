@@ -17,9 +17,9 @@ Future<Map<String, Map<String, String>>> init() async {
 
   Get.lazyPut(() => sharedPreferences, fenix: true);
   Get.lazyPut(() => ApiClient(sharedPreferences: Get.find()));
-  Get.lazyPut(() => CasesRepo());
-  Get.lazyPut(() => ConsultationsRepo());
-  Get.lazyPut(() => DocumentsRepo());
+  Get.lazyPut(() => CasesRepo(apiClient: Get.find()));
+  Get.lazyPut(() => ConsultationsRepo(apiClient: Get.find()));
+  Get.lazyPut(() => DocumentsRepo(apiClient: Get.find()));
   Get.lazyPut(() => SplashRepo(apiClient: Get.find()));
   Get.lazyPut(() => LocalizationController(sharedPreferences: Get.find()));
   Get.lazyPut(() => SplashController(
