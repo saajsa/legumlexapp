@@ -42,17 +42,31 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return GetBuilder<MainNavigationController>(
       builder: (controller) {
         // Show loading indicator while permissions are loading
-        if (controller.isLoading && !controller.permissionsLoaded) {
+        if (controller.isLoading || !controller.permissionsLoaded) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading permissions...'),
+                ],
+              ),
             ),
           );
         }
         
+        print('=== BUILDING NAVIGATION ===');
+        print('Projects enabled: ${controller.isProjectsEnable}');
+        print('Cases enabled: ${controller.isCasesEnable}');
+        
         // Build navigation items based on enabled features
         List<Widget> navigationItems = [];
         List<Widget> screens = [];
+        
+        // Keep track of current tab count to reset index if needed
+        int tabCount = 0;
         
         // Dashboard (always available)
         navigationItems.add(
@@ -63,6 +77,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         );
         screens.add(const DashboardScreen());
+        tabCount++;
         
         // Projects (if enabled)
         if (controller.isProjectsEnable) {
@@ -74,6 +89,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
           screens.add(const ProjectsScreen());
+          tabCount++;
         }
         
         // Invoices (if enabled)
@@ -86,6 +102,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
           screens.add(const InvoicesScreen());
+          tabCount++;
         }
         
         // Tickets (if enabled)
@@ -98,6 +115,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
           screens.add(const TicketsScreen());
+          tabCount++;
         }
         
         // Cases (if enabled)
@@ -110,6 +128,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
           screens.add(const CasesScreen());
+          tabCount++;
         }
         
         // Profile (always available)
@@ -121,6 +140,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         );
         screens.add(const ProfileScreen());
+        tabCount++;
+        
+        // Reset current index if it's out of bounds
+        if (_currentIndex >= tabCount) {
+          print('Resetting current index from $_currentIndex to 0 (tabCount: $tabCount)');
+          _currentIndex = 0;
+        }
+        
+        print('Final tab count: $tabCount, Current index: $_currentIndex');
 
         return Scaffold(
           body: PageView(

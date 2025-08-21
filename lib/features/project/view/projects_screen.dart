@@ -13,6 +13,7 @@ import 'package:legumlex_customer/features/dashboard/widget/custom_container.dar
 import 'package:legumlex_customer/features/project/controller/project_controller.dart';
 import 'package:legumlex_customer/features/project/repo/project_repo.dart';
 import 'package:legumlex_customer/features/project/widget/project_card.dart';
+import 'package:legumlex_customer/features/main_navigation/controller/main_navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,6 +44,40 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if user has permission to access Projects
+    final mainNavigationController = Get.find<MainNavigationController>();
+    
+    if (!mainNavigationController.isProjectsEnable) {
+      return Scaffold(
+        appBar: CustomAppBar(
+          title: LocalStrings.projects.tr,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.lock_outline,
+                size: 64,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Access Denied',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              SizedBox(height: 8),
+              Text(
+                'You do not have permission to access Projects.',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
     return Scaffold(
       appBar: CustomAppBar(
         title: LocalStrings.projects.tr,

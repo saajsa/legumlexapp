@@ -37,8 +37,19 @@ class MainNavigationController extends GetxController {
       // Load feature toggles from API
       final response = await repo.getFeatureToggles();
       
+      print('=== PERMISSION API RESPONSE ===');
+      print('Status: ${response.status}');
+      print('Response JSON: ${response.responseJson}');
+      
       if (response.status) {
         MenuModel menuModel = MenuModel.fromJson(jsonDecode(response.responseJson));
+        
+        // Log available menu items
+        print('Available menu items:');
+        menuModel.data?.forEach((item) {
+          print('- ${item.name} (${item.shortName})');
+        });
+        
         isProjectsEnable = menuModel.data!.any((item) => item.name == 'Projects');
         isInvoicesEnable = menuModel.data!.any((item) => item.name == 'Invoices');
         isContractsEnable = menuModel.data!.any((item) => item.name == 'Contracts');
@@ -46,17 +57,35 @@ class MainNavigationController extends GetxController {
         isSupportEnable = menuModel.data!.any((item) => item.name == 'Support');
         isEstimatesEnable = menuModel.data!.any((item) => item.name == 'Estimates');
         isCasesEnable = menuModel.data!.any((item) => item.name == 'Cases');
+        
+        // Log final permissions state
+        print('=== PERMISSIONS STATE ===');
+        print('Projects: $isProjectsEnable');
+        print('Invoices: $isInvoicesEnable');
+        print('Contracts: $isContractsEnable');
+        print('Proposals: $isProposalsEnable');
+        print('Support: $isSupportEnable');
+        print('Estimates: $isEstimatesEnable');
+        print('Cases: $isCasesEnable');
+        
+        _permissionsLoaded = true;
+      } else {
+        print('=== API RESPONSE ERROR ===');
+        print('Status: false - ${response.responseJson}');
         _permissionsLoaded = true;
       }
     } catch (e) {
-      // Default to all enabled if API fails
-      isProjectsEnable = true;
-      isInvoicesEnable = true;
-      isContractsEnable = true;
-      isProposalsEnable = true;
-      isSupportEnable = true;
-      isEstimatesEnable = true;
-      isCasesEnable = true;
+      print('=== API CALL EXCEPTION ===');
+      print('Error: $e');
+      
+      // Default to all disabled if API fails to prevent showing unauthorized content
+      isProjectsEnable = false;
+      isInvoicesEnable = false;
+      isContractsEnable = false;
+      isProposalsEnable = false;
+      isSupportEnable = false;
+      isEstimatesEnable = false;
+      isCasesEnable = false;
       _permissionsLoaded = true;
     }
     
