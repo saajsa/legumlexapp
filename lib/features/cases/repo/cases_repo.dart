@@ -1,116 +1,72 @@
+import 'package:legumlex_customer/common/models/response_model.dart';
+import 'package:legumlex_customer/core/service/api_service.dart';
+import 'package:legumlex_customer/core/utils/method.dart';
 import 'package:legumlex_customer/core/utils/url_container.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
-import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CasesRepo {
-  Future<CasesResponse> getCases() async {
-    try {
-      final response = await http.get(
-        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${UrlContainer.token}', // Assuming token is stored in UrlContainer
-        },
-      );
+  ApiClient apiClient;
+  CasesRepo({required this.apiClient});
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return CasesResponse.fromJson(jsonData);
-      } else {
-        return CasesResponse(
-          status: false,
-          message: 'Failed to load cases: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
+  Future<CasesResponse> getCases() async {
+    String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}';
+    ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
+    
+    if (responseModel.isSuccess) {
+      final jsonData = json.decode(responseModel.responseJson);
+      return CasesResponse.fromJson(jsonData);
+    } else {
       return CasesResponse(
         status: false,
-        message: 'Error occurred while fetching cases: $e',
+        message: responseModel.message,
       );
     }
   }
 
   Future<CasesResponse> getCaseById(int caseId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${UrlContainer.token}',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return CasesResponse.fromJson(jsonData);
-      } else {
-        return CasesResponse(
-          status: false,
-          message: 'Failed to load case: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
+    String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId';
+    ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
+    
+    if (responseModel.isSuccess) {
+      final jsonData = json.decode(responseModel.responseJson);
+      return CasesResponse.fromJson(jsonData);
+    } else {
       return CasesResponse(
         status: false,
-        message: 'Error occurred while fetching case: $e',
+        message: responseModel.message,
       );
     }
   }
 
   Future<HearingsResponse> getCaseHearings(int caseId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/hearings'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${UrlContainer.token}',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return HearingsResponse.fromJson(jsonData);
-      } else {
-        return HearingsResponse(
-          status: false,
-          message: 'Failed to load hearings: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
+    String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/hearings';
+    ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
+    
+    if (responseModel.isSuccess) {
+      final jsonData = json.decode(responseModel.responseJson);
+      return HearingsResponse.fromJson(jsonData);
+    } else {
       return HearingsResponse(
         status: false,
-        message: 'Error occurred while fetching hearings: $e',
+        message: responseModel.message,
       );
     }
   }
 
   Future<DocumentsResponse> getCaseDocuments(int caseId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/documents'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${UrlContainer.token}',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return DocumentsResponse.fromJson(jsonData);
-      } else {
-        return DocumentsResponse(
-          status: false,
-          message: 'Failed to load documents: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
+    String url = '${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/documents';
+    ResponseModel responseModel = await apiClient.request(url, Method.getMethod, null, passHeader: true);
+    
+    if (responseModel.isSuccess) {
+      final jsonData = json.decode(responseModel.responseJson);
+      return DocumentsResponse.fromJson(jsonData);
+    } else {
       return DocumentsResponse(
         status: false,
-        message: 'Error occurred while fetching documents: $e',
+        message: responseModel.message,
       );
     }
   }

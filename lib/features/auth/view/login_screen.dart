@@ -1,15 +1,7 @@
-import 'package:legumlex_customer/common/components/buttons/rounded_button.dart';
-import 'package:legumlex_customer/common/components/buttons/rounded_loading_button.dart';
-import 'package:legumlex_customer/common/components/text-form-field/custom_text_field.dart';
-import 'package:legumlex_customer/common/components/text/default_text.dart';
 import 'package:legumlex_customer/common/components/will_pop_widget.dart';
 import 'package:legumlex_customer/core/route/route.dart';
 import 'package:legumlex_customer/core/service/api_service.dart';
-import 'package:legumlex_customer/core/utils/color_resources.dart';
-import 'package:legumlex_customer/core/utils/dimensions.dart';
 import 'package:legumlex_customer/core/utils/images.dart';
-import 'package:legumlex_customer/core/utils/local_strings.dart';
-import 'package:legumlex_customer/core/utils/style.dart';
 import 'package:legumlex_customer/features/auth/controller/login_controller.dart';
 import 'package:legumlex_customer/features/auth/repo/auth_repo.dart';
 import 'package:flutter/material.dart';

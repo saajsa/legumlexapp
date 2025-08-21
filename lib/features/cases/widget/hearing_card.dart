@@ -4,7 +4,7 @@ import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
 class HearingCard extends StatelessWidget {
   final HearingModel hearing;
 
-  HearingCard({required this.hearing});
+  const HearingCard({super.key, required this.hearing});
 
   @override
   Widget build(BuildContext context) {

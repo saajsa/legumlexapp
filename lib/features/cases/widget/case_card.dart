@@ -5,7 +5,7 @@ class CaseCard extends StatelessWidget {
   final CaseModel caseModel;
   final VoidCallback? onTap;
 
-  CaseCard({required this.caseModel, this.onTap});
+  const CaseCard({super.key, required this.caseModel, this.onTap});
 
   @override
   Widget build(BuildContext context) {

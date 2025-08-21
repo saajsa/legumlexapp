@@ -5,11 +5,15 @@ import 'package:legumlex_customer/features/cases/controller/cases_controller.dar
 import 'package:legumlex_customer/features/cases/controller/consultations_controller.dart';
 import 'package:legumlex_customer/features/cases/controller/documents_controller.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
+import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
+import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/widget/case_card.dart';
 import 'package:legumlex_customer/features/cases/widget/consultation_card.dart';
 import 'package:legumlex_customer/features/cases/widget/document_card.dart';
 
 class CasesScreen extends StatefulWidget {
+  const CasesScreen({super.key});
+  
   @override
   _CasesScreenState createState() => _CasesScreenState();
 }

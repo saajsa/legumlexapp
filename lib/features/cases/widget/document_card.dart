@@ -5,7 +5,7 @@ class DocumentCard extends StatelessWidget {
   final DocumentModel document;
   final VoidCallback? onTap;
 
-  DocumentCard({required this.document, this.onTap});
+  const DocumentCard({super.key, required this.document, this.onTap});
 
   @override
   Widget build(BuildContext context) {

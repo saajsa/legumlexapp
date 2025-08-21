@@ -5,7 +5,7 @@ class ConsultationCard extends StatelessWidget {
   final ConsultationModel consultation;
   final VoidCallback? onTap;
 
-  ConsultationCard({required this.consultation, this.onTap});
+  const ConsultationCard({super.key, required this.consultation, this.onTap});
 
   @override
   Widget build(BuildContext context) {

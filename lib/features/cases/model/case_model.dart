@@ -16,6 +16,7 @@ class CaseModel {
   String? nextHearingDate;
   int? documentCount;
   int? hearingCount;
+  String? status;
 
   CaseModel({
     this.id,
@@ -35,6 +36,7 @@ class CaseModel {
     this.nextHearingDate,
     this.documentCount,
     this.hearingCount,
+    this.status,
   });
 
   CaseModel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class CaseModel {
     nextHearingDate = json['next_hearing_date'];
     documentCount = int.tryParse(json['document_count'].toString()) ?? 0;
     hearingCount = int.tryParse(json['hearing_count'].toString()) ?? 0;
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,6 +79,7 @@ class CaseModel {
     data['next_hearing_date'] = nextHearingDate;
     data['document_count'] = documentCount;
     data['hearing_count'] = hearingCount;
+    data['status'] = status;
     return data;
   }
 }

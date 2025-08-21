@@ -4,6 +4,8 @@ import 'package:legumlex_customer/features/cases/controller/consultations_contro
 import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 
 class ConsultationDetailsScreen extends StatefulWidget {
+  const ConsultationDetailsScreen({super.key});
+  
   @override
   _ConsultationDetailsScreenState createState() => _ConsultationDetailsScreenState();
 }

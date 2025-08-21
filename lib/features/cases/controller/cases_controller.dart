@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
-import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
 import 'package:legumlex_customer/features/cases/repo/cases_repo.dart';

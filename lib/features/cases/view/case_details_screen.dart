@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:legumlex_customer/features/cases/controller/cases_controller.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
-import 'package:legumlex_customer/features/cases/model/hearing_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:legumlex_customer/features/cases/widget/hearing_card.dart';
 import 'package:legumlex_customer/features/cases/widget/document_card.dart';
 
 class CaseDetailsScreen extends StatefulWidget {
+  const CaseDetailsScreen({super.key});
+  
   @override
   _CaseDetailsScreenState createState() => _CaseDetailsScreenState();
 }
