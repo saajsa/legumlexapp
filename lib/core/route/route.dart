@@ -101,9 +101,9 @@ class RouteHelper {
     GetPage(name: casesScreen, page: () => CasesScreen()),
     GetPage(
         name: caseDetailsScreen,
-        page: () => CaseDetailsScreen(caseModel: Get.arguments)),
+        page: () => CaseDetailsScreen()),
     GetPage(
         name: consultationDetailsScreen,
-        page: () => ConsultationDetailsScreen(consultation: Get.arguments)),
+        page: () => ConsultationDetailsScreen()),
   ];
 }

@@ -1,4 +1,4 @@
-import 'package:legumlex_customer/core/utils/urls.dart';
+import 'package:legumlex_customer/core/utils/url_container.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,10 +7,10 @@ class DocumentsRepo {
   Future<DocumentsResponse> getDocuments() async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.documentsUrl}'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.documentsUrl}'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 

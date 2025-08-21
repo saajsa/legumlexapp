@@ -1,4 +1,4 @@
-import 'package:legumlex_customer/core/utils/urls.dart';
+import 'package:legumlex_customer/core/utils/url_container.dart';
 import 'package:legumlex_customer/features/cases/model/case_model.dart';
 import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 import 'package:legumlex_customer/features/cases/model/document_model.dart';
@@ -10,10 +10,10 @@ class CasesRepo {
   Future<CasesResponse> getCases() async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.casesUrl}'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}', // Assuming token is stored in Urls
+          'Authorization': 'Bearer ${UrlContainer.token}', // Assuming token is stored in UrlContainer
         },
       );
 
@@ -37,10 +37,10 @@ class CasesRepo {
   Future<CasesResponse> getCaseById(int caseId) async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.casesUrl}/id/$caseId'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 
@@ -64,10 +64,10 @@ class CasesRepo {
   Future<HearingsResponse> getCaseHearings(int caseId) async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.casesUrl}/id/$caseId/group/hearings'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/hearings'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 
@@ -91,10 +91,10 @@ class CasesRepo {
   Future<DocumentsResponse> getCaseDocuments(int caseId) async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.casesUrl}/id/$caseId/group/documents'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.casesUrl}/id/$caseId/group/documents'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 

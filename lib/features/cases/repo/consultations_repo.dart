@@ -1,4 +1,4 @@
-import 'package:legumlex_customer/core/utils/urls.dart';
+import 'package:legumlex_customer/core/utils/url_container.dart';
 import 'package:legumlex_customer/features/cases/model/consultation_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,10 +7,10 @@ class ConsultationsRepo {
   Future<ConsultationsResponse> getConsultations() async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.consultationsUrl}'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.consultationsUrl}'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 
@@ -34,10 +34,10 @@ class ConsultationsRepo {
   Future<ConsultationsResponse> getConsultationById(int consultationId) async {
     try {
       final response = await http.get(
-        Uri.parse('${Urls.baseUrl}${Urls.consultationsUrl}/id/$consultationId'),
+        Uri.parse('${UrlContainer.baseUrl}${UrlContainer.consultationsUrl}/id/$consultationId'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Urls.token}',
+          'Authorization': 'Bearer ${UrlContainer.token}',
         },
       );
 
