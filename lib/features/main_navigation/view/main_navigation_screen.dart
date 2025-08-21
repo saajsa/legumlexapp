@@ -97,7 +97,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             Icon(
               Icons.gavel_rounded,
               size: 28,
-              color: const Color(0xFF6B7280),
+              color: const Color(0xFFE67E22), // Orange color for Cases
             ),
           );
           screens.add(const CasesScreen());

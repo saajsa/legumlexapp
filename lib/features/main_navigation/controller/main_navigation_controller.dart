@@ -51,6 +51,7 @@ class MainNavigationController extends GetxController {
       isProposalsEnable = true;
       isSupportEnable = true;
       isEstimatesEnable = true;
+      isCasesEnable = true;
     }
     
     isLoading = false;
