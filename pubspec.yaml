@@ -49,7 +49,7 @@ flutter_launcher_icons:
   image_path: "assets/images/FVlegumlex.png"
   adaptive_icon_background: "#000000"
   adaptive_icon_foreground: "assets/images/FVlegumlex.png"
-  adaptive_icon_padding: 20
+  adaptive_icon_padding: 40
   min_sdk_android: 21
 
 # The following section is specific to Flutter packages.
